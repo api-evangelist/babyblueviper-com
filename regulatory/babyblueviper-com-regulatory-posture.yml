@@ -1,0 +1,54 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: https://api.babyblueviper.com/privacy
+signals:
+  data_subject_request:
+    url: https://api.babyblueviper.com/privacy
+    section: Your data rights
+    channel: contact@agents.babyblueviper.com
+    stated_sla: 'we will respond within 30 days'
+    rights_named: [access, correct, export (portability), restrict, object, erase, withdraw consent, lodge a complaint with a supervisory authority]
+    self_service: 'Because the service is keyed to your Bearer token, you can exercise access and erasure directly and immediately using the memory and workspace list/delete tools.'
+    evidence:
+    - source: https://api.babyblueviper.com/privacy
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: >-
+        "If you are in the EEA, UK, or a jurisdiction with similar laws, you have the right to access, correct,
+        export (portability), restrict, or object to the processing of your personal data, and to erase it. ...
+        For any request you cannot self-serve — or to object, restrict, or raise a concern — contact us at the
+        address below and we will respond within 30 days. You also have the right to lodge a complaint with
+        your local data protection supervisory authority."
+    note: >-
+      Substance present: named rights, a channel, a stated response period, an escalation route and a
+      self-service path (memory/workspace delete operations that exist in the contract). "Last updated: May
+      2026". The policy also states GDPR legal bases (contract, legitimate interests, consent) and a retention
+      rule (account records while active; memory/workspace data until deleted or after 2+ years of
+      inactivity).
+probed_not_found:
+  note: >-
+    Each path below was requested on api.babyblueviper.com on 2026-09-19 and returned the host's JSON 404
+    ({"detail":"Not Found"}); the Substack site (www.babyblueviper.com) has no legal pages of its own for this
+    product. Signals not recorded because no page carries the substance: no SBOM, no support-lifetime
+    statement, no accessibility conformance report, no training-data summary, no dedicated AI-transparency
+    page (the Terms say "AI outputs may be incomplete or incorrect" — a disclaimer, not a disclosure
+    regime), no Global Privacy Control statement, no dated subprocessor list (the privacy policy names OpenAI
+    as the single AI processor in prose, which is not a subprocessor register), no data-residency statement
+    (transfers to the US are disclosed, residency is not offered), no incident-notification SLA, no age
+    assurance, no notice-and-action, no transparency report, no exit-assistance page (the
+    invinoveritas-compliance-export CLI exports the caller's own signed proofs, which is a product feature
+    rather than a documented data-export commitment).
+  paths:
+  - {path: /accessibility, status: 404}
+  - {path: /accessibility/vpat, status: 404}
+  - {path: /legal/subprocessors, status: 404}
+  - {path: /legal/dpa, status: 404}
+  - {path: /privacy/requests, status: 404}
+  - {path: /transparency, status: 404}
+  - {path: /trust, status: 404}
+  - {path: /security/sbom, status: 404}
+  - {path: /docs/data-residency, status: 404}
+  - {path: /ai, status: 404}
+  - {path: /ai/transparency, status: 404}
+  - {path: /legal/report-content, status: 404}

@@ -1,0 +1,47 @@
+generated: '2026-09-19'
+method: searched
+source:
+- https://api.babyblueviper.com/.well-known/agent-handshake
+- https://api.babyblueviper.com/llms.txt
+- https://api.babyblueviper.com/guide
+- openapi/babyblueviper-com-openapi.yml (ReviewRequest.dry_run, /ledger/demo/verdict-outcome-resolution)
+description: >-
+  invinoveritas has no separate sandbox environment, no test-mode keys and no test/live key prefix split —
+  there is one host, one key type (ivv_) and real sats. What it publishes instead is a set of no-cost ways to
+  exercise the real API: free endpoints, a free-call allowance on a new key, a dry-run flag on /review, a
+  ready-to-verify sample proof, and a demo endpoint. Every value below is the provider's own, reproduced
+  verbatim; nothing is invented.
+test_vs_live:
+  separation: none — single production host https://api.babyblueviper.com
+  key_prefixes: {live: ivv_, test: none}
+  note: Card- and x402-funded sats are spendable but not withdrawable (an abuse guard, not a test mode).
+free_allowance:
+  statement: >-
+    "first 5 calls FREE, no funding needed" (live 402 body, 2026-09-19); llms.txt quick start shows a /review
+    response with billing.free_call_used true and free_calls_remaining 2
+  how: POST https://api.babyblueviper.com/register {"label":"my-agent"} then Authorization Bearer <api_key>
+free_endpoints:
+- POST /verify-proof (no auth) — verify any signed proof
+- GET /ledger, /ledger/{entry}, /ledger.txt — the public verdict track record
+- GET /conformance, /conformance.json — the conformance registry
+- GET /signals — free BTC-regime teaser (paid multi-coin set at /signals/full)
+- GET /agent-economy-brief/preview, /audit/agent-readiness/preview, /x402/seller-intel/preview — free previews of paid tools
+- GET /health, /prices, /stats, /offers/list, /messages/feed
+- MCP: initialize and tools/list are anonymous; memory_list, memory_search, memory_delete, feedback_*, residence_me, ledger, verify_proof are free tools
+dry_run:
+  operation: review_review_post
+  field: dry_run (boolean)
+  behaviour: computes and returns artifact_hash + decision_ref WITHOUT signing anything — no Nostr event, no schnorr signature, nothing committed (schema description)
+  worked_example: https://github.com/babyblueviper1/invinoveritas/tree/main/examples/air-v03-verdict-dry-run
+fixtures:
+  sample_proof:
+    where: /.well-known/agent-handshake -> try_it_now.sample_proof.event (a live, signed NIP-01 event, kind 30078, pubkey 6786e18a864893a900bd9858e650f67ccc3513f248fed374b591e2ff6922fbb7)
+    use: >-
+      POST {"event": <sample_proof.event>} to https://api.babyblueviper.com/verify-proof -> expect valid true, issued_by_invinoveritas true
+    file: well-known/babyblueviper-com-agent-handshake.json
+  ledger_entries: GET https://api.babyblueviper.com/ledger — real signed entries to verify offline with `pip install invinoveritas-verify`
+  demo_endpoint: GET/POST /ledger/demo/verdict-outcome-resolution — a worked verdict-to-outcome resolution demo (in the contract; not exercised)
+  conformance_vectors: https://github.com/babyblueviper1/preaction-governance-conformance — offline, zero-dependency conformance fixtures (self_declared in conformance/)
+  human_tool: https://api.babyblueviper.com/edgeproof — free web form for the /validate backtest check
+test_clocks: none
+trigger_tooling: none

@@ -1,0 +1,42 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  info.version in the OpenAPI, GET /health, the agent card and the MCP serverInfo (all 1.13.0); GitHub
+  releases/tags; the README; llms.txt; the public roadmap at GET /roadmap (text/markdown, 420KB, dated
+  session log). Read 2026-09-19.
+versioning:
+  scheme: single unversioned base URL; a semantic-looking product version (1.13.0) carried in info.version, /health, the agent card, the MCP serverInfo and the PyPI SDK — not in the path and not negotiable by header
+  current: 1.13.0
+  path_prefix: none (no /v1)
+  header: none
+  docs: https://api.babyblueviper.com/health
+  note: >-
+    There is no published versioning or compatibility policy. The same 1.13.0 string is the API version, the
+    SDK version (pypi invinoveritas 1.13.0, 2026-08-05) and the MCP server version, so they move together;
+    the one GitHub release is tagged v1.0.0 (2026-09-03) and does not track the API version.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  policy: none published
+  observed_practice: >-
+    Retirements are announced in prose and enforced with HTTP 410: llms.txt states the Edge-idea bounty
+    programme was retired on 2026-09-06 and "/bounty/submit now returns 410". The public roadmap records an
+    "11-endpoint sunset" on 2026-05-17 with a SUNSET_LOG and a 30/90-day deletion watch, and npm
+    invinoveritas-mcp was deprecated on the registry in favour of the remote endpoint. So there IS a practice
+    (announce, 410, delete later) but no stated notice period and no RFC 8594 Sunset/Deprecation headers —
+    which is why no Deprecation pointer is emitted.
+deprecated_operations: []
+deprecated_operations_note: No operation in the OpenAPI carries deprecated true; the retired /bounty/* paths are simply absent from the contract.
+sla:
+  url: null
+  uptime_target: null
+  note: 'Terms of Service: "The service is provided as-is." No SLA is published. Governance plans (plans/) do not state one either.'
+status_page: null
+status_page_note: >-
+  No status page (no status.* host, no /status page). GET /health returns a live JSON health document
+  (status ok, version, payment/feature flags) and /health/usage, /metrics, /metrics/execution and
+  /execution/status expose live counters — operational telemetry, not an incident/status page — so no
+  StatusPage pointer is emitted.
+changelog: changelog/babyblueviper-com-changelog.yml
+support_lifetime: not stated anywhere

@@ -1,0 +1,48 @@
+generated: '2026-09-19'
+method: searched
+source: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/agentskills
+source_detail: >-
+  Saved verbatim from the provider's own repository (raw.githubusercontent.com, all HTTP 200 on 2026-09-19).
+  These are PROVIDER-PUBLISHED Agent Skills in the agentskills.io SKILL.md format, not pipeline-generated
+  ones: three skills under integrations/agentskills/ (invinoveritas, loop-verifier, verification-handshake,
+  with a REFERENCE.md tool table for the first) plus a fourth, pre-action-review, shipped inside the provider's
+  Cursor plugin (integrations/cursor-plugin/skills/). Frontmatter names, descriptions, license
+  ("Proprietary. See https://api.babyblueviper.com") and metadata are the provider's.
+license: Proprietary (per each SKILL.md frontmatter) — text reproduced here for cataloguing only
+grounding:
+  bound_to: the remote MCP server at https://api.babyblueviper.com/mcp (tools review, verify_proof, prove, markets_act, signals, execute, memory_*) and the REST equivalents POST /review, POST /verify-proof
+  openapi: openapi/babyblueviper-com-openapi.yml
+  crosswalk: mcp/babyblueviper-com-tool-crosswalk.yml
+skills:
+- file: babyblueviper-com-invinoveritas.md
+  name: invinoveritas
+  source: https://raw.githubusercontent.com/babyblueviper1/invinoveritas/main/integrations/agentskills/invinoveritas/SKILL.md
+  version: '1.0'
+  api: openapi/babyblueviper-com-openapi.yml
+  operations: [review_review_post, markets_act_markets_act_post, get_signals_full_signals_full_get, get_regime_regime_get, execute_code_execute_post, store_memory_memory_store_post, get_memory_memory_get_post, post_to_board_messages_post_post, buy_offer_offers_buy_post]
+  mcp_tools: [review, markets_act, signals, regime, execute, memory_store, memory_get, message_post, marketplace_buy]
+  summary: The full platform skill — when and how to reach for the paid MCP tools, above all review before any irreversible action.
+  reference: babyblueviper-com-invinoveritas-REFERENCE.md
+- file: babyblueviper-com-loop-verifier.md
+  name: loop-verifier
+  source: https://raw.githubusercontent.com/babyblueviper1/invinoveritas/main/integrations/agentskills/loop-verifier/SKILL.md
+  version: '1.1'
+  api: openapi/babyblueviper-com-openapi.yml
+  operations: [review_review_post, verify_proof_verify_proof_post]
+  mcp_tools: [review, verify_proof]
+  summary: Wire review (sign=true) as an objective exit-code gate before an autonomous loop's irreversible step; verify-proof is free and unauthenticated.
+- file: babyblueviper-com-verification-handshake.md
+  name: verification-handshake
+  source: https://raw.githubusercontent.com/babyblueviper1/invinoveritas/main/integrations/agentskills/verification-handshake/SKILL.md
+  version: '1.0'
+  api: openapi/babyblueviper-com-openapi.yml
+  operations: [verify_proof_verify_proof_post, review_review_post]
+  mcp_tools: [verify_proof, review]
+  summary: Demand a proof on what you receive, attach a proof to what you ship — the agent-to-agent trust handshake.
+- file: babyblueviper-com-pre-action-review.md
+  name: pre-action-review
+  source: https://raw.githubusercontent.com/babyblueviper1/invinoveritas/main/integrations/cursor-plugin/skills/pre-action-review/SKILL.md
+  api: openapi/babyblueviper-com-openapi.yml
+  operations: [review_review_post]
+  mcp_tools: [review]
+  summary: Cursor plugin skill — call review before a force-push, merge, deploy, migration or other hard-to-undo action and act on the verdict.

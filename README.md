@@ -64,5 +64,10 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-invinoveritas is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://babyblueviper.com/
+invinoveritas, published by Baby Blue Viper, is a verification layer for autonomous agents: a neutral verdict before an irreversible action (POST /review), a signed proof after (POST /prove), and a public, Nostr- and Bitcoin-anchored track record (GET /ledger). It ships a REST API (OpenAPI 3.1, 187 operations), a remote MCP server (31 tools, OAuth 2.1 metadata) and an A2A agent card, all on api.babyblueviper.com, paid per call in Lightning sats, USDC via x402, or by card.
+
+- Website: https://babyblueviper.com/
+- Developer portal / API host: https://api.babyblueviper.com/
+- OpenAPI: https://api.babyblueviper.com/openapi.json
+- MCP: https://api.babyblueviper.com/mcp
+- Agent card: https://api.babyblueviper.com/.well-known/agent-card.json

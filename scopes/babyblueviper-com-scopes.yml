@@ -1,0 +1,28 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.babyblueviper.com/.well-known/oauth-authorization-server
+docs: https://api.babyblueviper.com/.well-known/oauth-protected-resource
+note: >-
+  The OpenAPI declares no oauth2 securityScheme, so derive-oauth-scopes.py found nothing. The provider's OAuth
+  2.1 surface exists for the MCP resource only and is documented by its RFC 8414 / RFC 9728 metadata, which is
+  the source here. Exactly one scope is published. No human scopes/permissions reference page was found; the
+  metadata is the reference.
+schemes:
+- name: OAuth 2.1 (MCP resource)
+  source: https://api.babyblueviper.com/.well-known/oauth-authorization-server
+  issuer: https://api.babyblueviper.com
+  resource: https://api.babyblueviper.com/mcp
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.babyblueviper.com/oauth/authorize
+    tokenUrl: https://api.babyblueviper.com/oauth/token
+    refresh_token: true
+    code_challenge_methods: [S256]
+    registration_endpoint: https://api.babyblueviper.com/oauth/register
+    token_endpoint_auth_methods: [none, client_secret_post]
+scopes:
+- scope: mcp
+  description: Access to the invinoveritas MCP server at https://api.babyblueviper.com/mcp (the only scope listed in scopes_supported of both the authorization-server and protected-resource metadata).
+  flows: [authorizationCode]
+  sources: [https://api.babyblueviper.com/.well-known/oauth-authorization-server, https://api.babyblueviper.com/.well-known/oauth-protected-resource]
+scope_count: 1

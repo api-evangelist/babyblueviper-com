@@ -1,0 +1,1 @@
+{"contact":"mailto:contact@agents.babyblueviper.com","preferred_languages":"en","canonical":"https://api.babyblueviper.com/.well-known/security.txt","policy":"https://api.babyblueviper.com/guide","acknowledgments":"https://github.com/babyblueviper1/invinoveritas","expires":"2027-04-08T00:00:00Z"}

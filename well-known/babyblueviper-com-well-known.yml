@@ -1,0 +1,213 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* path list on babyblueviper.com, www.babyblueviper.com and
+  api.babyblueviper.com (the API, MCP resource and A2A host), 2026-09-19. Every row is a request that was
+  issued; every status is the one returned. Bodies were parsed before a row was recorded as a document.
+summary:
+  hosts_probed: 3
+  documents_served: 8
+  hit_count: 8
+  path_echo_control: passed
+  note: >-
+    invinoveritas runs everything on api.babyblueviper.com, which is also the MCP resource host
+    (https://api.babyblueviper.com/mcp) and the A2A host. That host serves RFC 8414 authorization-server
+    metadata (issuer https://api.babyblueviper.com, PKCE S256, a registration_endpoint for dynamic client
+    registration, scopes_supported [mcp]), RFC 9728 protected-resource metadata whose resource is the MCP
+    endpoint and whose authorization_servers points back at the same issuer, an ai-plugin.json manifest, an
+    MCP server card at both /.well-known/mcp.json and /.well-known/mcp/server-card.json (byte-identical),
+    the A2A agent card at both agent-card paths (captured in a2a/), a custom /.well-known/agent-handshake
+    capability offer, and a security.txt. The security.txt is served as a JSON object (contact, policy,
+    acknowledgments, canonical, expires 2027-04-08) with content-type application/json rather than the
+    RFC 9116 text field format — the fields are there, the serialization is not the standard one, and its
+    policy link points at the payment guide (/guide), not a disclosure policy. openid-configuration answers
+    404 with a JSON body that explicitly says OpenID Connect is not implemented and points at the OAuth
+    metadata. No RFC 9727 api-catalog, no APIs.json, no UCP/ACP manifest, no AAuth resource document. A
+    negative-control path that cannot exist returns the host's real 22-byte JSON 404, so the 200s are
+    served documents and not a catch-all. The registrable domain 301s every path to www.babyblueviper.com,
+    a Substack publication; Substack's platform serves its own OAuth authorization-server metadata (issuer
+    https://substack.com) on every publication's custom domain, recorded below for completeness and marked
+    as platform-served — it is not invinoveritas' document and awards nothing here that the provider's own
+    api-host document does not already earn.
+hosts:
+- host: api.babyblueviper.com
+  role: API (OpenAPI base), MCP resource server (/mcp), A2A JSON-RPC host (/a2a), docs (/docs, /redoc) — one origin
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: application/json
+    bytes: 297
+    file: babyblueviper-com-security.txt
+    format: json
+    note: >-
+      Fields present: contact mailto:contact@agents.babyblueviper.com, preferred_languages en, canonical
+      (this URL), policy https://api.babyblueviper.com/guide, acknowledgments (the GitHub repo), expires
+      2027-04-08T00:00:00Z. Served as a JSON object, not RFC 9116 "Field: value" lines; the policy URL is the
+      payment guide. Recorded as served; probe-security-programs.py did not accept it as a disclosure policy.
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+    content_type: application/json
+    note: >-
+      Body: {"error":"not_supported","error_description":"This service does not implement OpenID Connect ...
+      OAuth 2.1 IS supported", "oauth_authorization_server_metadata": ".../.well-known/oauth-authorization-server",
+      "supported_auth":["OAuth 2.1","L402","Bearer"]}. An explicit, documented negative.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    bytes: 532
+    file: babyblueviper-com-oauth-authorization-server.json
+    standard: RFC 8414
+    note: >-
+      issuer https://api.babyblueviper.com; authorization_endpoint /oauth/authorize; token_endpoint
+      /oauth/token; registration_endpoint /oauth/register (RFC 7591 dynamic client registration — the endpoint
+      answers 405 to GET, i.e. it exists and expects POST); scopes_supported [mcp]; response_types [code];
+      grant_types [authorization_code, refresh_token]; code_challenge_methods [S256];
+      token_endpoint_auth_methods [none, client_secret_post]; client_id_metadata_document_supported true.
+      No jwks_uri (and /.well-known/jwks.json 404s).
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+    bytes: 232
+    file: babyblueviper-com-oauth-protected-resource.json
+    standard: RFC 9728
+    note: >-
+      resource https://api.babyblueviper.com/mcp; authorization_servers [https://api.babyblueviper.com];
+      bearer_methods_supported [header]; scopes_supported [mcp]; resource_documentation
+      https://api.babyblueviper.com/mcp. This is the MCP-host probe the contract requires — the resource is
+      the MCP endpoint on this same host.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    content_type: application/json
+    bytes: 3688
+    file: babyblueviper-com-ai-plugin.json
+    note: schema_version v1; name_for_model invinoveritas; description_for_model carries the self-registration and payment flow.
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json
+    bytes: 20728
+    file: ../a2a/babyblueviper-com-agent-card.json
+    standard: A2A Agent Card (protocolVersion 0.3.0)
+    note: Saved verbatim under a2a/ and graded in a2a/babyblueviper-com-a2a.yml (conformant).
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    bytes: 20728
+    note: Legacy pre-0.3 path; byte-identical to the canonical card. Not saved twice.
+  - path: /.well-known/mcp/server-card.json
+    status: 200
+    content_type: application/json
+    bytes: 45999
+    file: babyblueviper-com-mcp-server-card.json
+    standard: MCP server card ($schema https://modelcontextprotocol.io/schemas/server-card/v1.0)
+    note: Also served byte-identically at /.well-known/mcp.json. Advertised in robots.txt.
+  - path: /.well-known/mcp.json
+    status: 200
+    content_type: application/json
+    bytes: 45999
+    note: Identical to /.well-known/mcp/server-card.json above; not saved twice.
+  - path: /.well-known/agent-handshake
+    status: 200
+    content_type: application/json
+    bytes: 5450
+    file: babyblueviper-com-agent-handshake.json
+    note: >-
+      Provider-specific "invinoveritas.verification.v1" capability offer: verifier pubkey, the free
+      /verify-proof endpoint, two independent verifier nodes, a ready-to-verify sample proof, and pointers to
+      the ERC drafts the provider co-authors. Every API response also carries it as an
+      x-verification-handshake response header.
+  - path: /.well-known/jwks.json
+    status: 404
+  - path: /.well-known/babyblueviper-com-negative-control-7f3ab91c.json
+    status: 404
+    content_type: application/json
+    bytes: 22
+    note: Negative control — a path that cannot exist returns the host's real JSON 404, so the 200s above are served documents.
+- host: babyblueviper.com
+  role: Registrable domain (Website pointer). 301s every path to https://www.babyblueviper.com/ — serves nothing of its own.
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+    note: Redirects to www; the www target 404s (see next host).
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+  - path: /llms.txt
+    status: 301
+  - path: /apis.json
+    status: 301
+- host: www.babyblueviper.com
+  role: Website — a Substack publication ("Baby Blue Viper", x-served-by Substack, fronted by Cloudflare). Statuses below are after following the apex 301.
+  platform: substack
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    bytes: 699
+    file: babyblueviper-com-www-substack-oauth-authorization-server.json
+    platform_served: true
+    note: >-
+      issuer https://substack.com, token/registration endpoints on mcp.substack.com, scopes openid/profile/
+      email/notes.read/mcp:read. This is Substack's own authorization-server metadata, served on every
+      publication's custom domain; it is not authored or operated by invinoveritas and should not be read as
+      the provider's OAuth surface (that one is on api.babyblueviper.com above).
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /apis.json
+    status: 404
+    note: Substack returns its 404 as a 319KB HTML page here (text/html) — a soft body but a hard 404 status.
+  - path: /apis.yml
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /.well-known/babyblueviper-com-negative-control-7f3ab91c.json
+    status: 404
+    note: Negative control on the Substack host — real 404 (46-byte JSON), so the one 200 above is a served (platform) document.

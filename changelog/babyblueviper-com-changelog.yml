@@ -1,0 +1,54 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://github.com/babyblueviper1/invinoveritas (releases API, README "v1.11.0 Highlights", the Cursor plugin
+  CHANGELOG.md), https://api.babyblueviper.com/llms.txt (dated retirement note), https://api.babyblueviper.com/roadmap
+  (a 420KB text/markdown session log with "Last updated" / "CLOSED <date>" stamps), the PyPI release history and
+  the npm deprecation notice — read 2026-09-19.
+docs: https://api.babyblueviper.com/roadmap
+description: >-
+  There is no single dated API changelog. Change history is spread across a public roadmap that doubles as a
+  session-by-session engineering log (the closest thing to a changelog, but not structured by version), a
+  README highlights table pinned to v1.11.0 while the served version is 1.13.0, one GitHub release (v1.0.0,
+  which post-dates the 1.x API versions and tracks the repository rather than the API), a plugin-level
+  CHANGELOG.md, and release dates on the package registries. The entries below are the dated facts that could
+  be pinned to a source; the live roadmap is the source of truth.
+versioning:
+  scheme: product semver (1.13.0) shared by the API, SDK and MCP server; the GitHub release tag (v1.0.0) is independent of it
+  current: 1.13.0
+  breaking_change_policy: none published
+entries:
+- version: 1.13.0
+  date: '2026-08-05'
+  date_basis: PyPI release date of invinoveritas 1.13.0 (the API, agent card and MCP serverInfo carry the same version on 2026-09-19); the API cut may be earlier
+  breaking: unknown
+  highlights: [Current served version across OpenAPI info.version, /health, the agent card and MCP serverInfo]
+- version: retirement
+  date: '2026-09-06'
+  breaking: true
+  highlights: ['Edge-idea bounty programme retired; /bounty/submit now returns HTTP 410 (llms.txt "Residence" section)']
+- version: v1.0.0 (GitHub release)
+  date: '2026-09-03'
+  breaking: false
+  highlights: ['First and only GitHub release/tag on babyblueviper1/invinoveritas — a repository milestone, not the API version']
+  url: https://github.com/babyblueviper1/invinoveritas/releases/tag/v1.0.0
+- version: cursor-plugin 1.0.0
+  date: null
+  breaking: false
+  highlights: ['Cursor plugin initial release: invinoveritas MCP server entry pointing at https://api.babyblueviper.com/mcp, IVV_API_KEY variable, pre-action-review skill (integrations/cursor-plugin/CHANGELOG.md)']
+- version: 1.11.0
+  date: null
+  breaking: false
+  highlights: ['README "v1.11.0 Highlights" table: /review with artifact_type=onchain_action, /witness, /verify-proof free handshake, Nostr + Bitcoin (OpenTimestamps) anchoring of every ledger entry, invinoveritas-recompute-ledger and invinoveritas-compliance-export CLIs, /validate EdgeProof, payments in sats / USDC (x402 on Base) / XRP / card, OpenAPI at /openapi.json and /.well-known/openapi.json']
+- version: platform sunset
+  date: '2026-05-17'
+  breaking: true
+  highlights: ['Roadmap Session 84: "Platform moat audit + 11-endpoint sunset SHIPPED" with a SUNSET_LOG and a 30/90-day deletion watch']
+- version: invinoveritas-mcp 1.6.2 (npm)
+  date: '2026-05-06'
+  breaking: true
+  highlights: ['Last publish of the stdio MCP package; registry deprecation notice directs clients to the remote endpoint https://api.babyblueviper.com/mcp']
+recent_window_note: >-
+  The roadmap's newest dated stamps seen on 2026-09-19 were "Last updated: 2026-05-26 (Session 126)" near the
+  top and session entries through Session 210+ referenced in /stats notes; it is written for the operator, not
+  as a consumer-facing changelog, so per-version breaking/addition tagging is not possible from it.

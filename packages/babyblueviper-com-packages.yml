@@ -1,0 +1,179 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  registry.npmjs.org (maintainer babyblueviper1) and pypi.org JSON metadata, cross-checked against
+  github.com/babyblueviper1/invinoveritas (sdk/ts, integrations/*/package.json, integrations/verify-proof/python)
+  and the README "SDK" section. Versions and publish dates were read from the registry metadata endpoints on
+  2026-09-19, not from prose.
+description: >-
+  First-party client libraries, verifiers and framework connectors for invinoveritas. All npm packages are
+  published by the single maintainer babyblueviper1 with author "invinoveritas" and repository
+  github.com/babyblueviper1/invinoveritas (or a sibling repo of the same account), so official is true
+  throughout. The core SDK is the PyPI package "invinoveritas" (InvinoClient); the verifier
+  "invinoveritas-verify" ships on both npm and PyPI and is the zero-dependency offline proof checker (the PyPI
+  build also installs the three CLIs catalogued in cli/). The remaining npm packages are framework adapters
+  (n8n, Flowise, Activepieces, elizaOS, GOAT, Coinbase AgentKit, Virtuals ACP, OpenClaw, MetaMask Snap). The old
+  stdio MCP package invinoveritas-mcp is deprecated on npm in favour of the remote endpoint and is listed for
+  the record only.
+packages:
+- language: python
+  registry: pypi
+  name: invinoveritas
+  url: https://pypi.org/project/invinoveritas/
+  source: https://github.com/babyblueviper1/invinoveritas
+  install: pip install invinoveritas
+  official: true
+  kind: sdk
+  version: 1.13.0
+  published: '2026-08-05'
+  note: The primary SDK (InvinoClient — reason/decide/review). Project URLs point at github.com/babyblueviper1/invinoveritas-sdk, which 301s to the main repository.
+- language: python
+  registry: pypi
+  name: invinoveritas-verify
+  url: https://pypi.org/project/invinoveritas-verify/
+  source: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/verify-proof/python
+  install: pip install invinoveritas-verify
+  official: true
+  kind: verifier + cli
+  version: 0.4.0
+  published: '2026-07-02'
+  note: Zero-dependency BIP-340/NIP-01 proof verifier; installs the invinoveritas-verify, invinoveritas-recompute-ledger and invinoveritas-compliance-export commands (see cli/).
+- language: javascript
+  registry: npm
+  name: invinoveritas-verify
+  url: https://www.npmjs.com/package/invinoveritas-verify
+  source: https://github.com/babyblueviper1/invinoveritas/tree/main/sdk/ts
+  install: npm install invinoveritas-verify
+  official: true
+  kind: verifier
+  version: 1.1.1
+  published: '2026-08-13'
+  note: ESM, Node >=18; verifyAttachedProof (online) and verifyProofLocal (offline) plus verify-before-pay helpers for x402.
+- language: javascript
+  registry: npm
+  name: n8n-nodes-invinoveritas
+  url: https://www.npmjs.com/package/n8n-nodes-invinoveritas
+  source: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/n8n/n8n-nodes-invinoveritas
+  install: npm install n8n-nodes-invinoveritas
+  official: true
+  kind: connector (n8n)
+  version: 0.7.4
+  published: '2026-07-30'
+- language: javascript
+  registry: npm
+  name: flowise-invinoveritas
+  url: https://www.npmjs.com/package/flowise-invinoveritas
+  source: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/flowise/flowise-invinoveritas
+  install: npm install flowise-invinoveritas
+  official: true
+  kind: connector (Flowise)
+  version: 0.8.2
+  published: '2026-07-29'
+- language: javascript
+  registry: npm
+  name: invinoveritas-activepieces-piece
+  url: https://www.npmjs.com/package/invinoveritas-activepieces-piece
+  source: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/activepieces/invinoveritas
+  install: npm install invinoveritas-activepieces-piece
+  official: true
+  kind: connector (Activepieces)
+  version: 0.7.2
+  published: '2026-07-29'
+- language: javascript
+  registry: npm
+  name: elizaos-plugin-invinoveritas
+  url: https://www.npmjs.com/package/elizaos-plugin-invinoveritas
+  source: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/elizaos
+  install: npm install elizaos-plugin-invinoveritas
+  official: true
+  kind: plugin (elizaOS)
+  version: 0.2.3
+  published: '2026-08-13'
+- language: javascript
+  registry: npm
+  name: invinoveritas-goat
+  url: https://www.npmjs.com/package/invinoveritas-goat
+  source: https://github.com/babyblueviper1/invinoveritas
+  install: npm install invinoveritas-goat
+  official: true
+  kind: plugin (GOAT SDK)
+  version: 0.1.1
+  published: '2026-06-23'
+- language: javascript
+  registry: npm
+  name: invinoveritas-agentkit
+  url: https://www.npmjs.com/package/invinoveritas-agentkit
+  source: https://github.com/babyblueviper1/invinoveritas
+  install: npm install invinoveritas-agentkit
+  official: true
+  kind: action provider (Coinbase AgentKit)
+  version: 0.1.1
+  published: '2026-06-23'
+- language: javascript
+  registry: npm
+  name: invinoveritas-acp
+  url: https://www.npmjs.com/package/invinoveritas-acp
+  source: https://github.com/babyblueviper1/invinoveritas
+  install: npm install invinoveritas-acp
+  official: true
+  kind: server (Virtuals ACP)
+  version: 0.1.1
+  published: '2026-06-23'
+- language: javascript
+  registry: npm
+  name: invinoveritas-openclaw-bundle
+  url: https://www.npmjs.com/package/invinoveritas-openclaw-bundle
+  source: https://github.com/babyblueviper1/invinoveritas
+  install: npm install invinoveritas-openclaw-bundle
+  official: true
+  kind: bundle (OpenClaw)
+  version: 1.12.0
+  published: '2026-07-02'
+- language: typescript
+  registry: npm
+  name: invinoveritas-metamask-snap
+  url: https://www.npmjs.com/package/invinoveritas-metamask-snap
+  source: https://github.com/babyblueviper1/invinoveritas-metamask-snap
+  install: npm install invinoveritas-metamask-snap
+  official: true
+  kind: MetaMask Snap
+  version: 0.1.1
+  published: '2026-07-01'
+- language: javascript
+  registry: npm
+  name: invinoveritas-governance-gate-core
+  url: https://www.npmjs.com/package/invinoveritas-governance-gate-core
+  source: https://github.com/babyblueviper1/invinoveritas-integrations
+  install: npm install invinoveritas-governance-gate-core
+  official: true
+  kind: library (framework-agnostic pre-execution gate)
+  version: 0.1.0
+  published: '2026-06-27'
+  note: Also published as the scoped alias @invinoveritas/governance-gate-core 0.1.0 (2026-06-27), which re-exports this package.
+- language: javascript
+  registry: npm
+  name: invinoveritas-mcp
+  url: https://www.npmjs.com/package/invinoveritas-mcp
+  source: https://github.com/babyblueviper1/invinoveritas-mcp
+  install: null
+  official: true
+  kind: stdio MCP server (DEPRECATED)
+  version: 1.6.2
+  published: '2026-05-06'
+  deprecated: true
+  note: 'Registry deprecation notice: "Use the remote endpoint at https://api.babyblueviper.com/mcp directly — add it to your MCP client config. No npm install needed." Listed for the record; not counted as a live SDK.'
+- language: github-action
+  registry: github
+  name: babyblueviper1/verify-proof-action
+  url: https://github.com/babyblueviper1/verify-proof-action
+  source: https://github.com/babyblueviper1/verify-proof-action
+  install: 'uses: babyblueviper1/verify-proof-action'
+  official: true
+  kind: GitHub Action (offline proof verification)
+  version: null
+  published: null
+  note: No registry metadata endpoint for a GitHub Action; the repository was last pushed 2026-08-01 per the GitHub API. Version left null rather than guessed.
+sdk_count: 3
+sdk_note: >-
+  Counted as SDKs (client libraries a developer imports to call the API): pypi invinoveritas, and the two
+  invinoveritas-verify builds (npm, pypi). The framework connectors are integrations rather than SDKs.

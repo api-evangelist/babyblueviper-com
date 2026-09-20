@@ -1,0 +1,83 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/babyblueviper-com-openapi.yml (4xx responses) enriched with live unauthenticated responses observed on 2026-09-19 and the llms.txt / guide text
+format: fastapi-detail
+description: >-
+  The contract declares only two non-2xx responses — 422 Validation Error on 103 operations (FastAPI's
+  HTTPValidationError, a `detail` array of {loc, msg, type}) and 402 Payment Required on the 20 x402-priced
+  operations — and no application/problem+json anywhere, so RFC 9457 does not apply. Live probes showed the
+  real error envelope is FastAPI's {"detail": <string | object | array>}: 402 carries a rich object with the
+  amount, a recommended registration path and an L402 invoice; 401 and 404 carry a string. The 402 is the
+  important one for an agent: it is not an error to retry blindly but a payment challenge with two machine
+  paths (L402 header or x402 X-PAYMENT).
+envelope:
+  shape: '{"detail": ...}'
+  validation: '{"detail": [{"type": "missing", "loc": ["query", "api_key"], "msg": "Field required", "input": null}]}'
+  payment: '{"detail": {"message": "Payment Required", "amount_sats": <n>, "recommended_path": "Bearer token (free /register)", "fastest_route": {...}, "pay_per_call_alternative": {"method": "L402", "payment_hash": ..., "invoice": "lnbc..."}}}'
+  x402: '{"x402Version": 2, "error": "X-PAYMENT header required", "resource": {url, description, mimeType, serviceName, tags}, "accepts": [...]}'
+problems:
+- status: 402
+  title: Payment Required
+  type: null
+  description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+  in_contract: true
+  operations: 20 (every operation carrying x-payment-info — reason, decision, review, review/external, agent-economy-brief, audit/agent-readiness, x402/seller-intel, regime, signals/full, markets/act, residence/act, web-act, browse, execute, prove, witness, validate, memory/store, memory/get, messages/post)
+  observed:
+  - {op: 'POST /reason', headers: 'WWW-Authenticate: L402 token=..., invoice=lnbc...; Retry-After: 15', body: 'detail.amount_sats 130, fastest_route (register -> Bearer, first 5 calls free), pay_per_call_alternative L402'}
+  - {op: 'POST /review', headers: 'WWW-Authenticate: L402; Retry-After: 15', body: 'detail.amount_sats 260'}
+  - {op: 'GET /regime', headers: 'x-payment-scheme: x402; payment-required: <base64 x402 v2 challenge>; Retry-After: 15', body: 'x402Version 2, accepts[] eip155:8453 USDC'}
+  remediation: Register (POST /register) and send Authorization Bearer <api_key>; or pay the bolt11 invoice and retry with Authorization L402 <payment_hash>:<preimage>; or settle the x402 challenge and retry with X-PAYMENT. Do not treat as a transient failure.
+  source_operation: openapi/babyblueviper-com-openapi.yml#reason_reason_post
+- status: 422
+  title: Validation Error
+  type: null
+  schema: '#/components/schemas/HTTPValidationError -> detail[] of ValidationError {loc[], msg, type}'
+  in_contract: true
+  operations: 103
+  observed:
+  - {op: 'GET /balance (no api_key)', body: '{"detail":[{"type":"missing","loc":["query","api_key"],"msg":"Field required","input":null}]}'}
+  remediation: Fix the named field in detail[].loc; the error is deterministic and not retryable as-is.
+  source_operation: openapi/babyblueviper-com-openapi.yml#get_balance_balance_get
+- status: 401
+  title: Unauthorized
+  type: null
+  in_contract: false
+  observed:
+  - {op: 'POST /memory/store (no credentials)', body: '{"detail":"Missing or invalid Bearer token (or send X-Payment-Scheme: x402 for USDC payment)"}'}
+  remediation: Send a valid Bearer api_key, or opt into x402 with X-Payment-Scheme x402 to receive a 402 challenge instead.
+  note: Not declared in the OpenAPI — the contract lists only 200/402/422 — so an agent reading the spec alone will not expect it.
+- status: 404
+  title: Not Found
+  type: null
+  in_contract: false
+  observed:
+  - {op: 'GET /price/review', body: '{"detail":"Unknown endpoint. Use ''reason'', ''decide'', ''mcp'', or ''memory''."}'}
+  - {op: 'GET /.well-known/api-catalog', body: '{"detail":"Not Found"}'}
+  remediation: Check the path/identifier; the body names the accepted values where there is an enumerated set.
+- status: 405
+  title: Method Not Allowed
+  type: null
+  in_contract: false
+  observed:
+  - {op: 'GET /verify-proof', body: '{"detail":"Method Not Allowed"}', note: 'POST-only endpoints (verify-proof, oauth/register) answer 405 to GET'}
+- status: 410
+  title: Gone
+  type: null
+  in_contract: false
+  documented: llms.txt "Residence" section — "/bounty/submit now returns 410" (the Edge-idea bounty programme was retired 2026-09-06)
+  remediation: The endpoint is permanently retired; there is no replacement.
+- status: 429
+  title: Too Many Requests
+  type: null
+  in_contract: false
+  documented: false
+  note: /health advertises features.rate_limiting true and the execute tier table mentions rate limits, but no 429 semantics, limits or headers are published anywhere (see rate-limits/). Recorded as an unknown, not as an absence of throttling.
+- status: 5xx
+  title: Server errors
+  in_contract: false
+  documented: false
+  note: No 5xx responses are declared or documented.
+gaps:
+- The contract declares no 400, 401, 403, 404, 409, 429 or 5xx responses; 200 + 422 (+ 402 on 20 ops) is the whole declared surface.
+- Both duplicate operationIds (register_account_register_post, topup_account_topup_post — each used for a GET and a POST) sit on account endpoints an agent hits first.
+- MCP tool errors were not exercised (no paid call was made); the MCP layer returns JSON-RPC results over text/event-stream.

@@ -1,0 +1,42 @@
+generated: '2026-09-19'
+method: searched
+source: https://github.com/babyblueviper1/invinoveritas/blob/main/integrations/verify-proof/python/pyproject.toml
+docs: https://github.com/babyblueviper1/invinoveritas/blob/main/integrations/verify-proof/python/README.md
+clis:
+- name: invinoveritas-verify
+  purpose: >-
+    Offline, zero-dependency verification of invinoveritas verdict proofs: check one signed proof, recompute
+    the whole public ledger from raw relay bytes, or assemble and verify a regulator-recomputable compliance
+    bundle — without trusting the API. Ships in the PyPI package invinoveritas-verify (see packages/).
+  language: Python (>=3.8, stdlib only — BIP-340 schnorr verification in pure hashlib)
+  repository: https://github.com/babyblueviper1/invinoveritas/tree/main/integrations/verify-proof/python
+  package: invinoveritas-verify (PyPI 0.4.0, 2026-07-02)
+  install:
+  - method: pip
+    steps: [pip install invinoveritas-verify]
+  commands:
+  - group: verify
+    commands:
+    - name: invinoveritas-verify
+      entry_point: invinoveritas_verify:_main
+      description: Verify a single signed proof (the `event` object returned by POST /review {sign:true} or POST /prove) — recompute the NIP-01 event id and check the schnorr signature against the published verifier key.
+  - group: ledger
+    commands:
+    - name: invinoveritas-recompute-ledger
+      entry_point: recompute_ledger:main
+      description: Recompute the WHOLE public /ledger from raw relay bytes and report every entry that verifies (or fails).
+  - group: compliance
+    commands:
+    - name: invinoveritas-compliance-export
+      entry_point: compliance_export:main
+      description: Assemble the signed verdicts that gated an agent into a compliance bundle, and verify a bundle (--verify) by re-checking every signature and that no displayed field was altered.
+      examples:
+      - invinoveritas-compliance-export ./my_proofs --subject "AcmeBot prod" --out bundle.json
+      - invinoveritas-compliance-export --verify bundle.json
+  key_flows:
+  - Verify a counterparty's attached proof before acting on its output (the verification-handshake skill).
+  - Recompute the provider's own track record instead of trusting a score.
+  - Produce post-hoc oversight evidence (the README frames this against EU AI Act Art. 12 logging).
+  note: >-
+    This is the only first-party command-line surface found. The SDK package (pypi invinoveritas) is a library
+    without a console script, and the deprecated npm invinoveritas-mcp was a stdio server, not a CLI.

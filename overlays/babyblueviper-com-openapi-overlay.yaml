@@ -1,0 +1,100 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for invinoveritas
+  version: 1.0.0
+  description: Our additions layered over the provider-hosted OpenAPI 3.1.0 (https://api.babyblueviper.com/openapi.json,
+    saved verbatim in openapi/_original/). The original is never mutated. Each action records where the added fact
+    came from.
+extends: openapi/babyblueviper-com-openapi.yml
+x-generated: '2026-09-19'
+x-method: generated
+actions:
+- target: $
+  description: 'The spec has no servers[]; the base is stated in llms.txt ("Base URL: https://api.babyblueviper.com"),
+    the agent card provider.url and info.contact.url.'
+  update:
+    servers:
+    - url: https://api.babyblueviper.com
+      description: Production (the only host)
+- target: $.components
+  description: The spec declares no securitySchemes; these are the four documented ways in (authentication/babyblueviper-com-authentication.yml),
+    taken from the agent card securitySchemes, the payment guide and RFC 8414 metadata.
+  update:
+    securitySchemes:
+      bearer:
+        type: http
+        scheme: bearer
+        description: 'api_key (ivv_ prefix) from POST /register; Authorization: Bearer <api_key>'
+      l402:
+        type: apiKey
+        in: header
+        name: Authorization
+        description: 'L402 <payment_hash>:<preimage> after paying the bolt11 invoice from a 402 WWW-Authenticate:
+          L402 challenge'
+      x402:
+        type: apiKey
+        in: header
+        name: X-PAYMENT
+        description: 'x402 v2 payment payload (USDC on Base, eip155:8453) answering the payment-required 402 challenge;
+          opt in with X-Payment-Scheme: x402'
+      oauth2_mcp:
+        type: oauth2
+        description: OAuth 2.1 for the MCP resource only (RFC 8414 metadata on this host)
+        flows:
+          authorizationCode:
+            authorizationUrl: https://api.babyblueviper.com/oauth/authorize
+            tokenUrl: https://api.babyblueviper.com/oauth/token
+            refreshUrl: https://api.babyblueviper.com/oauth/token
+            scopes:
+              mcp: Access the MCP server
+- target: $.info
+  update:
+    x-apievangelist:
+      profile: https://github.com/api-evangelist/babyblueviper-com
+      base_url_source: llms.txt + agent card
+      mcp: https://api.babyblueviper.com/mcp
+      a2a: https://api.babyblueviper.com/.well-known/agent-card.json
+      llms_txt: https://api.babyblueviper.com/llms.txt
+      duplicate_operation_ids:
+      - register_account_register_post (GET and POST /register)
+      - topup_account_topup_post (GET and POST /topup)
+      declared_error_codes:
+      - 402 (20 ops)
+      - 422 (103 ops)
+      undeclared_observed:
+      - '401'
+      - '404'
+      - '405'
+      - '410'
+- target: $.paths['/register'].get
+  description: Duplicate operationId with POST /register in the original; a unique id so tooling can address the
+    GET.
+  update:
+    operationId: register_account_register_get
+    x-apievangelist-note: operationId disambiguated by API Evangelist; original was register_account_register_post
+- target: $.paths['/topup'].get
+  description: Duplicate operationId with POST /topup in the original.
+  update:
+    operationId: topup_account_topup_get
+    x-apievangelist-note: operationId disambiguated by API Evangelist; original was topup_account_topup_post
+- target: $.paths['/review'].post
+  update:
+    x-apievangelist-dry-run: ReviewRequest.dry_run=true previews artifact_hash + decision_ref without signing or
+      committing anything
+    x-apievangelist-reversibility: none — a signed proof (sign=true) is a permanent Nostr event by design
+    x-apievangelist-observed-402: 'WWW-Authenticate: L402 …; Retry-After: 15; detail.amount_sats 260'
+- target: $.paths['/verify-proof'].post
+  update:
+    x-apievangelist-free: true
+    x-apievangelist-note: Free, unauthenticated; the agent-to-agent trust handshake. GET answers 405.
+- target: $.paths['/memory/store'].post
+  update:
+    x-apievangelist-reversibility: documented — POST /memory/delete at any time at no cost (privacy policy)
+    x-apievangelist-observed-401: 'Missing or invalid Bearer token (or send X-Payment-Scheme: x402 for USDC payment)'
+- target: $.paths['/offers/buy'].post
+  update:
+    x-apievangelist-reversibility: none documented — no refund/void path; verify_before_buy is a pre-purchase check,
+      not a reversal
+- target: $.paths['/ledger/submit'].post
+  update:
+    x-apievangelist-reversibility: none — publishes immediately and is Nostr + Bitcoin anchored

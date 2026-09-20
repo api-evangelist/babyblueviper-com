@@ -1,0 +1,47 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Response headers observed on https://api.babyblueviper.com (POST /reason, POST /review, GET /regime, GET
+  /signals/full, GET /health x15 burst, GET /offers/list, POST /verify-proof) on 2026-09-19, plus the docs
+  (llms.txt, /health features, /prices execution_tiers) searched for a published limit.
+limit_count: 0
+description: >-
+  invinoveritas publishes no request-rate limits. GET /health advertises features.rate_limiting: true and the
+  /execute pricing text says jobs have "rate limits", but no number, window, scope or 429 semantics appear
+  anywhere — llms.txt, the guide, the OpenAPI, the MCP tool descriptions or the roadmap (which mentions only
+  internal "1/UTC-day" throttles on operator agents). What IS published is resource ceilings per execution
+  tier (timeout, RAM, vCPU, browser actions) and per-call prices, which bound spend rather than request rate.
+  The only runtime header seen was Retry-After: 15 on every 402 payment challenge — a re-present-after-paying
+  hint, not a throttle signal. A 15-request burst on /health returned 15 x 200 with no rate-limit headers.
+  Recorded as an honest zero from live responses.
+limits: []
+resource_ceilings_published:
+  note: Not rate limits — per-job execution ceilings from /prices execution_tiers and llms.txt "Paid Execution Tiers"; recorded here because they are the only quantitative limits the provider publishes.
+  tiers:
+  - {tier: Tier 0 (Starter), timeout_seconds: 30, memory_mb: 512, vcpu: 0.5, max_browser_actions: 3}
+  - {tier: Tier 1 (Standard), timeout_seconds: 60, memory_mb: 1024, vcpu: 1.0, max_browser_actions: 8}
+  - {tier: Tier 2 (Premium), timeout_seconds: 300, memory_mb: 4096, vcpu: 2.0, max_browser_actions: 20}
+  - {tier: Tier 3 (Enterprise), timeout_seconds: 600, memory_mb: 5120, vcpu: 4.0, access: per-agent grant}
+  free_calls: 'a fresh Bearer key gets a small free allowance ("first 5 calls FREE" in the live 402 body); after that every paid call debits sats'
+response_headers:
+  observed: [Retry-After]
+  observed_note: Retry-After 15 appeared only on 402 Payment Required responses (L402 and x402), never on a 200.
+  checked_for: [RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After]
+  note: None of the RateLimit-* / X-RateLimit-* headers appeared on any response. An agent gets no pacing signal before it is throttled.
+exhaustion_status: null
+exhaustion_note: 429 is neither declared in the OpenAPI nor documented; the contract declares only 200, 402 and 422.
+enforcement:
+  documented: false
+  inferred: >-
+    Throttling almost certainly exists (nginx front, /health rate_limiting true, sandbox queueing described
+    for /execute) but is unpublished and unsignalled. The economic limiter is the sats balance: every paid
+    call is metered, so runaway loops are bounded by funds rather than by a request quota.
+x-evidence:
+  fetched: '2026-09-19'
+  probes:
+  - {url: 'https://api.babyblueviper.com/reason', method: POST, status: 402, rate_limit_headers: 'Retry-After: 15'}
+  - {url: 'https://api.babyblueviper.com/review', method: POST, status: 402, rate_limit_headers: 'Retry-After: 15'}
+  - {url: 'https://api.babyblueviper.com/regime', method: GET, status: 402, rate_limit_headers: 'Retry-After: 15'}
+  - {url: 'https://api.babyblueviper.com/health', method: 'GET x15 burst', status: 200, rate_limit_headers: none}
+  - {url: 'https://api.babyblueviper.com/offers/list', method: GET, status: 200, rate_limit_headers: none}
+  - {url: 'https://api.babyblueviper.com/verify-proof', method: POST, status: 200, rate_limit_headers: none}

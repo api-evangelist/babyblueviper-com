@@ -1,0 +1,114 @@
+generated: '2026-09-19'
+method: probed
+source: https://api.babyblueviper.com/billing/plans (machine-readable, application/json) and https://api.babyblueviper.com/prices (per-call sats) — read 2026-09-19
+docs:
+- https://api.babyblueviper.com/llms.txt#pricing
+- https://api.babyblueviper.com/discovery/x402
+- https://api.babyblueviper.com/guide
+plan_count: 6
+currency: USD (card subscriptions); sats (per-call, quoted live at /prices); USDC (x402, quoted in the 402 and /discovery/x402)
+model: >-
+  Two layers. (1) Pay-per-call in sats from a prefunded Bearer balance (or L402 / x402 per call), with a
+  1.3x "agent multiplier" on some tools, a 50-sat minimum, dynamic pricing flagged true, and a free
+  allowance on a fresh key. (2) Six monthly card plans returned by GET /billing/plans (five flat, one per
+  seat) that buy ongoing governance review + signed proofs + audits, checked out through Stripe via POST
+  /billing/checkout {plan, email, seats?}. There is no free tier as such; registration is free and the first
+  few paid calls are free.
+plans:
+- id: starter
+  name: invinoveritas Governance — Starter
+  price: 29.0
+  currency: USD
+  billing_period: month
+  per_seat: false
+  billing_note: flat, quantity fixed at 1
+  includes: Pre-trade governance review and recomputable signed proofs for ONE money-touching agent; capital-scale-aware verdicts; audit-ready governance record; risk-regime feed
+  quota: not stated
+  overage: not stated
+- id: pro
+  name: invinoveritas Governance — Pro
+  price: 149.0
+  currency: USD
+  billing_period: month
+  per_seat: false
+  billing_note: flat, quantity fixed at 1
+  includes: Governance + signed proofs for MULTIPLE agents; high-volume pre-trade review; full audit-trail export; risk-regime feed; proof anchoring
+  quota: not stated
+  overage: not stated
+- id: audit
+  name: invinoveritas Agent Trust Audit
+  price: 399.0
+  currency: USD
+  billing_period: month
+  per_seat: false
+  billing_note: flat, quantity fixed at 1
+  includes: One-off style deliverable billed as a plan — an independent signed verdict on whether an agent is safe to deploy, ranked-fix report, signed proof; "Delivered in 3–5 business days"
+- id: audit_call
+  name: invinoveritas Agent Trust Audit + Review Call
+  price: 1500.0
+  currency: USD
+  billing_period: month
+  per_seat: false
+  billing_note: flat, quantity fixed at 1
+  includes: Everything in the audit plus a 45-minute walkthrough and a prioritised remediation checklist
+- id: advisory
+  name: invinoveritas Governance — Advisory
+  price: 4000.0
+  currency: USD
+  billing_period: month
+  per_seat: false
+  billing_note: flat, quantity fixed at 1
+  includes: Verification gates wired into the customer's pipeline, tailored governance framework, monthly re-audit with signed proof of standing
+- id: gate
+  name: invinoveritas Review Gate — per seat
+  price: 49.0
+  currency: USD
+  billing_period: month
+  per_seat: true
+  billing_note: "per seat/agent, POST {plan: 'gate', seats: N}"
+  includes: /review verdicts wired into the pipeline with a signed proof on every gated action
+pay_per_call:
+  source: https://api.babyblueviper.com/prices
+  unit: sats
+  dynamic_pricing: true
+  agent_multiplier: 1.3
+  minimum_price_sats: 50
+  free_allowance: "first calls on a new key are free (live 402 body: 'first 5 calls FREE, no funding needed'; /review responses report free_calls_remaining)"
+  prices:
+  - {tool: review, sats_base: 200, sats_agent: 260, usd_x402: '0.210812'}
+  - {tool: reason, sats_base: 100, sats_agent: 130, usd_x402: '0.105652'}
+  - {tool: decision, sats_base: 180, sats_agent: 234, usd_x402: '0.189731'}
+  - {tool: review/external, usd_x402: '0.948654'}
+  - {tool: regime, sats: 30}
+  - {tool: signals (full), sats: 40, note: BTC teaser free at GET /signals}
+  - {tool: markets_act, sats: 105}
+  - {tool: agent_economy_brief, sats_base: 65, sats_agent: 84}
+  - {tool: audit_agent_readiness, sats_base: 1100, sats_agent: 1430}
+  - {tool: seller_intel, sats_base: 1500, sats_agent: 1950}
+  - {tool: memory_store, sats_per_kb: 2, minimum: 50}
+  - {tool: memory_get, sats_per_kb: 1, minimum: 20}
+  - {tool: memory_list / memory_search / memory_delete, sats: 0}
+  - {tool: prove, sats: 100}
+  - {tool: witness, sats: 100}
+  - {tool: validate, sats: 300}
+  - {tool: ledger_submit, sats_base: 150, sats_agent: 195}
+  - {tool: conformance_certify, sats_base: 250, sats_agent: 325}
+  - {tool: messages_post, sats_base: 200, sats_agent: 260}
+  - {tool: messages/dm, sats: listing price}
+  - {tool: browse, sats_fetch_text: 500, sats_screenshot: 1500, sats_multi_step: 2000, tiered: true}
+  - {tool: execute, sats: 700, tiered: true}
+  - {tool: verify_proof / ledger / conformance / health / prices / stats, sats: 0}
+  - {tool: withdraw, fee_sats: 100, minimum_sats: 5000, note: first withdrawal free (per /stats platform block)}
+  execution_tiers:
+  - {tier: 0, label: Starter, timeout_seconds: 30, memory_mb: 512, vcpu: 0.5, execute_sats: 700, browse_fetch_text_sats: 500, browse_screenshot_sats: 1500, browse_multi_step_sats: 2000, max_browser_actions: 3, network: none}
+  - {tier: 1, label: Standard, timeout_seconds: 60, memory_mb: 1024, vcpu: 1.0, execute_sats: 700, browse_fetch_text_sats: 500, browse_screenshot_sats: 1500, browse_multi_step_sats: 2000, max_browser_actions: 8, network: none}
+  - {tier: 2, label: Premium, timeout_seconds: 300, memory_mb: 4096, vcpu: 2.0, execute_sats: 2800, browse_fetch_text_sats: 2000, browse_screenshot_sats: 6000, max_browser_actions: 20, network: none}
+  - {tier: 3, label: Enterprise, timeout_seconds: 600, memory_mb: 5120, vcpu: 4.0, execute_sats: 7000, browse_fetch_text_sats: 5000, browse_screenshot_sats: 15000, network: none, access: 'per-agent grant — contact the operator with agent_id, expected daily spend and /browse allowlist_domains'}
+  marketplace: 'sellers keep 95%, platform cut 5%; listing free; minimum listing price 100 sats (/stats platform block, llms.txt)'
+  payment_rails: [Bearer balance (Lightning top-up), L402 per call, x402 USDC on Base (and XRP on XRPL per README), card via Stripe (/billing/topup), 'note: card- and x402-funded sats are spendable but not withdrawable']
+x-evidence:
+  fetched: '2026-09-19'
+  probes:
+  - {url: 'https://api.babyblueviper.com/billing/plans', status: 200, content_type: application/json, plans: 6, configured: true}
+  - {url: 'https://api.babyblueviper.com/prices', status: 200, content_type: application/json}
+  - {url: 'https://api.babyblueviper.com/discovery/x402', status: 200, content_type: application/json, resources: 20}

@@ -1,0 +1,95 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  Read from the served discovery documents and the contract itself on 2026-09-19 — RFC 8414 / RFC 9728
+  metadata, the A2A agent card, the MCP initialize response, the OpenAPI (x-payment-info blocks), the x402
+  discovery catalog and live 402 challenges — plus the provider's own /conformance registry and llms.txt
+  "Standards position" section for the claims it makes about itself. Each entry says where the evidence is.
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/babyblueviper-com-openapi.yml declares openapi 3.1.0 (served at https://api.babyblueviper.com/openapi.json, FastAPI-generated)
+- id: oauth2
+  conforms: true
+  evidence: RFC 8414 metadata at /.well-known/oauth-authorization-server (authorization_code + refresh_token, PKCE S256) for the MCP resource
+- id: rfc8414-authorization-server-metadata
+  conforms: true
+  evidence: https://api.babyblueviper.com/.well-known/oauth-authorization-server (issuer matches the host)
+- id: rfc9728-protected-resource-metadata
+  conforms: true
+  evidence: https://api.babyblueviper.com/.well-known/oauth-protected-resource — resource https://api.babyblueviper.com/mcp, authorization_servers [https://api.babyblueviper.com]
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint https://api.babyblueviper.com/oauth/register in the RFC 8414 document (GET answers 405, i.e. POST-only endpoint exists)
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported [S256]
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404 with {"error":"not_supported","error_description":"This service does not implement OpenID Connect ..."} — an explicit negative
+- id: mcp-2025-06-18
+  conforms: true
+  evidence: POST /mcp initialize returned protocolVersion 2025-06-18 with tools/resources/prompts capabilities; tools/list returned 31 tools with inputSchema and MCP annotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint)
+- id: mcp-server-card
+  conforms: true
+  evidence: /.well-known/mcp/server-card.json and /.well-known/mcp.json declare $schema https://modelcontextprotocol.io/schemas/server-card/v1.0; server.json in the repo follows the MCP registry schema 2025-12-11
+- id: a2a-0.3.0
+  conforms: true
+  evidence: agent card at /.well-known/agent-card.json (and legacy /.well-known/agent.json), protocolVersion 0.3.0, graded conformant against A2A 1.0.0 in a2a/babyblueviper-com-a2a.yml
+- id: x402-v2
+  conforms: true
+  domain_standard: true
+  evidence: >-
+    The CONTRACT declares it: 20 operations carry x-payment-info {price: {mode: fixed, currency: USD, amount},
+    protocols: [{x402: {}}]} (e.g. POST /reason, POST /review, GET /regime); info.x-guidance documents the
+    402-then-X-PAYMENT flow; GET /discovery/x402 serves an x402Version 2 catalog of 20 resources with
+    accepts[] (scheme exact, network eip155:8453, USDC asset, payTo); live GET /regime answered 402 with
+    x-payment-scheme: x402 and a payment-required header. This is the domain standard of the agent-payments
+    market the provider sells into, declared in the machine-readable contract rather than on a marketing page.
+- id: l402
+  conforms: true
+  evidence: live POST /reason and /review answered 402 with WWW-Authenticate L402 token + bolt11 invoice; llms.txt "Payment methods" documents the L402 retry header
+- id: nostr-nip-01
+  conforms: true
+  evidence: proofs are NIP-01 events (kind 30078) signed with the published verifier key; /.well-known/agent-handshake carries a sample event and the recompute rule; /verify-proof recomputes the event id
+- id: bip-340-schnorr
+  conforms: true
+  evidence: /governance/pubkey sig_scheme "bip340-schnorr (over the NIP-01 event id)"; the invinoveritas-verify packages implement it with no dependencies
+- id: rfc8785-json-canonicalization
+  conforms: true
+  evidence: decision_ref = sha256(JCS({...})) per the ReviewRequest.sign description; /stats standards_adoption cites "canonical-bytes-jcs-v1/v2.json (10 published RFC 8785 vectors)"
+- id: opentimestamps
+  conforms: true
+  evidence: GET /ledger/{entry}/ots and /.well-known/pq-key-binding.ots in the contract; README "Nostr- and Bitcoin-anchored (OpenTimestamps)"
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt is served (contact, policy, expires, canonical) but as a JSON object with content-type application/json, not the RFC 9116 text format
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'errors use the FastAPI {"detail": ...} envelope (see errors/babyblueviper-com-problem-types.yml); no application/problem+json anywhere in the contract'
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog and /.well-known/api-catalog.json both 404
+- id: apis-json
+  conforms: false
+  evidence: /apis.json, /.well-known/apis.json and /apis.yml all 404
+- id: agentskills-skill-md
+  conforms: true
+  evidence: four provider-published SKILL.md files in the agentskills.io format (skills/_index.yml), validated by the provider with skills-ref per integrations/agentskills/README.md
+- id: json-api
+  conforms: false
+  evidence: plain JSON bodies; no application/vnd.api+json
+self_declared:
+  note: >-
+    Claims the provider makes that this pass records but did not independently verify — they are listed so a
+    reader knows they are the provider's assertions, not standards the pipeline observed in the contract.
+  items:
+  - claim: Co-author of Ethereum ERC drafts 8274 (AI Inference Proof Verification Interfaces) and 8299 (WYRIWE input provenance); /stats lists ERCs 8275, 8299, 8274, 8323, 8373
+    where: /.well-known/agent-handshake "standardized", llms.txt "Standards position", /stats standards_adoption
+  - claim: Runs an open pre-action-governance conformance registry (GET /conformance, /conformance.json) grading its own and three external verifiers against five invariants
+    where: https://api.babyblueviper.com/conformance.json (suite_repo github.com/babyblueviper1/preaction-governance-conformance)
+  - claim: Compliance-export bundles are framed as EU AI Act Art. 12 logging evidence
+    where: README, llms.txt, agent card governanceSubscription — a positioning statement, not a certification
+compliance_program:
+  published: false
+  note: No SOC 2 / ISO 27001 / PCI / HIPAA certification or trust center was found (probe-security-programs.py wrote nothing), so no Compliance pointer is emitted. The privacy policy states GDPR legal bases; that is a privacy notice, not a compliance program.

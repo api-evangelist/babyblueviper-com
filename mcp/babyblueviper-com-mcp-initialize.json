@@ -1,0 +1,41 @@
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "protocolVersion": "2025-06-18",
+    "capabilities": {
+      "tools": {
+        "listChanged": true
+      },
+      "resources": {
+        "listChanged": false
+      },
+      "prompts": {
+        "listChanged": false
+      }
+    },
+    "serverInfo": {
+      "name": "invinoveritas",
+      "version": "1.13.0",
+      "description": "Verification layer for autonomous agents — signed pre-action verdicts, recomputable proofs, and a public audit ledger. Free /verify-proof; /review has free try-it calls, then pay-per-use."
+    },
+    "supported_payments": [
+      "Bearer Token (recommended)",
+      "L402 Lightning"
+    ],
+    "get_started": {
+      "summary": "Free Bearer registration. Fund via Lightning top-up, x402 (USDC), or card before paid tools, marketplace, and withdrawals.",
+      "steps": [
+        "1. POST /register — returns api_key (Bearer token).",
+        "2. Authorization: Bearer <api_key> on /mcp calls (or any REST endpoint).",
+        "3. Optional: POST /topup with amount_sats to fund via Lightning (L402-style invoice; required for marketplace buys, withdrawals, and large-volume agents)."
+      ],
+      "curl_register": "curl -s -X POST https://api.babyblueviper.com/register -H 'Content-Type: application/json' -d '{\"label\":\"my-agent\"}'",
+      "curl_first_paid_call": "curl -s -X POST https://api.babyblueviper.com/review -H 'Authorization: Bearer <api_key>' -H 'Content-Type: application/json' -d '{\"artifact\":\"OPEN long 5x BTC at 65000, 3% of equity\",\"artifact_type\":\"trade\",\"sign\":true}'",
+      "alternative_l402": "Or pay per-call without registering: WWW-Authenticate L402 invoice header on any paid endpoint.",
+      "discovery": "/.well-known/mcp/server-card.json + /.well-known/agent-card.json",
+      "proof_of_flow": "/stats — live platform activity + verification-handshake adoption metrics"
+    },
+    "resultType": "complete"
+  }
+}

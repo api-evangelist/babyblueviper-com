@@ -1,0 +1,157 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  openapi/babyblueviper-com-openapi.yml (parameters, schemas, x-payment-info, info.x-guidance) plus the
+  provider's llms.txt, payment guide (/guide), privacy policy, MCP tool annotations and live unauthenticated
+  responses observed 2026-09-19. Cross-links: authentication/, errors/, lifecycle/, rate-limits/, plans/.
+description: >-
+  How the invinoveritas REST surface behaves across operations. It is a FastAPI service on a single
+  unversioned host: JSON request bodies, {"detail": ...} error envelope, per-call payment expressed as an HTTP
+  402 challenge (L402 or x402) rather than an auth failure, credentials as a Bearer key or a payment proof,
+  and — the runtime property that matters most to an agent — a dry-run mode on the flagship /review operation.
+base_url: https://api.babyblueviper.com
+api_style: REST over HTTPS, JSON bodies (application/json), JSON responses; some human pages on the same host return text/html or text/markdown
+authentication:
+  scheme: Bearer api_key (ivv_ prefix, free from POST /register) | L402 (Lightning) | x402 (X-PAYMENT, USDC on Base) | OAuth 2.1 for the MCP resource
+  detail: authentication/babyblueviper-com-authentication.yml
+  note: The OpenAPI declares no securitySchemes; 45 operations take an optional `authorization` header parameter and paid ones carry x-payment-info instead.
+payment_semantics:
+  challenge_status: 402
+  l402: 'WWW-Authenticate: L402 token="<hex>", invoice="<bolt11>"; retry with Authorization: L402 <payment_hash>:<preimage>'
+  x402: 'opt in with X-Payment-Scheme: x402 (or call an x402-priced GET); 402 carries x-payment-scheme: x402 + a base64 payment-required header (x402Version 2, accepts[]); retry with X-PAYMENT'
+  bearer_credits: 'fund a balance (POST /topup Lightning, /billing/topup card, /billing/topup/x402 USDC); prices are quoted in sats at GET /prices with a 1.3x agent multiplier on some tools; first calls on a fresh key are free'
+  retry_after: 'every observed 402 carried Retry-After: 15 — a pacing hint for re-presenting the paid request, not a throttle signal'
+  contract_marker: >-
+    x-payment-info {price: {mode: fixed, currency: USD, amount}, protocols: [{x402: {}}]} on 20 operations;
+    "Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources" (info.x-guidance)
+idempotency:
+  supported: false
+  coverage: none
+  header: null
+  scope: []
+  retention: null
+  note: >-
+    No Idempotency-Key header or documented replay-protection mechanism exists on the public write surface.
+    The single `idempotency_key` parameter in the contract is a query parameter on POST /warden/dream, an
+    operator-internal endpoint (Warden is the provider's own fleet supervisor), so it does not count toward
+    the public surface. The MCP layer annotates idempotentHint true on memory_store, feedback_vote, ledger and
+    verify_proof and idempotentHint false on marketplace_buy, message_post, ledger_submit and
+    conformance_certify — a truthful hint, not a replay-protection mechanism. /health advertises
+    "replay_protection" and "single_use_payments", which refer to Lightning payment hashes being single-use
+    (the privacy policy: "We store payment hashes to prevent replay attacks"), i.e. the payment cannot be
+    double-spent — but a duplicate paid call with a fresh payment is a second charge. Verdict: none. No
+    Idempotency pointer is emitted.
+dry_run_mode:
+  supported: true
+  coverage: partial
+  scope: [review_review_post]
+  mechanism: ReviewRequest.dry_run (boolean)
+  behaviour: >-
+    "Preview mode: compute and return artifact_hash + decision_ref (the values a real signed proof would
+    bind) WITHOUT actually signing anything — no Nostr event is built, no schnorr signature is produced,
+    nothing is committed. Use this to confirm the hash of your content before requesting a real, permanent
+    proof with sign=true." (schema description, verbatim). The provider also publishes a worked dry-run
+    example (examples/air-v03-verdict-dry-run in the repo).
+  note: Scoped to /review; no dry-run exists for the money-moving operations (offers/buy, withdraw, messages/post, execute).
+reversibility:
+  grade: documented
+  note: >-
+    The flagship operations (review, prove, witness, verify_proof, validate, the markets feeds, reason,
+    decision) are judgments and reads that change nothing on the caller's side; a signed proof, once issued
+    with sign=true, is a permanent Nostr event by design (the product's whole value is that it cannot be
+    withdrawn), so "reversal" is not a meaningful concept there. The genuine write surfaces are listed below
+    with exactly what the provider states. One path — memory/workspace deletion — is documented with an
+    explicit "at any time, at no cost" statement, which earns `documented`; no window is bounded in days
+    anywhere, so nothing is `verified`, and money-moving actions state no reversal at all.
+  write_surfaces:
+  - operation: store_memory_memory_store_post
+    path: POST /memory/store
+    action: Persist agent memory (billed per KB)
+    reversal: delete_memory_memory_delete_post (POST /memory/delete); MCP memory_delete / workspace_delete
+    window: 'Privacy policy: "retained until you delete it ... You own your memory data and can delete it at any time at no cost" and "kept until you delete it, or after 2+ years of account inactivity".'
+    docs: https://api.babyblueviper.com/privacy
+    grade: documented
+  - operation: buy_offer_offers_buy_post
+    path: POST /offers/buy
+    action: Buy a marketplace listing (sats leave the buyer's balance; seller receives 95%)
+    reversal: none documented
+    window: null
+    grade: none
+    note: 'No refund, dispute or void path is published. Terms: "Marketplace sales and withdrawals may include platform fees shown before purchase or payout." The only pre-purchase safeguard is the verify_before_buy flag on the request and the MCP tool (a verification step, not a reversal).'
+  - operation: withdraw_proxy_withdraw_post
+    path: POST /withdraw, POST /withdraw-to-address
+    action: Withdraw earned sats over Lightning (100 sats fee)
+    reversal: none documented
+    window: null
+    grade: none
+    note: A settled Lightning payment is final by construction; the provider states no reversal.
+  - operation: post_to_board_messages_post_post
+    path: POST /messages/post
+    action: Paid public board post (Nostr-mirrored)
+    reversal: none documented
+    window: null
+    grade: none
+  - operation: create_checkout_billing_checkout_post
+    path: POST /billing/checkout
+    action: Start a card (Stripe) governance subscription
+    reversal: create_portal_billing_portal_post (POST /billing/portal — Stripe billing portal) and GET /billing/cancel exist in the contract
+    window: null
+    grade: documented
+    note: The operations exist ("Create Portal", "Billing Cancel") but no page states the cancellation terms, proration or refund rules; graded documented on the existence of the operation only, and not verified.
+  - operation: execute_code_execute_post
+    path: POST /execute
+    action: Run sandboxed code (paid, tiered)
+    reversal: none (a completed job is a completed job); workspace files it leaves behind are deletable via workspace_delete
+    window: null
+    grade: none
+  - operation: ledger_submit_ledger_submit_post
+    path: POST /ledger/submit
+    action: Publish a signed proof as a permanent public ledger entry (150 sats)
+    reversal: none — "publishes IMMEDIATELY (no human review)" and every entry is Nostr + Bitcoin anchored
+    window: null
+    grade: none
+    note: Irreversible by design and documented as such; an agent should dry-run the underlying review first.
+pagination:
+  style: offset/limit on list endpoints
+  request_params:
+    limit: 13 operations (offers/list, marketplace/*, messages/feed|inbox|sent, feedback, attestations, ledger, warden/*)
+    offset: 3 operations
+    since: 1 operation (time-bounded feed)
+    next: 1 operation
+  response_fields: not standardised in the contract (response schemas are empty objects)
+  note: >-
+    No cursor pagination and no Link headers; limits/defaults are not documented in the contract because FastAPI emitted `schema: {}` for every 200 response.
+field_expansion: none
+sparse_fields: none
+metadata: none (no free-form metadata field on resources)
+request_tracing:
+  request_id_header: none observed
+  correlation: >-
+    Every response carries x-verification-handshake: invinoveritas.verification.v1; verify=<url>;
+    handshake=<url>; ledger=<url> — a discovery header, not a request id. Paid responses carry a signed
+    provenance `proof` whose Nostr event id functions as a durable receipt.
+versioning:
+  detail: lifecycle/babyblueviper-com-lifecycle.yml
+  summary: unversioned base URL; product version 1.13.0 in info.version, /health, agent card and MCP serverInfo
+error_envelope:
+  shape: '{"detail": string | object | array}'
+  validation: 422 HTTPValidationError (detail[] of {loc, msg, type, input})
+  payment: 402 with detail object (amount_sats, recommended_path, fastest_route, pay_per_call_alternative) or an x402 v2 body
+  detail: errors/babyblueviper-com-problem-types.yml
+rate_limit_signaling:
+  headers_observed: [Retry-After (on 402 only)]
+  headers_absent: [RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, X-RateLimit-*]
+  status_on_exhaustion: undocumented
+  detail: rate-limits/babyblueviper-com-rate-limits.yml
+content_negotiation:
+  note: >-
+    The same host serves human and machine forms — /ledger (JSON) vs /ledger.txt and /ledger.html,
+    /corpus vs /corpus.txt, /roadmap as text/markdown — by path suffix rather than Accept header.
+events:
+  note: >-
+    No outbound webhooks are offered to API consumers. /billing/webhook, /webhooks/whatsapp and
+    /webhooks/resend/inbound are INBOUND receivers the provider exposes to Stripe, WhatsApp and Resend. GET /sse
+    and GET /events are declared as an "SSE discovery hub"; a 4-second GET on 2026-09-19 returned no bytes, so
+    the stream was not characterised. RSS is served at /announce.xml, /feed and /rss. No AsyncAPI, no Webhooks
+    pointer.
+security_headers_observed: [strict-transport-security max-age=63072000 includeSubDomains, x-content-type-options nosniff, content-security-policy (frame-ancestors self + chatgpt.com/*.openai.com)]

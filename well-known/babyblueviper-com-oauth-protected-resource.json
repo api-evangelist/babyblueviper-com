@@ -1,0 +1,1 @@
+{"resource":"https://api.babyblueviper.com/mcp","authorization_servers":["https://api.babyblueviper.com"],"bearer_methods_supported":["header"],"scopes_supported":["mcp"],"resource_documentation":"https://api.babyblueviper.com/mcp"}
