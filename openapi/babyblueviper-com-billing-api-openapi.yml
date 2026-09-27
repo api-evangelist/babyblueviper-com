@@ -1,0 +1,384 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Billing API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged Billing across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Billing
+paths:
+  /billing/checkout:
+    post:
+      summary: Create Checkout
+      description: Create a hosted Stripe Checkout Session (subscription mode). Returns {url}.
+      operationId: create_checkout_billing_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Billing
+  /billing/portal:
+    post:
+      summary: Create Portal
+      description: 'Stripe customer portal (manage/cancel). Body: {stripe_customer_id}.
+
+
+        REAL SECURITY GAP FOUND + FIXED 2026-08-13 (Grok codebase sweep, independently verified):
+
+        this endpoint has no Bearer/signature/session auth at all -- it used to also accept a bare
+
+        {email}, look the customer up by it, and hand back a live Billing Portal URL (which can
+
+        cancel the subscription, change the card, or change seat count). Anyone who merely knows a
+
+        subscriber''s email got their portal. The email-lookup path is removed: stripe_customer_id
+
+        (a cus_... id) is not publicly knowable the way an email address is, so requiring it directly
+
+        closes the practical attack path without a broader auth redesign. A stricter fix (binding
+
+        this to the caller''s own invinoveritas api_key via client_reference_id) is a real follow-up,
+
+        not done here -- this endpoint may currently have no legitimate self-serve caller passing an
+
+        api_key at all, and guessing that contract wrong risks breaking real subscription management.'
+      operationId: create_portal_billing_portal_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Body
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Billing
+  /billing/status:
+    get:
+      summary: Billing Status
+      description: 'Subscription status for an email (gate check / UI).
+
+
+        LOCALHOST ONLY (2026-08-13 security sweep). This used to be a public
+
+        unauthenticated lookup: anyone who guessed a subscriber email learned
+
+        their plan, status, and period end. No in-repo caller. Bind to
+
+        trusted_client_ip (X-Real-IP), not raw peer — nginx makes every
+
+        proxied request look like 127.0.0.1 on request.client.host.'
+      operationId: billing_status_billing_status_get
+      parameters:
+      - name: email
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Email
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Billing
+  /billing/success:
+    get:
+      summary: Billing Success
+      description: 'Post-checkout landing. Doubles as an IDEMPOTENT credit backstop for card topups.
+
+
+        The webhook is the primary credit path; this handler is a second, independent trigger so
+
+        a missed/failed single webhook delivery can''t strand a paid-but-uncredited topup. Both
+
+        funnel through the status-row-guarded `_credit_card_topup`, so a double-fire credits once.
+
+        Never raises — a landing page must render even if Stripe lookup hiccups.'
+      operationId: billing_success_billing_success_get
+      parameters:
+      - name: session_id
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Session Id
+      - name: next
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Next
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Billing
+  /billing/cancel:
+    get:
+      summary: Billing Cancel
+      description: Post-checkout cancel landing (no charge was made).
+      operationId: billing_cancel_billing_cancel_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Billing
+  /billing/topup:
+    post:
+      summary: Create Topup
+      description: One-time card charge that credits the caller's per-call sats balance (NOT withdrawable).
+      operationId: create_topup_billing_topup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopupBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Billing
+  /billing/topup/x402:
+    post:
+      summary: Topup X402
+      description: 'Fund a per-call sats balance with USDC (x402 on Base). Synchronous settle.
+
+
+        Flow (same shape as any x402 resource): POST without X-PAYMENT -> 402 challenge for the
+
+        requested amount; resend with the signed X-PAYMENT header -> settle -> credit SPENDABLE
+
+        (not withdrawable) sats. Idempotent on the settle tx hash.'
+      operationId: topup_x402_billing_topup_x402_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/X402TopupBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Billing
+  /billing/webhook:
+    post:
+      summary: Stripe Webhook
+      description: Verified, idempotent Stripe webhook — fulfills + tracks subscription lifecycle.
+      operationId: stripe_webhook_billing_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Billing
+  /billing/plans:
+    get:
+      summary: Billing Plans
+      description: 'Live governance-subscription plans (name, price, interval) read from Stripe — the
+
+        SINGLE SOURCE the pricing page + any agent reads, so displayed prices can never drift
+
+        from what Checkout actually charges. Fail-soft: if billing is unconfigured or Stripe is
+
+        unreachable, returns {configured:false, plans:[]} (the page hides the section, no 5xx).'
+      operationId: billing_plans_billing_plans_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Billing
+  /billing/health:
+    get:
+      summary: Billing Health
+      description: Non-secret readiness probe (does NOT leak keys).
+      operationId: billing_health_billing_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - Billing
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CheckoutBody:
+      properties:
+        plan:
+          type: string
+          title: Plan
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        client_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Reference Id
+        seats:
+          type: integer
+          title: Seats
+          default: 1
+      type: object
+      required:
+      - plan
+      title: CheckoutBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    X402TopupBody:
+      properties:
+        api_key:
+          type: string
+          title: Api Key
+        usd_amount:
+          type: number
+          title: Usd Amount
+      type: object
+      required:
+      - api_key
+      - usd_amount
+      title: X402TopupBody
+    TopupBody:
+      properties:
+        api_key:
+          type: string
+          title: Api Key
+        usd_amount:
+          type: number
+          title: Usd Amount
+      type: object
+      required:
+      - api_key
+      - usd_amount
+      title: TopupBody
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

@@ -1,0 +1,909 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Meta API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged meta across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Meta
+  description: Health, pricing, and discovery endpoints
+paths:
+  /verify:
+    get:
+      tags:
+      - Meta
+      summary: Verify Panel
+      description: 'In-browser recompute panel for the PQ key binding (2026-07-30). Closes a real gap flagged
+
+        the same day the binding shipped: /verify-proof and /.well-known/pq-key-binding.json are both
+
+        JSON APIs -- every "verify this yourself" claim meant "curl this," not "click a link and watch
+
+        it recompute in front of you." Two cards now (2026-07-30, same day): ours (ML-DSA-65, NIP-01
+
+        carrier) and trustless-ai/KYA-L4''s (SLH-DSA-SHA2-192s, on-chain OCP-anchored, no carrier) --
+
+        the full symmetric mirror of Merlini''s own panel (ai.verticecriativo.pt/quantum), which already
+
+        verifies ours. Neither side trusts the other''s UI; both independently recompute from raw bytes,
+
+        fetched live (CORS-enabled) from each origin. Uses vendored @noble/post-quantum@0.4.1 +
+
+        @noble/hashes@1.8.0 (static/vendor/, see its README) served from our own origin, not a CDN --
+
+        a "don''t trust, recompute" page shouldn''t itself require trusting a third party. Scope is the
+
+        hash-recompute + PQ companion-signature verify + tamper check, same as the shared
+
+        pq-key-binding-v0 conformance profile''s documented split; the classical signature (Schnorr for
+
+        ours, the on-chain record() sender for KYA-L4) and the anchor-vs-chain read are the separate
+
+        "deeper lane" (POST /verify-proof for ours; read the tx directly for theirs).'
+      operationId: verify_panel_verify_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /wallet-status:
+    get:
+      tags:
+      - Meta
+      summary: Wallet Status
+      description: Current payment options and recommendations.
+      operationId: wallet_status_wallet_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /metrics:
+    get:
+      tags:
+      - Meta
+      summary: Usage Metrics
+      description: Read-only VPS and execution-layer usage metrics.
+      operationId: usage_metrics_metrics_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /metrics/execution:
+    get:
+      tags:
+      - Meta
+      summary: Execution Metrics
+      description: Clean execution-layer metrics and scaling recommendations for operators.
+      operationId: execution_metrics_metrics_execution_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /health/usage:
+    get:
+      tags:
+      - Meta
+      summary: Health Usage
+      description: Simple scaling status for agents and operator automation.
+      operationId: health_usage_health_usage_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /conduct:
+    get:
+      tags:
+      - Meta
+      summary: Conduct
+      description: 'Agent code of conduct + the enforcement ladder. Public + machine-readable so
+
+        every agent knows the rules and the consequences up front (deterrent + fairness).'
+      operationId: conduct_conduct_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /roadmap:
+    get:
+      tags:
+      - Meta
+      summary: Public Roadmap
+      description: Return the current public roadmap as Markdown.
+      operationId: public_roadmap_roadmap_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /guide:
+    get:
+      tags:
+      - Meta
+      summary: Payment Guide
+      description: Payment guide — multi-rail (Bearer + L402 + x402 + card).
+      operationId: payment_guide_guide_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /wallet-onboarding:
+    get:
+      tags:
+      - Meta
+      summary: Wallet Onboarding
+      description: Payment onboarding guide — multi-rail (Bearer + L402 + x402 + card).
+      operationId: wallet_onboarding_wallet_onboarding_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /prices:
+    get:
+      tags:
+      - Meta
+      summary: Get All Prices
+      description: Detailed pricing — Lightning only.
+      operationId: get_all_prices_prices_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /price/{endpoint}:
+    get:
+      tags:
+      - Meta
+      summary: Get Price
+      description: Return pricing for a specific endpoint (v1.6.0).
+      operationId: get_price_price__endpoint__get
+      parameters:
+      - name: endpoint
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Endpoint
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /tool:
+    get:
+      tags:
+      - Meta
+      summary: Tool Definition
+      description: Main tool definition for agent discovery (MCP, LangChain, A2A, etc.).
+      operationId: tool_definition_tool_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /tool/mcp:
+    get:
+      tags:
+      - Meta
+      summary: Tool Definition Mcp
+      description: 'MCP-compatible tool definitions. DERIVED from the canonical TOOLS dict in routes/mcp.py (S169
+
+        anti-drift) — this list can never fall out of sync with the real /mcp tools again.'
+      operationId: tool_definition_mcp_tool_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /health/doom_loop:
+    get:
+      tags:
+      - Meta
+      summary: Doom Loop
+      description: 'Per-agent doom-loop ratio (blocks vs executes) over a rolling window.
+
+
+        Reports the Session-73 chicken-and-egg pattern: gates → no actions → no
+
+        fresh data → can''t recalibrate. Read-only; never mutates agent state.
+
+        Cached server-side for 60s to avoid repeatedly tailing large logs.'
+      operationId: doom_loop_health_doom_loop_get
+      parameters:
+      - name: hours
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 24.0
+          title: Hours
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /health:
+    get:
+      tags:
+      - Meta
+      summary: Health
+      description: Health check with rich metadata for monitoring and autonomous agents.
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /:
+    get:
+      tags:
+      - Meta
+      summary: Home
+      description: Landing page served from index.html
+      operationId: home__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /edgeproof:
+    get:
+      tags:
+      - Meta
+      summary: Edgeproof Page
+      description: 'EdgeProof — upload a backtest, get a real-vs-overfit verdict. Human-facing
+
+        surface for the paid /validate endpoint; renders a shareable result card.'
+      operationId: edgeproof_page_edgeproof_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /caught:
+    get:
+      tags:
+      - Meta
+      summary: Caught Page
+      description: 'Demand-ignition pull asset (S189): the ''what the gate caught'' case study, dev-facing.
+
+        Two real bugs from our own code replayed through /review blind + the honest ''what it does NOT
+
+        do'' + the 60-second free try. Linked from llms.txt + the x402 /review catalog entry so an
+
+        inbound (Coinbase/x402) agent lands on PROOF, not a pitch. Verifier-first per S168.'
+      operationId: caught_page_caught_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /governance:
+    get:
+      tags:
+      - Meta
+      summary: Governance Page
+      description: 'Governance-plan demand test (REVENUE_EXPERIMENT_S182): one page, two CTAs —
+
+        existing Stripe checkout + waitlist email capture. S168 narrative: verifier-first.'
+      operationId: governance_page_governance_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /discover:
+    get:
+      tags:
+      - Meta
+      summary: Discover Page
+      description: Public discovery page — multi-rail (Bearer/L402/x402/card).
+      operationId: discover_page_discover_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /connect/grok:
+    get:
+      tags:
+      - Meta
+      summary: Connect Grok Page
+      description: Grok / xAI MCP Connector — one-click instructions for consumer Grok + Grok Build + API (S129).
+      operationId: connect_grok_page_connect_grok_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /install:
+    get:
+      tags:
+      - Meta
+      summary: Install Page
+      description: 'Client-agnostic MCP install — copy-paste the verification gate into any dev-tool agent
+
+        loop (Claude Code, Cursor, VS Code, Cline, Windsurf, Claude Desktop). The point-of-need
+
+        funnel: a dev running an agent loop adds /review as a pre-action gate in ~30 seconds.'
+      operationId: install_page_install_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /farcaster-connect:
+    get:
+      tags:
+      - Meta
+      summary: Farcaster Connect Page
+      operationId: farcaster_connect_page_farcaster_connect_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /governance/pubkey:
+    get:
+      tags:
+      - Meta
+      summary: Verifier Keys
+      description: 'Verifier key-freshness / rotation / revocation manifest. A holder of any signed proof can confirm
+
+        the active key, its history (so a rotation doesn''t silently invalidate older proofs), and revocation
+
+        state — the freshness check our trust root needs. `/governance/pubkey` mirrors the cross-impl
+
+        convention; both return the same manifest.'
+      operationId: verifier_keys_governance_pubkey_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /governance/pq-key-binding:
+    get:
+      tags:
+      - Meta
+      summary: Pq Key Binding
+      description: 'Anchored post-quantum key-binding statement (2026-07-30, converged with the trustless-ai/
+
+        Merlini+Pavlo group): a content-addressed, dual-signed (BIP-340 Schnorr + ML-DSA-65), Bitcoin
+
+        OTS-anchored statement binding our secp256k1 verifier key to a real ML-DSA-65 key, so a future
+
+        quantum-capable forger who derives the secp256k1 key cannot forge a valid PQ-bound identity —
+
+        only a binding anchored BEFORE the break (cutoff by anchor time, not created_at) counts.
+
+
+        THIS ENDPOINT IS DISCOVERY ONLY, per the group''s explicit design ("manifest is discovery, never
+
+        authority"): a verifier MUST independently recompute the event_id from the returned bytes and
+
+        verify BOTH signatures + the OTS proof against the Bitcoin header — not trust this response.
+
+        See the payload''s own `verify` block for the exact recompute steps.'
+      operationId: pq_key_binding_governance_pq_key_binding_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /governance/pq-key-history:
+    get:
+      tags:
+      - Meta
+      summary: Pq Key History
+      description: 'Append-only PQ companion-key rotation / revocation manifest. Same discipline as
+
+        /.well-known/verifier-keys.json: a holder of any PQ-companion-signed proof can confirm
+
+        the claimed pq_pubkey was active in the window containing the proof''s created_at.
+
+        Seeded with the one ML-DSA-65 key published in pq-key-binding.json; on rotation the
+
+        outgoing key is marked retired (not deleted) so in-window companions stay verifiable.'
+      operationId: pq_key_history_governance_pq_key_history_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /governance/verifier-keys-history:
+    get:
+      tags:
+      - Meta
+      summary: Verifier Keys History
+      description: 'Bitcoin-OTS-anchored history of verifier_identity()''s own trust-relevant state (2026-09-04,
+
+        closes a real gap flagged by Vegeta451/flop-labs on flop-labs/technocore-chat#613: the
+
+        verifier-keys.json manifest itself was unsigned/unanchored, so a key rotation or history edit
+
+        had nothing independent to check against). See services.proof_signing.
+
+        verifier_key_manifest_anchors() docstring for the full mechanism.'
+      operationId: verifier_keys_history_governance_verifier_keys_history_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /.well-known/pq-key-binding.ots:
+    get:
+      tags:
+      - Meta
+      summary: Pq Key Binding Ots
+      description: 'The raw OpenTimestamps proof (.ots) for the PQ key binding''s event_id -- a real gap found
+
+        2026-07-30 (flagged in trustless-ai group by an independent reviewer, "M"): the binding''s
+
+        `ots_anchor` block pointed at a local file path that had no public route, unlike every /ledger
+
+        entry''s own `/ledger/{entry}/ots` (which does). Same pattern as that route: feed this to
+
+        `ots verify -d .ots` to confirm the Bitcoin-PoW anchor against any
+
+        explorer, no trust in us.'
+      operationId: pq_key_binding_ots__well_known_pq_key_binding_ots_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /mcp:
+    get:
+      tags:
+      - Meta
+      summary: Mcp Info
+      operationId: mcp_info_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /me:
+    get:
+      tags:
+      - Meta
+      summary: Me Dashboard
+      description: 'Personal dashboard: balance, spend, earnings, ROI, listings, purchases.'
+      operationId: me_dashboard_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /announce.xml:
+    get:
+      tags:
+      - Meta
+      summary: Rss Feed
+      description: RSS feed that mirrors recent announcements + Baby Blue Viper podcast (v1.6.0).
+      operationId: rss_feed_announce_xml_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    head:
+      tags:
+      - Meta
+      summary: Rss Feed
+      description: RSS feed that mirrors recent announcements + Baby Blue Viper podcast (v1.6.0).
+      operationId: rss_feed_announce_xml_head
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /feed:
+    get:
+      tags:
+      - Meta
+      summary: Rss Feed
+      description: RSS feed that mirrors recent announcements + Baby Blue Viper podcast (v1.6.0).
+      operationId: rss_feed_feed_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    head:
+      tags:
+      - Meta
+      summary: Rss Feed
+      description: RSS feed that mirrors recent announcements + Baby Blue Viper podcast (v1.6.0).
+      operationId: rss_feed_feed_head
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /rss:
+    get:
+      tags:
+      - Meta
+      summary: Rss Feed
+      description: RSS feed that mirrors recent announcements + Baby Blue Viper podcast (v1.6.0).
+      operationId: rss_feed_rss_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    head:
+      tags:
+      - Meta
+      summary: Rss Feed
+      description: RSS feed that mirrors recent announcements + Baby Blue Viper podcast (v1.6.0).
+      operationId: rss_feed_rss_head
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /badge/conformance/{name}.json:
+    get:
+      tags:
+      - Meta
+      summary: Conformance Badge
+      description: 'shields.io endpoint-badge schema (https://shields.io/badges/endpoint-badge) — embed with:
+
+        !conformance
+
+        Reads the same live registry snapshot /conformance.json serves; never runs a check on request.
+
+        A verifier not (yet) in the registry gets an honest ''not listed'' badge, not a 404 — a broken
+
+        badge image in someone''s README is worse than an accurate ''not listed'' one.'
+      operationId: conformance_badge_badge_conformance__name__json_get
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /conformance.json:
+    get:
+      tags:
+      - Meta
+      summary: Conformance Json
+      operationId: conformance_json_conformance_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /conformance:
+    get:
+      tags:
+      - Meta
+      summary: Conformance Page
+      operationId: conformance_page_conformance_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /research:
+    get:
+      tags:
+      - Meta
+      summary: Research Json
+      description: 'Published academic papers, most recent first. Machine-readable companion to
+
+        /research.html. Every entry links to the real SSRN abstract page -- verify there, not here.'
+      operationId: research_json_research_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /research.html:
+    get:
+      tags:
+      - Meta
+      summary: Research Html
+      operationId: research_html_research_html_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /sse:
+    get:
+      tags:
+      - Meta
+      summary: Sse Discovery Hub
+      description: SSE endpoint for real-time announcements (v1.6.0)
+      operationId: sse_discovery_hub_sse_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    head:
+      tags:
+      - Meta
+      summary: Sse Discovery Hub
+      description: SSE endpoint for real-time announcements (v1.6.0)
+      operationId: sse_discovery_hub_sse_head
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /events:
+    get:
+      tags:
+      - Meta
+      summary: Sse Discovery Hub
+      description: SSE endpoint for real-time announcements (v1.6.0)
+      operationId: sse_discovery_hub_events_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    head:
+      tags:
+      - Meta
+      summary: Sse Discovery Hub
+      description: SSE endpoint for real-time announcements (v1.6.0)
+      operationId: sse_discovery_hub_events_head
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /webhooks/resend/inbound:
+    post:
+      tags:
+      - Meta
+      summary: Resend Inbound
+      description: 'Resend inbound-email webhook (event: email.received + bounced/complained).
+
+
+        Returns 200 always (after auth) so Resend marks delivery successful and
+
+        doesn''t retry-storm. Verification is strict: RESEND_WEBHOOK_SECRET must
+
+        be set (503 if missing). The old fail-open-at-setup path was retired
+
+        2026-08-13 once the secret was live.
+
+
+        Side-effect: for email.received events, the body is re-sent to the
+
+        operator''s Gmail (default babyblueviperbusiness@gmail.com) via Resend.
+
+        Bounces/complaints are NOT forwarded.'
+      operationId: resend_inbound_webhooks_resend_inbound_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /webhooks/whatsapp:
+    get:
+      tags:
+      - Meta
+      summary: Whatsapp Verify
+      description: 'Meta subscription handshake: echo hub.challenge iff the verify token matches.'
+      operationId: whatsapp_verify_webhooks_whatsapp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    post:
+      tags:
+      - Meta
+      summary: Whatsapp Inbound
+      description: WhatsApp event receiver. Returns 200 after auth so Meta doesn't retry-storm.
+      operationId: whatsapp_inbound_webhooks_whatsapp_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

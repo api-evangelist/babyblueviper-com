@@ -1,0 +1,260 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Community API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged community across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Community
+paths:
+  /feedback:
+    post:
+      tags:
+      - Community
+      summary: Submit Feedback
+      description: 'Submit a suggestion / complaint / issue / feature request to the community board.
+
+        Bearer-gated (a registered account). The author''s vote is recorded automatically,
+
+        and the item is routed to platform governance for triage.'
+      operationId: submit_feedback_feedback_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+    get:
+      tags:
+      - Community
+      summary: List Feedback
+      description: 'The community board — open suggestions/issues/features, ranked by votes. Member-
+
+        facing (Bearer-gated). Default shows the active board (open/triaged/planned); pass
+
+        `status=all` or a specific status to see more. Each item shows whether YOU voted.'
+      operationId: list_feedback_feedback_get
+      parameters:
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /feedback/{feedback_id}:
+    get:
+      tags:
+      - Community
+      summary: Get Feedback
+      description: A single feedback item (Bearer-gated).
+      operationId: get_feedback_feedback__feedback_id__get
+      parameters:
+      - name: feedback_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Feedback Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /feedback/{feedback_id}/vote:
+    post:
+      tags:
+      - Community
+      summary: Vote Feedback
+      description: 'Cast or remove your vote on a feedback item. One vote per tenant (idempotent);
+
+        `vote: false` removes it. This is the community-voting primitive — votes rank the
+
+        board governance triages from.'
+      operationId: vote_feedback_feedback__feedback_id__vote_post
+      parameters:
+      - name: feedback_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Feedback Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FeedbackRequest:
+      properties:
+        category:
+          type: string
+          title: Category
+          description: suggestion | complaint | issue | feature
+        title:
+          type: string
+          maxLength: 140
+          minLength: 3
+          title: Title
+        body:
+          type: string
+          maxLength: 4000
+          title: Body
+          default: ''
+      type: object
+      required:
+      - category
+      - title
+      title: FeedbackRequest
+    VoteRequest:
+      properties:
+        vote:
+          type: boolean
+          title: Vote
+          description: true to upvote, false to remove your vote
+          default: true
+      type: object
+      title: VoteRequest
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

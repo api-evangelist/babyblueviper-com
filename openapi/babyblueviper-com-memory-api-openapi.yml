@@ -1,0 +1,343 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Memory API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged memory across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Memory
+  description: Persistent agent memory store
+paths:
+  /memory/store:
+    post:
+      tags:
+      - Memory
+      summary: Store Memory
+      description: Store agent memory - ~2 sats per KB (min 50 sats). Bearer balance or x402 (USDC on Base).
+      operationId: store_memory_memory_store_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryStoreRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.052826'
+        protocols:
+        - x402: {}
+  /memory/get:
+    post:
+      tags:
+      - Memory
+      summary: Get Memory
+      description: Retrieve agent memory - ~1 sat per KB (min 20 sats). Bearer balance or x402 (USDC on Base).
+      operationId: get_memory_memory_get_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryGetRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.040635'
+        protocols:
+        - x402: {}
+  /memory/delete:
+    post:
+      tags:
+      - Memory
+      summary: Delete Memory
+      description: Delete agent memory - free
+      operationId: delete_memory_memory_delete_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryDeleteRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /memory/list:
+    post:
+      tags:
+      - Memory
+      summary: List Memory
+      description: List all keys for an agent - free
+      operationId: list_memory_memory_list_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /memory/search:
+    post:
+      tags:
+      - Memory
+      summary: Search Memory
+      description: Search memories (simple contains on key+value) - free / lightweight
+      operationId: search_memory_memory_search_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemorySearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    MemorySearchRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        query:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Query
+        limit:
+          type: integer
+          maximum: 50.0
+          minimum: 1.0
+          title: Limit
+          default: 10
+      type: object
+      required:
+      - agent_id
+      - query
+      title: MemorySearchRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MemoryDeleteRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        key:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Key
+      type: object
+      required:
+      - agent_id
+      - key
+      title: MemoryDeleteRequest
+    MemoryListRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+      type: object
+      required:
+      - agent_id
+      title: MemoryListRequest
+    MemoryGetRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        key:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Key
+      type: object
+      required:
+      - agent_id
+      - key
+      title: MemoryGetRequest
+    MemoryStoreRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        key:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Key
+        value:
+          type: string
+          minLength: 1
+          title: Value
+      type: object
+      required:
+      - agent_id
+      - key
+      - value
+      title: MemoryStoreRequest
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

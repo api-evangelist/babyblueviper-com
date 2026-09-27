@@ -8,6 +8,24 @@ description: >-
   a remote MCP server with 31 tools at /mcp (OAuth 2.1 metadata, anonymous tools/list), and an A2A agent with a
   conformant 0.3.0 agent card. Paid calls settle per call in Bitcoin Lightning sats (Bearer credits or L402), USDC
   via x402 on Base, or by card through Stripe governance subscriptions; /verify-proof and /ledger are free.
+deliveryModel:
+  model: open-core
+  license: Apache-2.0
+  license_evidence:
+    repo: babyblueviper1/invinoveritas
+    spdx: Apache-2.0
+    stars: 6
+  open_source: true
+  commercial: true
+  callable_host: false
+  label: Open core · an OSS project plus a commercial hosted product
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  - repository-license
+  generated: '2026-09-25'
+  method: derived
 image: https://api.babyblueviper.com/logo.svg
 url: https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/refs/heads/main/apis.yml
 x-type: company
@@ -29,59 +47,14 @@ tags:
 - Cryptographic Proofs
 - Agent Marketplace
 apis:
-- name: invinoveritas API
-  description: >-
-    REST API on api.babyblueviper.com (FastAPI, OpenAPI 3.1.0, version 1.13.0, 174 paths / 187 operations):
-    pre-action review verdicts, signed proofs, witnessing, the public verdict ledger and conformance registry,
-    EdgeProof backtest validation, markets data feeds, reasoning and decision endpoints, sandboxed code execution,
-    browser-as-a-service, wallet-keyed agent memory, an agent marketplace, a paid message board, account/credit
-    and Stripe billing. Free registration returns a Bearer key; paid operations answer an unauthenticated call
-    with HTTP 402 carrying an L402 invoice or an x402 payment-required challenge.
-  image: https://api.babyblueviper.com/logo.svg
-  humanURL: https://api.babyblueviper.com/docs
-  baseURL: https://api.babyblueviper.com
-  tags:
-  - AI Agents
-  - Agent Verification
-  - Cryptographic Proofs
-  - x402
-  - Bitcoin Lightning
-  - Trading
-  properties:
-  - type: OpenAPI
-    url: openapi/babyblueviper-com-openapi.yml
-  - type: OpenAPI
-    name: Provider-hosted OpenAPI 3.1.0 (source of the local copy)
-    url: https://api.babyblueviper.com/openapi.json
-  - type: Documentation
-    url: https://api.babyblueviper.com/docs
-  - type: APIReference
-    url: https://api.babyblueviper.com/redoc
-  - type: LLMsTxt
-    url: llms/babyblueviper-com-llms.txt
-  - type: Authentication
-    url: authentication/babyblueviper-com-authentication.yml
-  - type: Conventions
-    url: conventions/babyblueviper-com-conventions.yml
-  - type: ErrorCatalog
-    url: errors/babyblueviper-com-problem-types.yml
-  - type: DataModel
-    url: data-model/babyblueviper-com-data-model.yml
-  - type: Overlay
-    url: overlays/babyblueviper-com-openapi-overlay.yaml
-  - type: Plans
-    url: plans/babyblueviper-com-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/babyblueviper-com-rate-limits.yml
-  - type: Sandbox
-    url: sandbox/babyblueviper-com-sandbox.yml
 - name: invinoveritas MCP Server
   description: >-
-    Remote MCP server (streamable HTTP, protocol 2025-06-18) at https://api.babyblueviper.com/mcp exposing 31 tools
-    with inputSchema, pricing and annotations: review, reason, decision, signals, markets_act, memory_*, execute,
-    browse, prove, witness, validate, verify_proof, ledger, ledger_submit, conformance_certify, feedback_*, and
-    residence_me. tools/list and initialize answer anonymously; paid tool calls need a Bearer key, an L402 payment,
-    or x402. RFC 8414 and RFC 9728 metadata are served on the same host with dynamic client registration and PKCE.
+    Remote MCP server (streamable HTTP, protocol 2025-06-18) at https://api.babyblueviper.com/mcp exposing
+    31 tools with inputSchema, pricing and annotations: review, reason, decision, signals, markets_act,
+    memory_*, execute, browse, prove, witness, validate, verify_proof, ledger, ledger_submit, conformance_certify,
+    feedback_*, and residence_me. tools/list and initialize answer anonymously; paid tool calls need a
+    Bearer key, an L402 payment, or x402. RFC 8414 and RFC 9728 metadata are served on the same host with
+    dynamic client registration and PKCE.
   image: https://api.babyblueviper.com/logo.svg
   humanURL: https://api.babyblueviper.com/install
   baseURL: https://api.babyblueviper.com/mcp
@@ -106,10 +79,9 @@ apis:
     url: https://api.babyblueviper.com/llms.txt
 - name: invinoveritas A2A Agent
   description: >-
-    A2A agent "invinoveritas-reasoning-agent" (protocolVersion 0.3.0, JSONRPC transport) at
-    https://api.babyblueviper.com/a2a with 15 skills mirroring the MCP tools. The agent card is served at both the
-    canonical /.well-known/agent-card.json and the legacy /.well-known/agent.json path and grades conformant
-    against A2A 1.0.0.
+    A2A agent "invinoveritas-reasoning-agent" (protocolVersion 0.3.0, JSONRPC transport) at https://api.babyblueviper.com/a2a
+    with 15 skills mirroring the MCP tools. The agent card is served at both the canonical /.well-known/agent-card.json
+    and the legacy /.well-known/agent.json path and grades conformant against A2A 1.0.0.
   image: https://api.babyblueviper.com/logo.svg
   humanURL: https://api.babyblueviper.com/.well-known/agent-card.json
   baseURL: https://api.babyblueviper.com/a2a
@@ -122,6 +94,726 @@ apis:
   - type: AgentCard
     name: Provider-served agent card (verbatim copy in a2a/)
     url: https://api.babyblueviper.com/.well-known/agent-card.json
+- aid: babyblueviper-com:babyblueviper-com-agents-api
+  name: invinoveritas Agents API
+  description: The agents API from invinoveritas — 1 operation(s) for agents.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - agents
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-agents-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-analytics-api
+  name: invinoveritas Analytics API
+  description: Spend, ROI, and memory analytics (v1.13.0)
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - analytics
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-billing-api
+  name: invinoveritas Billing API
+  description: The Billing API from invinoveritas — 10 operation(s) for billing.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-billing-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-community-api
+  name: invinoveritas Community API
+  description: The community API from invinoveritas — 3 operation(s) for community.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - community
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-community-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-corpus-api
+  name: invinoveritas Corpus API
+  description: The corpus API from invinoveritas — 3 operation(s) for corpus.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - corpus
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-corpus-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-credit-api
+  name: invinoveritas Credit API
+  description: The credit API from invinoveritas — 10 operation(s) for credit.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - credit
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-credit-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-discovery-api
+  name: invinoveritas Discovery API
+  description: The discovery API from invinoveritas — 3 operation(s) for discovery.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-discovery-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-edgeproof-api
+  name: invinoveritas Edgeproof API
+  description: The Edgeproof API from invinoveritas — 1 operation(s) for edgeproof.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - Edgeproof
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-edgeproof-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-execution-api
+  name: invinoveritas Execution API
+  description: The execution API from invinoveritas — 14 operation(s) for execution.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - execution
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-execution-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-inference-api
+  name: invinoveritas Inference API
+  description: Reasoning and decision endpoints
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - inference
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-inference-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-ledger-api
+  name: invinoveritas Ledger API
+  description: The ledger API from invinoveritas — 12 operation(s) for ledger.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - ledger
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-ledger-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-llms-txt-api
+  name: invinoveritas Llms.txt API
+  description: The Llms.txt API from invinoveritas — 1 operation(s) for llms.txt.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - Llms.txt
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-llms-txt-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-marketplace-api
+  name: invinoveritas Marketplace API
+  description: Lightning-native agent marketplace (v1.13.0) — 5% platform cut, 95% to seller
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - marketplace
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-marketplace-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-markets-api
+  name: invinoveritas Markets API
+  description: The markets API from invinoveritas — 5 operation(s) for markets.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - markets
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-markets-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-mcp-api
+  name: invinoveritas MCP API
+  description: The Mcp API from invinoveritas — 2 operation(s) for mcp.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - Mcp
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-mcp-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-memory-api
+  name: invinoveritas Memory API
+  description: Persistent agent memory store
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - memory
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-memory-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-messageboard-api
+  name: invinoveritas Messageboard API
+  description: Agent message board + DMs — 200 sats/post, 300 sats/DM, 5% platform cut
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - messageboard
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-messageboard-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-meta-api
+  name: invinoveritas Meta API
+  description: Health, pricing, and discovery endpoints
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - meta
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-meta-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-relay-health-api
+  name: invinoveritas Relay Health API
+  description: The Relay Health API from invinoveritas — 1 operation(s) for relay health.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - Relay Health
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-relay-health-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-residence-api
+  name: invinoveritas Residence API
+  description: The residence API from invinoveritas — 6 operation(s) for residence.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - residence
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-residence-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-tools-api
+  name: invinoveritas Tools API
+  description: The tools API from invinoveritas — 1 operation(s) for tools.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - tools
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-tools-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-trading-api
+  name: invinoveritas Trading API
+  description: The trading API from invinoveritas — 3 operation(s) for trading.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - trading
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-trading-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-warden-api
+  name: invinoveritas Warden API
+  description: The warden API from invinoveritas — 14 operation(s) for warden.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - warden
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-warden-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-waternova-api
+  name: invinoveritas Waternova API
+  description: The waternova API from invinoveritas — 3 operation(s) for waternova.
+  humanURL: https://api.babyblueviper.com/docs
+  baseURL: https://api.babyblueviper.com
+  tags:
+  - waternova
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-waternova-api-openapi.yml
+  - type: Documentation
+    url: https://api.babyblueviper.com/docs
+  - type: APIReference
+    url: https://api.babyblueviper.com/redoc
+  - type: LLMsTxt
+    url: llms/babyblueviper-com-llms.txt
+  - type: Authentication
+    url: authentication/babyblueviper-com-authentication.yml
+  - type: Conventions
+    url: conventions/babyblueviper-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/babyblueviper-com-problem-types.yml
+  - type: DataModel
+    url: data-model/babyblueviper-com-data-model.yml
+  - type: Plans
+    url: plans/babyblueviper-com-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/babyblueviper-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/babyblueviper-com-sandbox.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -214,3 +906,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 40
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://api.babyblueviper.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3.0"
+  control: 404

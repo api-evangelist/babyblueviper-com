@@ -1,0 +1,170 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Trading API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged trading across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Trading
+paths:
+  /sovereign/status:
+    get:
+      tags:
+      - Trading
+      summary: Sovereign Status
+      description: Public Sovereign Earner monetization/status surface without exposing API keys.
+      operationId: sovereign_status_sovereign_status_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /sentinel/status:
+    get:
+      tags:
+      - Trading
+      summary: Sentinel Status
+      description: Sovereign Sentinel runtime status and last dream summary.
+      operationId: sentinel_status_sentinel_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /sentinel/directives:
+    post:
+      tags:
+      - Trading
+      summary: Sentinel Directives
+      description: 'Push a directive to Sovereign Sentinel.
+
+
+        Auth model (Audit Critical #3, 2026-05-08): Bearer token must be present in the
+
+        sentinel directive allowlist (data/sentinel_directive_allowlist.json). Empty allowlist
+
+        rejects ALL directives (fail-secure). Allowlist entries are added by the operator out-of-band.'
+      operationId: sentinel_directives_sentinel_directives_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SentinelDirectiveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SentinelDirectiveRequest:
+      properties:
+        action:
+          type: string
+          title: Action
+          description: pause_trading | resume_trading | run_dream | report_now | set_alert_threshold
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+          description: Action-specific parameters
+        issued_by:
+          type: string
+          title: Issued By
+          description: Issuing authority (viper_warden or operator)
+          default: viper_warden
+        reason:
+          type: string
+          title: Reason
+          description: Human-readable reason for audit trail
+          default: ''
+        idempotency_key:
+          type: string
+          maxLength: 80
+          minLength: 8
+          title: Idempotency Key
+          description: Unique key to prevent duplicate directive processing
+      type: object
+      required:
+      - action
+      - idempotency_key
+      title: SentinelDirectiveRequest
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

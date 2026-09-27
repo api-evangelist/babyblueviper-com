@@ -1,0 +1,1046 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Execution API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged execution across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Execution
+paths:
+  /web-act:
+    post:
+      tags:
+      - Execution
+      summary: Browse Action
+      operationId: browse_action_web_act_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/BrowseRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /browse:
+    post:
+      tags:
+      - Execution
+      summary: Browse Action
+      operationId: browse_action_browse_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/BrowseRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /execute:
+    post:
+      tags:
+      - Execution
+      summary: Execute Code
+      description: Paid secure-code-execution with tiered v1 Docker sandbox when available.
+      operationId: execute_code_execute_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ExecuteRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /execution/status:
+    get:
+      tags:
+      - Execution
+      summary: Execution Status
+      operationId: execution_status_execution_status_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /prove:
+    post:
+      tags:
+      - Execution
+      summary: Prove Action
+      description: 'Paid verifiable proof for a redacted execution audit row.
+
+
+        The proof includes hashes and metadata, never raw API keys or Bearer tokens.
+
+        If NOSTR_NSEC is configured, the response includes a signed Nostr event.
+
+        Otherwise it returns an HMAC/public-hash fallback so callers can still bind
+
+        a payload to a stable digest.'
+      operationId: prove_action_prove_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ProveRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /prove/{proof_id}/reveal:
+    post:
+      tags:
+      - Execution
+      summary: Prove Reveal
+      description: 'FREE, no-auth: bind held-back content to a previously published /prove commitment_hash
+
+        (DEILS leg-2). Anyone holding the true content can reveal it — the check is a pure function
+
+        of (stored commitment_hash, revealed content), never caller identity, so a third party can
+
+        confirm the bind without trusting whoever discloses.
+
+
+        Returns content_bound (hash matches, content now disclosed) or content_commitment_mismatch
+
+        (TERMINAL, fail-closed — a positive evidence state, not an absence: either the revealed
+
+        content was tampered with, or the original commitment was bad. Preserves the full evidence
+
+        bundle so the disagreement is legible, and does not adjudicate malice vs error).'
+      operationId: prove_reveal_prove__proof_id__reveal_post
+      parameters:
+      - name: proof_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proof Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProveRevealRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /witness:
+    post:
+      tags:
+      - Execution
+      summary: Witness Claim
+      description: 'Paid: anchor a third party''s exact claim bytes, unmodified and unjudged.
+
+
+        Distinct from /review(sign=true), which always runs OUR OWN independent judgment on the artifact
+
+        and signs THAT verdict. /witness is pure notarization — "we received and timestamped this,
+
+        attributed to source X" — never "we agree with it". Lets two independent verifiers compose a joint
+
+        artifact where each claim stays separately attributable, instead of one silently re-grading or
+
+        absorbing the other''s judgment. `source` is self-declared, not cryptographically verified by us;
+
+        see the returned proof''s `source_verification_note`.'
+      operationId: witness_claim_witness_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/WitnessRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /record/{content_hash}:
+    get:
+      tags:
+      - Execution
+      summary: Get Record
+      description: 'Free: self-naming, content-addressed lookup. The id IN THE URL is the sha256 of the exact
+
+        bytes this returns -- recompute it yourself, don''t trust the lookup. No separate ID scheme,
+
+        no lookup table to trust: `sha256(response_body) == content_hash` or this response is wrong.
+
+
+        Added 2026-09-16 (Toshikatsu Oga/HORIZON SHIELD, LinkedIn DM) matching his own gate''s
+
+        GET /record/ convention, so a two-party record can be pinned by content hash on both
+
+        sides rather than by an address either party could quietly repoint. Scoped to /witness bodies
+
+        specifically -- a witnessed claim''s `body_hash` is a hash of verbatim, servable bytes; other
+
+        proof types (e.g. a /review verdict''s `artifact_hash`) hash the CALLER''S input artifact, not
+
+        our own proof_payload, so they are not the same kind of self-naming pointer and are not served
+
+        here. Fails closed: recomputes the hash of what it''s about to serve before responding, and a
+
+        404 (never a wrong body) is the answer for a stored record whose bytes no longer match their
+
+        own claimed hash.'
+      operationId: get_record_record__content_hash__get
+      parameters:
+      - name: content_hash
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Content Hash
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /validate:
+    post:
+      tags:
+      - Execution
+      summary: Validate Action
+      description: 'Paid backtest reality-check (EdgeProof).
+
+
+        Submit a strategy''s realized returns (or trade rows) — NOT the strategy itself —
+
+        and get a verdict: likely_real / borderline / overfit_or_noise. Scored with the
+
+        Deflated Sharpe Ratio (haircut for the number of variants tried), a sign-flip
+
+        permutation test against a coin-flip null, and purged k-fold out-of-sample decay.
+
+        Inputs are not retained beyond a redacted audit hash.
+
+
+        4th check (S226, additive): submit trade rows with ''coin'' and ''ts''/''timestamp'' fields
+
+        to also get a concentration jackknife (does the total depend on one trade/coin) and a
+
+        BTC-regime overlay (does the sign depend on riding a BTC melt-up window) under a
+
+        ''concentration_and_regime'' key. Built directly from a real, repeated finding in this
+
+        platform''s own trading history: both mistakes recurred across independent strategies
+
+        and were rediscovered by hand more than once before this check existed.'
+      operationId: validate_action_validate_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ValidateRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /verify-proof:
+    post:
+      tags:
+      - Execution
+      summary: Verify Proof
+      description: 'FREE, no-auth: verify a counterparty''s invinoveritas proof — the agent-to-agent trust handshake.
+
+
+        Hand over the signed `event` another agent gave you (or a proof_id). We recompute the Nostr event id,
+
+        verify the schnorr signature, and confirm the pubkey IS invinoveritas''s PUBLISHED key — so you learn,
+
+        WITHOUT trusting that agent OR us, whether invinoveritas really issued this verdict/proof. (You can run
+
+        the exact same NIP-01 check yourself; we''re a convenience, not a trust root.) Optionally pass
+
+        expect_artifact_hash to also confirm the proof covers the exact output you received, or
+
+        expect_intended_verifier to confirm the proof''s declared consumption context matches you.
+
+        Add verifier_signature alongside expect_intended_verifier to go further -- cryptographically
+
+        PROVE you hold that address''s key (eip155 namespace only) rather than just asserting it.'
+      operationId: verify_proof_verify_proof_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/VerifyProofRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /verdict-proofs/{event_id}:
+    get:
+      tags:
+      - Execution
+      summary: Get Verdict Proof
+      description: 'FREE, no-auth: raw retrieval of a durably-stored /review(sign=true), /witness, or /prove signed
+
+        event by its Nostr event_id -- the full {id,pubkey,created_at,kind,tags,content,sig}, not our own
+
+        verdict on it. Distinct from POST /verify-proof (which runs OUR check and returns a verdict): this
+
+        hands over the exact bytes so a third party can run their OWN independent recompute, never trusting
+
+        our check either. Real gap this closes (found live 2026-07-31, jamesavechives, ethereum-magicians
+
+        t/29194#8): a bare {id, pubkey, sig} pasted into a reply lets a reader verify the SIGNATURE over that
+
+        id, but not id_integrity/decision_ref_recomputes/artifact_hash_matches, which need created_at/kind/
+
+        tags/content too -- and public relay copies of these (kind 30078, parameterized-replaceable) are not
+
+        guaranteed to persist. 404 for anything predating this fix or an HMAC-fallback proof with no event.'
+      operationId: get_verdict_proof_verdict_proofs__event_id__get
+      parameters:
+      - name: event_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Event Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /verify-proof-log:
+    get:
+      tags:
+      - Execution
+      summary: Verify Proof Log
+      description: 'FREE, no-auth: the append-only, public record of every /verify-proof call that asserted
+
+        `expect_intended_verifier` (2026-08-17, Toshikatsu/大賀俊勝, HORIZON SHIELD -- the Certificate
+
+        Transparency framing: CT never *prevented* a mis-issued cert, it worked because mis-issuance became
+
+        *impossible to hide*). We can''t prove a proof was never seen by the wrong party (an unprovable
+
+        negative) -- but a caller who asserts a specific identity and gets a recorded mismatch cannot make
+
+        that attempt disappear afterward. Insert-only table, no UPDATE/DELETE path exists anywhere in this
+
+        codebase for it.
+
+
+        Honest limit, stated precisely (do not round this up): this only catches a caller who bothers to
+
+        assert `expect_intended_verifier` at all. A party who calls /verify-proof with no asserted identity
+
+        leaves nothing to log a mismatch against -- this is "detects a mismatched-audience verification BY
+
+        A CALLER WHO ASSERTED ONE," not detection of misuse in general.
+
+
+        Optional `event_id` scopes to one proof; otherwise returns the most recent `limit` (max 200)
+
+        assertions across all proofs, newest first.'
+      operationId: verify_proof_log_verify_proof_log_get
+      parameters:
+      - name: event_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /attestations:
+    get:
+      tags:
+      - Execution
+      summary: List Attestations
+      description: 'Browse issued /prove attestations. Free, no auth.
+
+
+        Filter by agent_id to see all proofs issued for a specific agent.
+
+        Returns proof_id, agent_id, proof_hash, signature_type, created_at.
+
+        Fetch the full proof payload via GET /attestations/{proof_id}.'
+      operationId: list_attestations_attestations_get
+      parameters:
+      - name: agent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /attestations/{proof_id}:
+    get:
+      tags:
+      - Execution
+      summary: Get Attestation
+      description: 'Public retrieval of a previously issued /prove attestation. Free, no auth.
+
+
+        Anyone can verify the proof by checking proof_hash against SHA-256 of the
+
+        sorted proof payload JSON. The attestation was paid for at prove-time.'
+      operationId: get_attestation_attestations__proof_id__get
+      parameters:
+      - name: proof_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proof Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ValidateRequest:
+      properties:
+        returns:
+          anyOf:
+          - items:
+              type: number
+            type: array
+          - type: 'null'
+          title: Returns
+          description: Per-trade (or per-period) realized returns.
+        trades:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+          - type: 'null'
+          title: Trades
+          description: 'Alternative to ''returns'': rows with a return field (ret/pnl/net_bps) and optional ''entry''/''exit'' bar indices for honest purged k-fold timing. Include ''coin'' and ''ts''/''timestamp'' on each row to also unlock a 4th check (S226): a concentration jackknife (does the total sign flip once you exclude the single best trade or the single dominant coin) and a BTC-regime overlay (does the sign differ inside vs outside a BTC melt-up window). Both are additive — never change verdict/DSR/permutation_p_value/kfold_decay_rho, they surface under a separate ''concentration_and_regime'' key only when coin/ts context is present.'
+        n_trials:
+          type: integer
+          maximum: 10000000.0
+          minimum: 1.0
+          title: N Trials
+          description: How many strategy variants/params you tried before selecting this one. Be honest — more trials = bigger Deflated-Sharpe haircut.
+          default: 1
+        trial_sharpes:
+          anyOf:
+          - items:
+              type: number
+            type: array
+          - type: 'null'
+          title: Trial Sharpes
+          description: 'Optional: Sharpes of all variants tried → exact DSR variance.'
+        k_folds:
+          type: integer
+          maximum: 20.0
+          minimum: 2.0
+          title: K Folds
+          default: 5
+        n_perms:
+          type: integer
+          maximum: 3000.0
+          minimum: 200.0
+          title: N Perms
+          default: 2000
+        periods_per_year:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Periods Per Year
+          description: Optional, for annualized-Sharpe display only.
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+      type: object
+      title: ValidateRequest
+      description: 'EdgeProof backtest reality-check. Submit realized P&L (never your strategy);
+
+        get a verdict on whether the edge is real or curve-fit noise.'
+    ExecuteRequest:
+      properties:
+        language:
+          type: string
+          const: python
+          title: Language
+          default: python
+        code:
+          type: string
+          maxLength: 6000
+          minLength: 1
+          title: Code
+        stdin:
+          type: string
+          maxLength: 20000
+          title: Stdin
+          default: ''
+        timeout_seconds:
+          anyOf:
+          - type: number
+            maximum: 600.0
+            minimum: 0.5
+          - type: 'null'
+          title: Timeout Seconds
+        tier:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Tier
+          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
+          default: 1
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+        permissive:
+          type: boolean
+          title: Permissive
+          description: 'Permissive mode: run ARBITRARY Python — any import, full builtins, no AST allowlist — relying on the hardened isolated container (network OFF, read-only root, all caps dropped, non-root, resource-capped) as the boundary. Priced at a premium. Default False keeps the restrictive allowlist sandbox.'
+          default: false
+        use_workspace:
+          type: boolean
+          title: Use Workspace
+          description: Mount a persistent per-agent workspace at /workspace (read-write for the agent). Files, installed packages, and git clones survive across calls. Storage is lightly metered. Only available in higher tiers or with permissive=True.
+          default: false
+      type: object
+      required:
+      - code
+      title: ExecuteRequest
+    ProveRequest:
+      properties:
+        action_id:
+          type: string
+          maxLength: 80
+          minLength: 6
+          title: Action Id
+          description: Execution audit action ID to prove.
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+        nostr_publish:
+          type: boolean
+          title: Nostr Publish
+          description: If true and NOSTR_NSEC is set, broadcast a kind 1 note to Nostr relays announcing this attestation.
+          default: false
+        disclose:
+          type: boolean
+          title: Disclose
+          description: 'Default True (unchanged legacy behavior): proof content is public immediately. Set False for DEILS ''leg 2'' held-content mode: only {commitment_hash, ledger_position, status=''content_withheld''} is returned/published now (existence is mandatory-public and non-suppressible), the actual content stays server-side until a later POST /prove/{proof_id}/reveal call binds it to this commitment.'
+          default: true
+      type: object
+      required:
+      - action_id
+      title: ProveRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BrowseRequest:
+      properties:
+        url:
+          type: string
+          maxLength: 2000
+          title: Url
+          description: Public http(s) URL to fetch in the isolated action layer.
+        action:
+          type: string
+          enum:
+          - fetch
+          - extract_text
+          - screenshot
+          - multi_step
+          title: Action
+          description: fetch/extract_text use v0; screenshot uses Playwright BaaS v1; multi_step runs a sequence of click/type/navigate/wait/screenshot steps within the initial URL's domain.
+          default: fetch
+        selector:
+          type: string
+          maxLength: 200
+          title: Selector
+          description: Reserved for single-step Playwright actions.
+          default: ''
+        steps:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          maxItems: 5
+          title: Steps
+          description: 'Step sequence for multi_step action (max 5). Each step: {"action": "click|type|navigate|wait|screenshot", "selector": "css", "value": "text", "url": "https://..."}.'
+        max_bytes:
+          type: integer
+          maximum: 262144.0
+          minimum: 1024.0
+          title: Max Bytes
+          default: 65536
+        viewport_width:
+          type: integer
+          maximum: 1920.0
+          minimum: 320.0
+          title: Viewport Width
+          default: 1280
+        viewport_height:
+          type: integer
+          maximum: 1600.0
+          minimum: 320.0
+          title: Viewport Height
+          default: 900
+        wait_ms:
+          type: integer
+          maximum: 3000.0
+          minimum: 0.0
+          title: Wait Ms
+          default: 500
+        tier:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Tier
+          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
+          default: 1
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+      type: object
+      required:
+      - url
+      title: BrowseRequest
+    WitnessRequest:
+      properties:
+        source:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Source
+          description: Who this claim is attributed to (e.g. a domain or issuer name). Self-declared by the caller, NOT cryptographically verified by us — this proof establishes WHEN and WHAT was submitted, not WHO actually authored it.
+        body:
+          type: string
+          maxLength: 16000
+          minLength: 1
+          title: Body
+          description: The exact bytes to anchor, verbatim (typically a canonical JSON verdict body from another verifier). Anchored byte-for-byte — not re-serialized, not judged.
+      type: object
+      required:
+      - source
+      - body
+      title: WitnessRequest
+      description: 'S216 (crewAI#4877 composed-evaluators collaboration) — anchor a THIRD PARTY''s exact claim bytes
+
+        as-is, without independent judgment. Distinct from /review(sign=true), which always runs OUR OWN
+
+        verdict on the artifact and signs THAT. This is pure notarization: ''we received and timestamped
+
+        this, attributed to source X'' — not ''we agree with it''. Lets two independent verifiers compose a
+
+        joint artifact where each claim stays separately attributable, instead of one re-grading the other.'
+    ProveRevealRequest:
+      properties:
+        content:
+          additionalProperties: true
+          type: object
+          title: Content
+          description: The exact proof_payload content being revealed/disclosed.
+      type: object
+      required:
+      - content
+      title: ProveRevealRequest
+      description: 'DEILS leg-2: reveal content for a proof issued with disclose=False and bind it to the
+
+        already-published commitment_hash. Anyone holding the true content can reveal it — the check
+
+        is a pure function of (stored commitment_hash, revealed content), not caller identity.'
+    VerifyProofRequest:
+      properties:
+        event:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event
+          description: The signed proof event {id,pubkey,created_at,kind,tags,content,sig} from a /prove or /review(sign=true) response. Trustless path — no lookup, no trust.
+        proof_event:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Proof Event
+          description: 'Alias for `event`, accepting the exact key name GET /ledger/{N} itself uses for the same object (`proof_event`) — added 2026-08-17 after a real caller (大賀俊勝/Toshikatsu, independent verification walk) hit this: Pydantic silently drops an unrecognized field rather than erroring, so posting a /ledger response''s `proof_event` value under that same key previously no-op''d into the ''provide `event`'' error with no hint the key name itself was the problem. If both `event` and `proof_event` are provided, `event` takes precedence.'
+        proof_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proof Id
+          description: Alternatively, a stored attestation proof_id to fetch + verify (convenience).
+        event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Id
+          description: Alternatively, the Nostr event id from a /review(sign=true), /prove, or /witness proof — fetches the durably-stored full event (independent of relay retention) and verifies it. Use this when you only have {id,pubkey,sig}, not the full event, from wherever the proof was shared.
+        pq_companion_signature:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pq Companion Signature
+          description: 'Optional (added 2026-08-12): the ML-DSA-65 companion signature {algorithm,pq_pubkey,signature_hex,signs} from a proof issued alongside `event`, if you have one — additively verified and reported as checks.pq_companion_verified, never required. Only used with the `event` path; event_id/proof_id lookups fetch their own stored companion sig automatically if one exists.'
+        expect_artifact_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expect Artifact Hash
+          description: 'Optional: assert the proof covers THIS artifact (sha256 hex of the output you were handed).'
+        expect_intended_verifier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expect Intended Verifier
+          description: 'Optional (added 2026-08-16, per safal207''s content/generation/consumption-identity framing on crewAIInc/crewAI#4877): assert the proof''s declared intended_verifier matches who YOU are, closing the same gap expect_artifact_hash closes for content_identity -- but for consumption_identity. Checks a self-declared field (see /review''s own intended_verifier docstring: ''we cannot confirm who will actually present this proof downstream''), so a match confirms the ISSUER''s declared intent, not that delivery was actually restricted to you.'
+        verifier_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verifier Signature
+          description: 'Optional (added 2026-08-16, per atomicdjt''s presenter-bound critique on the same thread): an EIP-191 personal_sign signature over the fixed challenge ''invinoveritas-verify-proof:<event_id>'', signed by the private key controlling the address in expect_intended_verifier (eip155:* CAIP-10 namespace only). If provided and it recovers to that address, sets checks.intended_verifier_authenticated=true -- this is presenter-bound (you cryptographically proved you hold that key), not just intent-bound (a caller-supplied string anyone could claim). Requires expect_intended_verifier to also be set. Other CAIP-10 namespaces are not yet supported and are reported as such, not silently ignored.'
+        expect_max_age_seconds:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expect Max Age Seconds
+          description: 'Optional (added 2026-08-17, per tyche-dev''s mandate-gate design on w3c-cg/ai-agent-protocol#44): by default `/verify-proof` never rejects on staleness -- `age_seconds` is purely informational, you decide. Pass this to turn it into an actual MUST-reject gate, symmetric to expect_artifact_hash/expect_intended_verifier: if the proof''s age_seconds exceeds this bound, checks.freshness_within_bound=false and valid flips to false. If age_seconds cannot be determined at all (an older proof with no verified_at), this fails CLOSED (freshness_within_bound=false, with a freshness_within_bound_error explaining why) rather than silently passing -- you asked to enforce freshness and we couldn''t confirm it, so it does not pass. Omit this param and nothing changes (informational-only, exactly today''s behavior).'
+        consume:
+          type: boolean
+          title: Consume
+          description: 'Optional (added 2026-09-07, per a nullifier-design comparison against crewAI#4877/ERC-8380): a verdict-issuance layer binding request+decision correctly is not automatically a replay-safe execution-consumption layer -- decision_ref is a pure function, so nothing stopped the identical, still-valid proof from being presented more than once. Pass true at the ACTUAL dispatch point (never earlier -- consuming before you''ve genuinely acted on it burns the verdict for nothing) to atomically claim single-use consumption of this proof''s decision_ref. Sets `checks.decision_ref_consumed` (true only on the first-ever presentation) and `checks.decision_ref_already_consumed` (true if some earlier call already consumed it -- a real replay), and flips `valid` to false on a replay. Absent by default: omit this and nothing changes, matching every other optional check here. Requires decision_ref_recomputes to have passed (a tampered proof cannot burn a real nullifier slot) and only applies to verdict proofs that carry a decision_ref at all (non-applicable otherwise, reported as such, never silently treated as consumed).'
+          default: false
+        expect_pq_binding:
+          type: boolean
+          title: Expect Pq Binding
+          description: 'Optional (added 2026-09-01, Vértice/verticecriativo pq-wallet-binding — a non-custodial post-quantum key-binding anchor, PqBindingAnchor.sol, first-write-immutable). Requires `expect_intended_verifier` to also be an eip155 CAIP-10 address. When true, we independently verify — never trusting Vértice''s gateway blindly — that this address has a real, anchored post-quantum key binding: fetch the binding statement, recompute its content-address ourselves via RFC-8785 JCS + sha256, and independently eth_call `PqBindingAnchor.bindingOf(address)` on a public Sepolia RPC, requiring our own recompute to match BOTH the gateway''s claim AND the real on-chain value. Sets `checks.pq_binding_verified` (true/false/null, derived 1:1 from `checks.pq_binding_evidence`) and `checks.pq_binding_evidence` — a genuine three-way read: `"verified"`, `"refuted"` (a confirmed mismatch or a confirmed-absent on-chain binding — we actually completed the check and it came back negative), or `"unverifiable"` (the check could not be completed at all — network failure, malformed/unusable gateway data, or bad input; NEVER conflated with `"refuted"`, since that would misreport an incomplete check as a genuine finding) — plus a `pq_binding` disclosure block (statement, pq_pubkey, which values matched, which RPC answered, and a machine-readable `reason` code for any non-`"verified"` result). This is testnet-only as of this field (chain_id 11155111, disclosed in the response) and an IDENTITY provenance claim, not transaction-level quantum safety — a stronger provenance signal on top of `verifier_signature`''s ECDSA proof, not a replacement for it. `valid` flips to false only when evidence is `"refuted"`; `"unverifiable"` never flips `valid` on its own, since that would let an unrelated network hiccup or gateway data bug reject an otherwise-good proof.'
+          default: false
+      type: object
+      title: VerifyProofRequest
+      description: S169 — verify a counterparty's invinoveritas proof (the agent-to-agent trust handshake).
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

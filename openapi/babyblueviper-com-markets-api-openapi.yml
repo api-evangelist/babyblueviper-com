@@ -1,0 +1,201 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Markets API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged markets across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Markets
+paths:
+  /agent-economy-brief/preview:
+    get:
+      tags:
+      - Markets
+      summary: Agent Economy Brief Preview
+      description: 'FREE teaser — source breadth + churn count (the shop-window). No payment.
+
+        Lives at /preview (not /agent-economy-brief) because the paid path is intercepted by the
+
+        x402 probe middleware regardless of method — mirrors /signals (free) vs /signals/full (paid).'
+      operationId: agent_economy_brief_preview_agent_economy_brief_preview_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /signals:
+    get:
+      tags:
+      - Markets
+      summary: Get Signals Teaser
+      description: FREE teaser — the BTC vol-expansion regime read (the shop-window). No payment.
+      operationId: get_signals_teaser_signals_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /signals/full:
+    get:
+      tags:
+      - Markets
+      summary: Get Signals Full
+      description: PAID full multi-coin signal set (x402 USDC on Base or Bearer credits).
+      operationId: get_signals_full_signals_full_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.032508'
+        protocols:
+        - x402: {}
+  /markets/act:
+    post:
+      tags:
+      - Markets
+      summary: Markets Act
+      description: 'Markets Bundle: regime + live signals + brief + optional governance review, one call.'
+      operationId: markets_act_markets_act_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketsActRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.085334'
+        protocols:
+        - x402: {}
+  /governance-record:
+    get:
+      tags:
+      - Markets
+      summary: Governance Record
+      operationId: governance_record_governance_record_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MarketsActRequest:
+      properties:
+        coins:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Coins
+          description: Coins for the signals set (default BTC/ETH/SOL/XRP).
+        artifact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact
+          description: Optional proposed trade/plan to pass through the governance review gate.
+        artifact_type:
+          type: string
+          title: Artifact Type
+          description: code_diff|patch|shell_command|plan|config_change|analysis|agent_output|trade|onchain_action|sanctions_screening|general
+          default: general
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Optional context for the review.
+        max_spend_sats:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Spend Sats
+          description: Hard deterministic cap; the bundle is rejected before any work if its price exceeds this.
+      type: object
+      title: MarketsActRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

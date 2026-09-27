@@ -1,0 +1,650 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Ledger API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged ledger across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Ledger
+paths:
+  /conformance/{name}/certify-to-ledger:
+    post:
+      tags:
+      - Ledger
+      summary: Certify To Ledger
+      description: 'Publish a CURRENTLY-certified verifier''s live /conformance grade as a permanent, WE-signed
+
+        /ledger entry — Nostr-broadcast immediately, Bitcoin-OTS-anchored within ~15 minutes, same as
+
+        every other ledger entry.
+
+
+        THE GRADE ITSELF STAYS FREE. This does not buy a better result — it publishes whatever the
+
+        live registry already measured, verbatim, as of the moment of the call. Only a verifier
+
+        currently `certified: true` on GET /conformance.json can be certified-to-ledger; nothing gates
+
+        the free grading itself (the neutrality of that is the registry''s whole authority — see
+
+        CONFORMANCE_REGISTRY_BUILD_SPEC.md). What''s paid for is durability and portability: a
+
+        Nostr+Bitcoin-anchored, independently-verifiable record that survives even if the live
+
+        endpoint later breaks, or a future re-check un-certifies it — the entry is honestly labeled
+
+        "certified AS OF this measurement," never "currently certified."
+
+
+        Re-calling on an unchanged snapshot (same verifier, same checked_at) returns the existing
+
+        entry instead of re-publishing/re-charging — a genuinely fresh measurement (the registry
+
+        runner''s own cadence) always produces a new publishable snapshot.
+
+
+        Auth: Bearer, real registered account (free to register: POST /register).
+
+        Price: CONFORMANCE_CERTIFY_PRICE_SATS (see /billing or this response''s 402 if unpaid).
+
+        Rate limit: shared with /ledger/submit, services.ledger_submissions.MAX_SUBMISSIONS_PER_KEY_PER_DAY.'
+      operationId: certify_to_ledger_conformance__name__certify_to_ledger_post
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      - name: note
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Note
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Index
+      description: 'Index of all verdict entries. Each is independently verifiable (see /ledger/{entry}).
+
+
+        ?anchors=pubkey1,pubkey2,... (added 2026-07-23): optional comma-separated list of attester
+
+        pubkey_hex values the CALLER trusts as independent. When present, reputation_axis''s
+
+        attestationCountNeff/independence_adjusted_diversity are recomputed rooted in that set
+
+        instead of our own global attester population -- see _reputation_axis()''s docstring. Omit
+
+        entirely to get today''s unchanged global-default behavior.'
+      operationId: ledger_index_ledger_get
+      parameters:
+      - name: anchors
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Anchors
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/submit:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Submit Describe
+      description: 'Self-describing, public, no-auth GET for the POST /ledger/submit door -- returns the exact
+
+        request shape, price, and payment/registration flow so a third-party UI (e.g. a console
+
+        rendering our submission door as a real, linkable step, not just prose) can point at something
+
+        live instead of a static description. MUST be registered before GET /ledger/{entry} in this
+
+        file -- FastAPI matches path routes in registration order, and a param route would otherwise
+
+        swallow the literal string "submit" as an entry id (confirmed live: this exact 404 happened
+
+        before this route existed, 2026-08-06, Merlini/trustless-ai console integration ask).'
+      operationId: ledger_submit_describe_ledger_submit_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    post:
+      tags:
+      - Ledger
+      summary: Ledger Submit
+      description: 'Submit a real, already-signed /review proof to become a featured public /ledger entry.
+
+
+        PUBLISHES IMMEDIATELY on success -- no human review, no queue. The gates are objective and
+
+        automated: the proof must be cryptographically real (verify_proof_event against our own
+
+        published key -- nothing fake or forged can land here), the account must be real and not
+
+        under active enforcement, payment (see pricing below), and a per-account rate-limit
+
+        backstop. Lands as its own honestly-labeled type, `self_submitted_verdict` -- distinct from
+
+        a hand-featured `external_partner_review` entry, same cryptographic trust either way.
+
+
+        SAME NOSTR BROADCAST + BITCOIN ANCHOR AS EVERY OTHER ENTRY: the already-signed event is
+
+        relayed to the public Nostr mesh immediately (posted_relays in the response), then
+
+        `ots-stamp.timer` (fully generic -- scans the whole ledger index, no type filtering) picks
+
+        up every new entry within ~15 minutes and submits its event_id to public OpenTimestamps
+
+        calendars, so `committed_at` is provably anchored to a Bitcoin block -- a clock no chain
+
+        operator or our own key can move or back-date. Bitcoin anchor is not instant (matches the
+
+        ~15min cadence for every other entry) -- check GET /ledger/{entry}/ots once it''s had a few
+
+        minutes.
+
+
+        Auth: Bearer, real registered account (free to register: POST /register).
+
+        Price: LEDGER_SUBMIT_PRICE_SATS (see /billing or this response''s 402 if unpaid).
+
+        Rate limit: services.ledger_submissions.MAX_SUBMISSIONS_PER_KEY_PER_DAY / rolling 24h, backstop only.'
+      operationId: ledger_submit_ledger_submit_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LedgerSubmitRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/demo/verdict-outcome-resolution:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Demo Verdict Outcome Resolution
+      description: 'Correspondence-by-observation for the 2026-08-07 verdict_outcome fix (commit 5b9a8ad),
+
+        per Merlini/Pavlo''s proposal (trustless-ai group, topic 16): rather than asking a peer to
+
+        trust that a gist recompute matches what actually runs in this private repo, call the REAL
+
+        production resolution function (_resolve_verdict_outcome_citations, the exact code
+
+        _verdict_outcome_resolution delegates to for real /ledger citations) against a synthetic,
+
+        clearly-labeled citing set that reproduces the bug report''s own scenarios. MUST be registered
+
+        before GET /ledger/{entry} (same reason as GET /ledger/submit above) -- otherwise the param
+
+        route would swallow "demo" as an entry id.
+
+
+        No ledger writes happen here -- decision_ref is a synthetic id, citing_entries below are
+
+        inline literals, nothing is read from or appended to the real /ledger index. This exists
+
+        purely so the fix''s behavior is checkable against live deployed code without either handing
+
+        over repo access or asking anyone to trust a claim.
+
+
+        This GET route serves ONE fixed example. For your own citation set, POST to this same path
+
+        with a JSON body ({"citing_entries": [...]}) -- Merlini''s honest limit on the fixed version
+
+        (msg 2431): ''Correspondence is now proven for one input... If the demo took a citation set as
+
+        a parameter, a reviewer could diff any case they invented, including this one.'''
+      operationId: ledger_demo_verdict_outcome_resolution_ledger_demo_verdict_outcome_resolution_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+    post:
+      tags:
+      - Ledger
+      summary: Ledger Demo Verdict Outcome Resolution Custom
+      description: 'Same real production function as the GET version below, but takes YOUR citation set instead
+
+        of a fixed example. Built 2026-08-07 per Merlini''s honest limit on the GET demo (trustless-ai
+
+        group, topic 16, msg 2431): ''The endpoint serves fixed synthetic inputs... Correspondence is now
+
+        proven for one input, which is genuinely more than zero and less than "the two are the same
+
+        function". If the demo took a citation set as a parameter, a reviewer could diff any case they
+
+        invented, including this one, without either of us in the loop.'' This is that: no auth, no
+
+        ledger writes, calls _resolve_verdict_outcome_citations() directly against whatever you post.'
+      operationId: ledger_demo_verdict_outcome_resolution_custom_ledger_demo_verdict_outcome_resolution_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerdictOutcomeDemoRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/{entry}:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Entry
+      description: A single signed verdict entry (the full signed Nostr event + the verdict record).
+      operationId: ledger_entry_ledger__entry__get
+      parameters:
+      - name: entry
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/{entry}/canonical:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Entry Canonical
+      description: 'EXACT canonical bytes of this entry''s `record` under a published hash recipe.
+
+
+        Additive (2026-09-17, Toshikatsu / HORIZON SHIELD gap): GET /ledger/{entry} returns a fresh
+
+        JSONResponse projection; the published content_hash_spec / legacy_record_sha256_spec both
+
+        require the reader to re-serialize `record` themselves. This path serves the exact bytes the
+
+        named recipe hashes, so:
+
+
+        sha256(response.content).hexdigest() == X-Expected-Sha256
+
+
+        with zero re-serialization on the reader side. Does not change /ledger/{entry} behavior.
+
+
+        Default recipe: content_hash_spec when chain.content_hash is present, else
+
+        legacy_ascii_escaped_v0 when record_sha256 is present. Override with ?recipe=.'
+      operationId: ledger_entry_canonical_ledger__entry__canonical_get
+      parameters:
+      - name: entry
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry
+      - name: recipe
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recipe
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/{entry}/commitment:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Entry Commitment
+      description: 'Commitment evidence ONLY — answers ''was this verdict committed before the outcome was
+
+        known?'' (signed event + relay anchor). No outcome data on this path by design.'
+      operationId: ledger_entry_commitment_ledger__entry__commitment_get
+      parameters:
+      - name: entry
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/{entry}/ots:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Entry Ots
+      description: 'The raw OpenTimestamps proof (.ots) for this entry''s verdict event_id. A third party feeds it to
+
+        `ots verify -d .ots` to confirm the Bitcoin-PoW anchor against any explorer,
+
+        with no trust in us — this is what makes the anchoring claim recomputable end to end, not just asserted.'
+      operationId: ledger_entry_ots_ledger__entry__ots_get
+      parameters:
+      - name: entry
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger/{entry}/outcome:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Entry Outcome
+      description: 'Outcome evidence ONLY — answers ''was the verdict later right or wrong?'' (on-chain
+
+        settlement account + covering signed outcome digests). No commitment re-derivation needed.'
+      operationId: ledger_entry_outcome_ledger__entry__outcome_get
+      parameters:
+      - name: entry
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Entry
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /ledger.txt:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Text
+      description: Human-readable summary of every verdict (claim -> result).
+      operationId: ledger_text_ledger_txt_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/plain:
+              schema:
+                type: string
+      security: []
+  /ledger.html:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Html
+      description: 'S198 — shareable, link-preview-friendly HTML view of the public verdict ledger.
+
+
+        The JSON (/ledger) and plain-text (/ledger.txt) views are the machine/recompute surfaces and are
+
+        UNCHANGED (other systems depend on those content-types). This adds a human-facing page with Open
+
+        Graph + Twitter-card meta so the track record can be featured/shared (LinkedIn/X reject text/plain
+
+        and JSON — they need an HTML page with preview tags). Same data, no new trust surface: every entry
+
+        links to its signed JSON so a skeptic recomputes rather than trusts.'
+      operationId: ledger_html_ledger_html_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/html:
+              schema:
+                type: string
+      security: []
+  /ledger/submissions/{submission_id}:
+    get:
+      tags:
+      - Ledger
+      summary: Ledger Submission Status
+      description: 'Public, no-auth lookup for a self-submitted entry''s audit record (submitter, price
+
+        paid, and the resulting /ledger entry number) -- submissions publish immediately, so this
+
+        is a record of what happened, not a pending/rejected status check.'
+      operationId: ledger_submission_status_ledger_submissions__submission_id__get
+      parameters:
+      - name: submission_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Submission Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    VerdictOutcomeDemoRequest:
+      properties:
+        citing_entries:
+          items:
+            $ref: '#/components/schemas/VerdictOutcomeDemoCitation'
+          type: array
+          maxItems: 50
+          title: Citing Entries
+          description: Your own synthetic citation set -- construct any mix of anchored/unanchored, proven_right/proven_wrong/inconclusive/evidence_unavailable entries you want to check the real resolution logic against.
+        decision_ref:
+          type: string
+          title: Decision Ref
+          default: demo:custom (SYNTHETIC — not a real /ledger entry)
+      type: object
+      required:
+      - citing_entries
+      title: VerdictOutcomeDemoRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VerdictOutcomeDemoCitation:
+      properties:
+        outcome:
+          type: string
+          title: Outcome
+          description: e.g. proven_right, proven_wrong, inconclusive, evidence_unavailable
+        anchor_timestamp:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Anchor Timestamp
+          description: unix seconds, or null for an unanchored citation -- REQUIRED key (omitting it 422s); use null, not omission, to declare 'unanchored'
+        entry:
+          type: string
+          title: Entry
+          description: free-text label for this synthetic citation, not a real /ledger entry
+          default: ''
+      type: object
+      required:
+      - outcome
+      - anchor_timestamp
+      title: VerdictOutcomeDemoCitation
+    LedgerSubmitRequest:
+      properties:
+        event:
+          additionalProperties: true
+          type: object
+          title: Event
+          description: The signed Nostr event from a prior /review(sign=true) call -- the exact `proof.event` object that response returned.
+        note:
+          type: string
+          maxLength: 500
+          title: Note
+          description: 'Optional short context: what this verdict was for.'
+          default: ''
+      type: object
+      required:
+      - event
+      title: LedgerSubmitRequest
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

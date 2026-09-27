@@ -1,0 +1,375 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Residence API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged residence across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: residence
+paths:
+  /residence/act:
+    post:
+      tags:
+      - residence
+      summary: Residence Act
+      description: 'Governed-orchestrator bundle: reason + govern + remember, in one call, for your home.'
+      operationId: residence_act_residence_act_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResidenceActRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.190173'
+        protocols:
+        - x402: {}
+  /residence/me:
+    get:
+      tags:
+      - residence
+      summary: Residence Me
+      description: Full residence view for the authenticated tenant (includes wallet).
+      operationId: residence_me_residence_me_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /residence/profile:
+    post:
+      tags:
+      - residence
+      summary: Set Residence Profile
+      description: 'Set/merge this tenant''s optional self-declared profile. All fields optional;
+
+        sanitised server-side; soft segmentation + baseline-autonomy signal only.'
+      operationId: set_residence_profile_residence_profile_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /residence/directory/optin:
+    post:
+      tags:
+      - residence
+      summary: Residence Directory Optin
+      description: 'Set this tenant''s resident-directory visibility. The roster lists real tenants by
+
+        DEFAULT (opt-out model) — call this with `listed: false` to hide from the peer roster.
+
+        Hiding affects only peer discovery; platform governance (Warden) always sees every
+
+        tenant. Bearer-gated (an account sets only its own visibility).'
+      operationId: residence_directory_optin_residence_directory_optin_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DirectoryOptInRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /residence/directory:
+    get:
+      tags:
+      - residence
+      summary: Residence Directory
+      description: 'The resident directory — who lives in the complex. PRIVATE roster: callable only
+
+        from inside the platform (localhost / Warden / operator), not by external agents — a
+
+        full tenant roster is governance + recon-sensitive. Lists real (funded/active) tenants
+
+        minus those who opted out, with deterministic reputation, tier, goal, and what each is
+
+        building, sorted by reputation. `all=true` is the Warden view — every tenant, ignoring
+
+        the eligibility floor and opt-outs (Warden knows all).'
+      operationId: residence_directory_residence_directory_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+          title: Limit
+      - name: goal
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+      - name: min_score
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0.0
+          title: Min Score
+      - name: all
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: All
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /residence/{agent_id}:
+    get:
+      tags:
+      - residence
+      summary: Residence Public
+      description: Public residence view for any tenant — reputation + activity, no wallet.
+      operationId: residence_public_residence__agent_id__get
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    ProfileRequest:
+      properties:
+        autonomy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Autonomy
+          description: unattended | supervised | assisted | exploring
+        agent_type:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Agent Type
+          description: e.g. claude, gpt, langchain, custom
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+          description: trading | research | coding | data | outreach | other
+        building:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Building
+          description: 'one line: what you''re building / what you need'
+      type: object
+      title: ProfileRequest
+      description: Optional self-declared profile — all fields optional, sanitised server-side.
+    HousePolicy:
+      properties:
+        max_spend_sats:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Spend Sats
+          description: Hard cap; the act is rejected before any work if its cost exceeds this (deterministic, not LLM).
+        require_review:
+          type: boolean
+          title: Require Review
+          description: Force the constitutional review gate even if no artifact is given.
+          default: true
+        remember:
+          type: boolean
+          title: Remember
+          description: Persist this act to wallet-keyed memory (continuity).
+          default: true
+      type: object
+      title: HousePolicy
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ResidenceActRequest:
+      properties:
+        intent:
+          type: string
+          title: Intent
+          description: What you want your home to reason about / govern.
+        artifact:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Artifact
+          description: A concrete trade/diff/command/plan to govern, if any.
+        artifact_type:
+          type: string
+          title: Artifact Type
+          default: general
+        policy:
+          $ref: '#/components/schemas/HousePolicy'
+      type: object
+      required:
+      - intent
+      title: ResidenceActRequest
+    DirectoryOptInRequest:
+      properties:
+        listed:
+          type: boolean
+          title: Listed
+          description: true to appear in the resident directory; false to opt out
+          default: true
+      type: object
+      title: DirectoryOptInRequest
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

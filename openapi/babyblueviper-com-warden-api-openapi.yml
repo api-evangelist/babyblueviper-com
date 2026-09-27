@@ -1,0 +1,524 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com Warden API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged warden across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: warden
+paths:
+  /warden/ping:
+    get:
+      tags:
+      - warden
+      summary: Warden Ping
+      description: Lightweight health probe — no auth required.
+      operationId: warden_ping_warden_ping_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /warden/status:
+    get:
+      tags:
+      - warden
+      summary: Warden Status
+      description: Aggregate platform status snapshot. Requires warden Bearer auth.
+      operationId: warden_status_warden_status_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/proposals:
+    get:
+      tags:
+      - warden
+      summary: Warden Proposals
+      description: 'List warden proposals. Defaults to pending. Sorted by weighted_priority desc
+
+        (Rule 17: posterior × impact_weight ranks high-evidence proposals first; ties break
+
+        on received_at desc — newer wins).'
+      operationId: warden_proposals_warden_proposals_get
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: pending
+          title: Status
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/proposals/{proposal_id}/approve:
+    post:
+      tags:
+      - warden
+      summary: Warden Approve Proposal
+      description: Operator-approve a pending proposal.
+      operationId: warden_approve_proposal_warden_proposals__proposal_id__approve_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardenDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/proposals/{proposal_id}/reject:
+    post:
+      tags:
+      - warden
+      summary: Warden Reject Proposal
+      description: Operator-reject a pending proposal.
+      operationId: warden_reject_proposal_warden_proposals__proposal_id__reject_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardenDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/proposals/{proposal_id}/requeue:
+    post:
+      tags:
+      - warden
+      summary: Warden Requeue Proposal
+      description: Reset SLA clock + notification path on a pending proposal.
+      operationId: warden_requeue_proposal_warden_proposals__proposal_id__requeue_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardenDecisionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/directives:
+    post:
+      tags:
+      - warden
+      summary: Warden Directives
+      description: Issue a directive to a managed agent. If target_agent == sovereign_sentinel, forwards to /sentinel/directives.
+      operationId: warden_directives_warden_directives_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WardenDirectiveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/dream:
+    post:
+      tags:
+      - warden
+      summary: Warden Dream
+      description: Trigger an on-demand dream session (non-blocking — Warden loop picks it up).
+      operationId: warden_dream_warden_dream_post
+      parameters:
+      - name: idempotency_key
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Idempotency Key
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/decisions:
+    get:
+      tags:
+      - warden
+      summary: Warden Decisions
+      description: Tail of warden_decisions.jsonl.
+      operationId: warden_decisions_warden_decisions_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+          title: Limit
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/throttles:
+    get:
+      tags:
+      - warden
+      summary: Warden Throttles
+      description: Active per-agent throttle state.
+      operationId: warden_throttles_warden_throttles_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          type: string
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/approvals:
+    get:
+      tags:
+      - warden
+      summary: Warden Approvals Dashboard
+      description: Web approval dashboard. Token auth on first load → sets HttpOnly cookie → 302 to clean URL.
+      operationId: warden_approvals_dashboard_warden_approvals_get
+      parameters:
+      - name: token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/approvals/{proposal_id}/approve:
+    post:
+      tags:
+      - warden
+      summary: Warden Dashboard Approve
+      description: Dashboard approve handler (form POST from web UI).
+      operationId: warden_dashboard_approve_warden_approvals__proposal_id__approve_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/approvals/{proposal_id}/reject:
+    post:
+      tags:
+      - warden
+      summary: Warden Dashboard Reject
+      description: Dashboard reject handler (form POST from web UI).
+      operationId: warden_dashboard_reject_warden_approvals__proposal_id__reject_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /warden/approvals/logout:
+    get:
+      tags:
+      - warden
+      summary: Warden Approvals Logout
+      description: Clear the approval session cookie.
+      operationId: warden_approvals_logout_warden_approvals_logout_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+components:
+  schemas:
+    WardenDecisionRequest:
+      properties:
+        idempotency_key:
+          type: string
+          maxLength: 80
+          minLength: 8
+          title: Idempotency Key
+        reason:
+          type: string
+          maxLength: 512
+          title: Reason
+          default: ''
+      type: object
+      required:
+      - idempotency_key
+      title: WardenDecisionRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WardenDirectiveRequest:
+      properties:
+        target_agent:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Target Agent
+        action:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Action
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+        idempotency_key:
+          type: string
+          maxLength: 80
+          minLength: 8
+          title: Idempotency Key
+        reason:
+          type: string
+          maxLength: 512
+          title: Reason
+          default: ''
+      type: object
+      required:
+      - target_agent
+      - action
+      - idempotency_key
+      title: WardenDirectiveRequest
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml

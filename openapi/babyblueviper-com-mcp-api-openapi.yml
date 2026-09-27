@@ -1,0 +1,51 @@
+openapi: 3.2.0
+info:
+  title: Babyblueviper Com MCP API
+  version: 1.13.0
+  contact:
+    name: invinoveritas
+    url: https://api.babyblueviper.com/
+    email: contact@agents.babyblueviper.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+  description: 'Operations tagged Mcp across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: MCP
+paths:
+  /mcp:
+    post:
+      summary: Mcp Handler
+      description: 'Dispatch to the MCP handler, then make 402 tool errors payment-legible: attach
+
+        x402Version + accepts + the payable REST resource as JSON-RPC error.data.'
+      operationId: mcp_handler_mcp_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - MCP
+  /mcp/:
+    post:
+      summary: Mcp Handler
+      description: 'Dispatch to the MCP handler, then make 402 tool errors payment-legible: attach
+
+        x402Version + accepts + the payable REST resource as JSON-RPC error.data.'
+      operationId: mcp_handler_mcp__post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+      tags:
+      - MCP
+x-refined-from:
+- babyblueviper-com-openapi-original.json
+- babyblueviper-com-openapi.yml
