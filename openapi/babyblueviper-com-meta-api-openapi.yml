@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Babyblueviper Com Meta API
-  version: 1.13.0
+  title: invinoveritas Meta API
+  description: The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us.
   contact:
     name: invinoveritas
     url: https://api.babyblueviper.com/
@@ -9,8 +9,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.13.0
   x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
-  description: 'Operations tagged meta across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
 tags:
 - name: Meta
   description: Health, pricing, and discovery endpoints
@@ -869,15 +869,6 @@ paths:
       security: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -904,6 +895,12 @@ components:
       - msg
       - type
       title: ValidationError
-x-refined-from:
-- babyblueviper-com-openapi-original.json
-- babyblueviper-com-openapi.yml
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

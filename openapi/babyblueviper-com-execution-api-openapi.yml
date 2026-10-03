@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Babyblueviper Com Execution API
-  version: 1.13.0
+  title: invinoveritas Execution API
+  description: The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us.
   contact:
     name: invinoveritas
     url: https://api.babyblueviper.com/
@@ -9,8 +9,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.13.0
   x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
-  description: 'Operations tagged execution across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
 tags:
 - name: Execution
 paths:
@@ -704,6 +704,109 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ExecuteRequest:
+      properties:
+        language:
+          type: string
+          const: python
+          title: Language
+          default: python
+        code:
+          type: string
+          maxLength: 6000
+          minLength: 1
+          title: Code
+        stdin:
+          type: string
+          maxLength: 20000
+          title: Stdin
+          default: ''
+        timeout_seconds:
+          anyOf:
+          - type: number
+            maximum: 600.0
+            minimum: 0.5
+          - type: 'null'
+          title: Timeout Seconds
+        tier:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Tier
+          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
+          default: 1
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+        permissive:
+          type: boolean
+          title: Permissive
+          description: 'Permissive mode: run ARBITRARY Python — any import, full builtins, no AST allowlist — relying on the hardened isolated container (network OFF, read-only root, all caps dropped, non-root, resource-capped) as the boundary. Priced at a premium. Default False keeps the restrictive allowlist sandbox.'
+          default: false
+        use_workspace:
+          type: boolean
+          title: Use Workspace
+          description: Mount a persistent per-agent workspace at /workspace (read-write for the agent). Files, installed packages, and git clones survive across calls. Storage is lightly metered. Only available in higher tiers or with permissive=True.
+          default: false
+      type: object
+      required:
+      - code
+      title: ExecuteRequest
+    ProveRevealRequest:
+      properties:
+        content:
+          additionalProperties: true
+          type: object
+          title: Content
+          description: The exact proof_payload content being revealed/disclosed.
+      type: object
+      required:
+      - content
+      title: ProveRevealRequest
+      description: 'DEILS leg-2: reveal content for a proof issued with disclose=False and bind it to the
+
+        already-published commitment_hash. Anyone holding the true content can reveal it — the check
+
+        is a pure function of (stored commitment_hash, revealed content), not caller identity.'
+    WitnessRequest:
+      properties:
+        source:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Source
+          description: Who this claim is attributed to (e.g. a domain or issuer name). Self-declared by the caller, NOT cryptographically verified by us — this proof establishes WHEN and WHAT was submitted, not WHO actually authored it.
+        body:
+          type: string
+          maxLength: 16000
+          minLength: 1
+          title: Body
+          description: The exact bytes to anchor, verbatim (typically a canonical JSON verdict body from another verifier). Anchored byte-for-byte — not re-serialized, not judged.
+      type: object
+      required:
+      - source
+      - body
+      title: WitnessRequest
+      description: 'S216 (crewAI#4877 composed-evaluators collaboration) — anchor a THIRD PARTY''s exact claim bytes
+
+        as-is, without independent judgment. Distinct from /review(sign=true), which always runs OUR OWN
+
+        verdict on the artifact and signs THAT. This is pure notarization: ''we received and timestamped
+
+        this, attributed to source X'' — not ''we agree with it''. Lets two independent verifiers compose a
+
+        joint artifact where each claim stays separately attributable, instead of one re-grading the other.'
     ValidateRequest:
       properties:
         returns:
@@ -767,207 +870,6 @@ components:
       description: 'EdgeProof backtest reality-check. Submit realized P&L (never your strategy);
 
         get a verdict on whether the edge is real or curve-fit noise.'
-    ExecuteRequest:
-      properties:
-        language:
-          type: string
-          const: python
-          title: Language
-          default: python
-        code:
-          type: string
-          maxLength: 6000
-          minLength: 1
-          title: Code
-        stdin:
-          type: string
-          maxLength: 20000
-          title: Stdin
-          default: ''
-        timeout_seconds:
-          anyOf:
-          - type: number
-            maximum: 600.0
-            minimum: 0.5
-          - type: 'null'
-          title: Timeout Seconds
-        tier:
-          type: integer
-          maximum: 3.0
-          minimum: 0.0
-          title: Tier
-          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
-          default: 1
-        agent_id:
-          type: string
-          maxLength: 120
-          title: Agent Id
-          default: ''
-        permissive:
-          type: boolean
-          title: Permissive
-          description: 'Permissive mode: run ARBITRARY Python — any import, full builtins, no AST allowlist — relying on the hardened isolated container (network OFF, read-only root, all caps dropped, non-root, resource-capped) as the boundary. Priced at a premium. Default False keeps the restrictive allowlist sandbox.'
-          default: false
-        use_workspace:
-          type: boolean
-          title: Use Workspace
-          description: Mount a persistent per-agent workspace at /workspace (read-write for the agent). Files, installed packages, and git clones survive across calls. Storage is lightly metered. Only available in higher tiers or with permissive=True.
-          default: false
-      type: object
-      required:
-      - code
-      title: ExecuteRequest
-    ProveRequest:
-      properties:
-        action_id:
-          type: string
-          maxLength: 80
-          minLength: 6
-          title: Action Id
-          description: Execution audit action ID to prove.
-        agent_id:
-          type: string
-          maxLength: 120
-          title: Agent Id
-          default: ''
-        nostr_publish:
-          type: boolean
-          title: Nostr Publish
-          description: If true and NOSTR_NSEC is set, broadcast a kind 1 note to Nostr relays announcing this attestation.
-          default: false
-        disclose:
-          type: boolean
-          title: Disclose
-          description: 'Default True (unchanged legacy behavior): proof content is public immediately. Set False for DEILS ''leg 2'' held-content mode: only {commitment_hash, ledger_position, status=''content_withheld''} is returned/published now (existence is mandatory-public and non-suppressible), the actual content stays server-side until a later POST /prove/{proof_id}/reveal call binds it to this commitment.'
-          default: true
-      type: object
-      required:
-      - action_id
-      title: ProveRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BrowseRequest:
-      properties:
-        url:
-          type: string
-          maxLength: 2000
-          title: Url
-          description: Public http(s) URL to fetch in the isolated action layer.
-        action:
-          type: string
-          enum:
-          - fetch
-          - extract_text
-          - screenshot
-          - multi_step
-          title: Action
-          description: fetch/extract_text use v0; screenshot uses Playwright BaaS v1; multi_step runs a sequence of click/type/navigate/wait/screenshot steps within the initial URL's domain.
-          default: fetch
-        selector:
-          type: string
-          maxLength: 200
-          title: Selector
-          description: Reserved for single-step Playwright actions.
-          default: ''
-        steps:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          maxItems: 5
-          title: Steps
-          description: 'Step sequence for multi_step action (max 5). Each step: {"action": "click|type|navigate|wait|screenshot", "selector": "css", "value": "text", "url": "https://..."}.'
-        max_bytes:
-          type: integer
-          maximum: 262144.0
-          minimum: 1024.0
-          title: Max Bytes
-          default: 65536
-        viewport_width:
-          type: integer
-          maximum: 1920.0
-          minimum: 320.0
-          title: Viewport Width
-          default: 1280
-        viewport_height:
-          type: integer
-          maximum: 1600.0
-          minimum: 320.0
-          title: Viewport Height
-          default: 900
-        wait_ms:
-          type: integer
-          maximum: 3000.0
-          minimum: 0.0
-          title: Wait Ms
-          default: 500
-        tier:
-          type: integer
-          maximum: 3.0
-          minimum: 0.0
-          title: Tier
-          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
-          default: 1
-        agent_id:
-          type: string
-          maxLength: 120
-          title: Agent Id
-          default: ''
-      type: object
-      required:
-      - url
-      title: BrowseRequest
-    WitnessRequest:
-      properties:
-        source:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Source
-          description: Who this claim is attributed to (e.g. a domain or issuer name). Self-declared by the caller, NOT cryptographically verified by us — this proof establishes WHEN and WHAT was submitted, not WHO actually authored it.
-        body:
-          type: string
-          maxLength: 16000
-          minLength: 1
-          title: Body
-          description: The exact bytes to anchor, verbatim (typically a canonical JSON verdict body from another verifier). Anchored byte-for-byte — not re-serialized, not judged.
-      type: object
-      required:
-      - source
-      - body
-      title: WitnessRequest
-      description: 'S216 (crewAI#4877 composed-evaluators collaboration) — anchor a THIRD PARTY''s exact claim bytes
-
-        as-is, without independent judgment. Distinct from /review(sign=true), which always runs OUR OWN
-
-        verdict on the artifact and signs THAT. This is pure notarization: ''we received and timestamped
-
-        this, attributed to source X'' — not ''we agree with it''. Lets two independent verifiers compose a
-
-        joint artifact where each claim stays separately attributable, instead of one re-grading the other.'
-    ProveRevealRequest:
-      properties:
-        content:
-          additionalProperties: true
-          type: object
-          title: Content
-          description: The exact proof_payload content being revealed/disclosed.
-      type: object
-      required:
-      - content
-      title: ProveRevealRequest
-      description: 'DEILS leg-2: reveal content for a proof issued with disclose=False and bind it to the
-
-        already-published commitment_hash. Anyone holding the true content can reveal it — the check
-
-        is a pure function of (stored commitment_hash, revealed content), not caller identity.'
     VerifyProofRequest:
       properties:
         event:
@@ -1041,6 +943,101 @@ components:
       type: object
       title: VerifyProofRequest
       description: S169 — verify a counterparty's invinoveritas proof (the agent-to-agent trust handshake).
-x-refined-from:
-- babyblueviper-com-openapi-original.json
-- babyblueviper-com-openapi.yml
+    ProveRequest:
+      properties:
+        action_id:
+          type: string
+          maxLength: 80
+          minLength: 6
+          title: Action Id
+          description: Execution audit action ID to prove.
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+        nostr_publish:
+          type: boolean
+          title: Nostr Publish
+          description: If true and NOSTR_NSEC is set, broadcast a kind 1 note to Nostr relays announcing this attestation.
+          default: false
+        disclose:
+          type: boolean
+          title: Disclose
+          description: 'Default True (unchanged legacy behavior): proof content is public immediately. Set False for DEILS ''leg 2'' held-content mode: only {commitment_hash, ledger_position, status=''content_withheld''} is returned/published now (existence is mandatory-public and non-suppressible), the actual content stays server-side until a later POST /prove/{proof_id}/reveal call binds it to this commitment.'
+          default: true
+      type: object
+      required:
+      - action_id
+      title: ProveRequest
+    BrowseRequest:
+      properties:
+        url:
+          type: string
+          maxLength: 2000
+          title: Url
+          description: Public http(s) URL to fetch in the isolated action layer.
+        action:
+          type: string
+          enum:
+          - fetch
+          - extract_text
+          - screenshot
+          - multi_step
+          title: Action
+          description: fetch/extract_text use v0; screenshot uses Playwright BaaS v1; multi_step runs a sequence of click/type/navigate/wait/screenshot steps within the initial URL's domain.
+          default: fetch
+        selector:
+          type: string
+          maxLength: 200
+          title: Selector
+          description: Reserved for single-step Playwright actions.
+          default: ''
+        steps:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          maxItems: 5
+          title: Steps
+          description: 'Step sequence for multi_step action (max 5). Each step: {"action": "click|type|navigate|wait|screenshot", "selector": "css", "value": "text", "url": "https://..."}.'
+        max_bytes:
+          type: integer
+          maximum: 262144.0
+          minimum: 1024.0
+          title: Max Bytes
+          default: 65536
+        viewport_width:
+          type: integer
+          maximum: 1920.0
+          minimum: 320.0
+          title: Viewport Width
+          default: 1280
+        viewport_height:
+          type: integer
+          maximum: 1600.0
+          minimum: 320.0
+          title: Viewport Height
+          default: 900
+        wait_ms:
+          type: integer
+          maximum: 3000.0
+          minimum: 0.0
+          title: Wait Ms
+          default: 500
+        tier:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Tier
+          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
+          default: 1
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+      type: object
+      required:
+      - url
+      title: BrowseRequest

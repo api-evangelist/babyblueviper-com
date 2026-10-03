@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Babyblueviper Com Inference API
-  version: 1.13.0
+  title: invinoveritas Inference API
+  description: The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us.
   contact:
     name: invinoveritas
     url: https://api.babyblueviper.com/
@@ -9,8 +9,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.13.0
   x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
-  description: 'Operations tagged inference across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
 tags:
 - name: Inference
   description: Reasoning and decision endpoints
@@ -245,39 +245,6 @@ paths:
         - x402: {}
 components:
   schemas:
-    ReasoningRequest:
-      properties:
-        question:
-          type: string
-          title: Question
-          description: The question to reason about
-        style:
-          type: string
-          enum:
-          - short
-          - concise
-          - normal
-          - detailed
-          - comprehensive
-          title: Style
-          description: 'Response style: short (1 sentence), concise (2-3 sentences), normal, detailed, or comprehensive'
-          default: normal
-        want_confidence:
-          type: boolean
-          title: Want Confidence
-          description: Whether to include confidence score and uncertainty flags
-          default: false
-        response_format:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Response Format
-          description: Optional JSON schema for structured output
-      type: object
-      required:
-      - question
-      title: ReasoningRequest
     ValidationError:
       properties:
         loc:
@@ -313,48 +280,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    DecisionRequest:
-      properties:
-        goal:
-          type: string
-          title: Goal
-          description: The overall goal or objective
-        context:
-          type: string
-          title: Context
-          description: Background context (market conditions, positions, risk tolerance, etc.)
-          default: ''
-        question:
-          type: string
-          title: Question
-          description: The specific decision question
-        style:
-          type: string
-          enum:
-          - short
-          - concise
-          - normal
-          - detailed
-          title: Style
-          description: 'Response style: short, concise, normal, or detailed'
-          default: normal
-        want_confidence:
-          type: boolean
-          title: Want Confidence
-          description: Include confidence score, risk level, and uncertainty factors (recommended for decisions)
-          default: true
-        response_format:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Response Format
-          description: Optional JSON schema for structured output
-      type: object
-      required:
-      - goal
-      - question
-      title: DecisionRequest
     ReviewRequest:
       properties:
         artifact:
@@ -515,6 +440,78 @@ components:
       required:
       - artifact
       title: ReviewRequest
-x-refined-from:
-- babyblueviper-com-openapi-original.json
-- babyblueviper-com-openapi.yml
+    ReasoningRequest:
+      properties:
+        question:
+          type: string
+          title: Question
+          description: The question to reason about
+        style:
+          type: string
+          enum:
+          - short
+          - concise
+          - normal
+          - detailed
+          - comprehensive
+          title: Style
+          description: 'Response style: short (1 sentence), concise (2-3 sentences), normal, detailed, or comprehensive'
+          default: normal
+        want_confidence:
+          type: boolean
+          title: Want Confidence
+          description: Whether to include confidence score and uncertainty flags
+          default: false
+        response_format:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response Format
+          description: Optional JSON schema for structured output
+      type: object
+      required:
+      - question
+      title: ReasoningRequest
+    DecisionRequest:
+      properties:
+        goal:
+          type: string
+          title: Goal
+          description: The overall goal or objective
+        context:
+          type: string
+          title: Context
+          description: Background context (market conditions, positions, risk tolerance, etc.)
+          default: ''
+        question:
+          type: string
+          title: Question
+          description: The specific decision question
+        style:
+          type: string
+          enum:
+          - short
+          - concise
+          - normal
+          - detailed
+          title: Style
+          description: 'Response style: short, concise, normal, or detailed'
+          default: normal
+        want_confidence:
+          type: boolean
+          title: Want Confidence
+          description: Include confidence score, risk level, and uncertainty factors (recommended for decisions)
+          default: true
+        response_format:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response Format
+          description: Optional JSON schema for structured output
+      type: object
+      required:
+      - goal
+      - question
+      title: DecisionRequest

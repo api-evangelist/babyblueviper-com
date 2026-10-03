@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: Babyblueviper Com Marketplace API
-  version: 1.13.0
+  title: invinoveritas Marketplace API
+  description: The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us.
   contact:
     name: invinoveritas
     url: https://api.babyblueviper.com/
@@ -9,8 +9,8 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.13.0
   x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
-  description: 'Operations tagged marketplace across 2 of this provider''s published API definitions: babyblueviper-com-openapi-original.json, babyblueviper-com-openapi.yml. Each path carries the servers of the definition it was published in.'
 tags:
 - name: Marketplace
   description: Lightning-native agent marketplace (v1.13.0) — 5% platform cut, 95% to seller
@@ -392,46 +392,6 @@ paths:
       security: []
 components:
   schemas:
-    BuyOfferRequest:
-      properties:
-        offer_id:
-          type: string
-          minLength: 1
-          title: Offer Id
-        verify_before_buy:
-          type: boolean
-          title: Verify Before Buy
-          description: Run a neutral /review verdict on this offer BEFORE charging; a reject blocks the purchase (no sats spent).
-          default: false
-        intent:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Intent
-          description: What you intend to use this offer for — context for the verification gate (optional).
-        buyer_input:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Buyer Input
-          description: Optional buyer-supplied data the seller needs to fulfil this specific purchase (e.g. a Lightning node pubkey for a node-analysis report). Passed through opaquely — never validated or interpreted by the platform — and surfaced to the seller via GET /offers/my/purchases. Do not put credentials, private keys, or seed phrases here.
-      type: object
-      required:
-      - offer_id
-      title: BuyOfferRequest
-    FulfillPurchaseRequest:
-      properties:
-        fulfillment_ref:
-          type: string
-          maxLength: 500
-          minLength: 1
-          title: Fulfillment Ref
-          description: A buyer-visible report reference or expiring delivery URL for this purchase.
-      type: object
-      required:
-      - fulfillment_ref
-      title: FulfillPurchaseRequest
     ValidationError:
       properties:
         loc:
@@ -467,6 +427,34 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    BuyOfferRequest:
+      properties:
+        offer_id:
+          type: string
+          minLength: 1
+          title: Offer Id
+        verify_before_buy:
+          type: boolean
+          title: Verify Before Buy
+          description: Run a neutral /review verdict on this offer BEFORE charging; a reject blocks the purchase (no sats spent).
+          default: false
+        intent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intent
+          description: What you intend to use this offer for — context for the verification gate (optional).
+        buyer_input:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Buyer Input
+          description: Optional buyer-supplied data the seller needs to fulfil this specific purchase (e.g. a Lightning node pubkey for a node-analysis report). Passed through opaquely — never validated or interpreted by the platform — and surfaced to the seller via GET /offers/my/purchases. Do not put credentials, private keys, or seed phrases here.
+      type: object
+      required:
+      - offer_id
+      title: BuyOfferRequest
     CreateOfferRequest:
       properties:
         seller_id:
@@ -539,6 +527,15 @@ components:
       - description
       - price_sats
       title: CreateOfferRequest
-x-refined-from:
-- babyblueviper-com-openapi-original.json
-- babyblueviper-com-openapi.yml
+    FulfillPurchaseRequest:
+      properties:
+        fulfillment_ref:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Fulfillment Ref
+          description: A buyer-visible report reference or expiring delivery URL for this purchase.
+      type: object
+      required:
+      - fulfillment_ref
+      title: FulfillPurchaseRequest
