@@ -100,6 +100,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Agents
+  tags_raw:
   - agents
   properties:
   - type: OpenAPI
@@ -130,6 +132,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Analytics
+  tags_raw:
   - analytics
   properties:
   - type: OpenAPI
@@ -190,6 +194,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Community
+  tags_raw:
   - community
   properties:
   - type: OpenAPI
@@ -220,6 +226,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Corpus
+  tags_raw:
   - corpus
   properties:
   - type: OpenAPI
@@ -250,6 +258,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Credit
+  tags_raw:
   - credit
   properties:
   - type: OpenAPI
@@ -280,6 +290,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Discovery
+  tags_raw:
   - discovery
   properties:
   - type: OpenAPI
@@ -340,6 +352,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Execution
+  tags_raw:
   - execution
   properties:
   - type: OpenAPI
@@ -370,6 +384,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Inference
+  tags_raw:
   - inference
   properties:
   - type: OpenAPI
@@ -400,6 +416,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Ledger
+  tags_raw:
   - ledger
   properties:
   - type: OpenAPI
@@ -430,6 +448,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - llms-txt
+  tags_raw:
   - Llms.txt
   properties:
   - type: OpenAPI
@@ -460,6 +480,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Marketplace
+  tags_raw:
   - marketplace
   properties:
   - type: OpenAPI
@@ -490,6 +512,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Markets
+  tags_raw:
   - markets
   properties:
   - type: OpenAPI
@@ -520,6 +544,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - MCP
+  tags_raw:
   - Mcp
   properties:
   - type: OpenAPI
@@ -550,6 +576,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Memory
+  tags_raw:
   - memory
   properties:
   - type: OpenAPI
@@ -580,6 +608,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Message Board
+  tags_raw:
   - messageboard
   properties:
   - type: OpenAPI
@@ -610,6 +640,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Meta
+  tags_raw:
   - meta
   properties:
   - type: OpenAPI
@@ -700,6 +732,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Tools
+  tags_raw:
   - tools
   properties:
   - type: OpenAPI
@@ -730,6 +764,8 @@ apis:
   humanURL: https://api.babyblueviper.com/docs
   baseURL: https://api.babyblueviper.com
   tags:
+  - Trading
+  tags_raw:
   - trading
   properties:
   - type: OpenAPI
@@ -820,6 +856,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/babyblueviper-com-capability-edges.yml
+  name: invinoveritas Business Capability Map
 - type: AgenticAccess
   url: agentic-access/babyblueviper-com-agentic-access.yml
 - type: DomainSecurity

@@ -1,0 +1,28 @@
+{
+  "repo": "babyblueviper-com",
+  "feeds": [
+    {
+      "source": "https://github.com/babyblueviper1/invinoveritas/issues",
+      "feed_url": "https://github.com/babyblueviper1/invinoveritas/issues",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
+      "source": "https://www.babyblueviper.com/",
+      "feed_url": "https://www.babyblueviper.com/feed",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
+    },
+    {
+      "source": "https://www.babyblueviper.com/feed",
+      "feed_url": "https://www.babyblueviper.com/feed",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    }
+  ],
+  "post_count": 20,
+  "fetched": "2026-10-03T12:30:02Z"
+}
