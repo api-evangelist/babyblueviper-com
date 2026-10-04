@@ -190,6 +190,45 @@ paths:
       security: []
 components:
   schemas:
+    FeedbackRequest:
+      properties:
+        category:
+          type: string
+          title: Category
+          description: suggestion | complaint | issue | feature
+        title:
+          type: string
+          maxLength: 140
+          minLength: 3
+          title: Title
+        body:
+          type: string
+          maxLength: 4000
+          title: Body
+          default: ''
+      type: object
+      required:
+      - category
+      - title
+      title: FeedbackRequest
+    VoteRequest:
+      properties:
+        vote:
+          type: boolean
+          title: Vote
+          description: true to upvote, false to remove your vote
+          default: true
+      type: object
+      title: VoteRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -216,42 +255,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    VoteRequest:
-      properties:
-        vote:
-          type: boolean
-          title: Vote
-          description: true to upvote, false to remove your vote
-          default: true
-      type: object
-      title: VoteRequest
-    FeedbackRequest:
-      properties:
-        category:
-          type: string
-          title: Category
-          description: suggestion | complaint | issue | feature
-        title:
-          type: string
-          maxLength: 140
-          minLength: 3
-          title: Title
-        body:
-          type: string
-          maxLength: 4000
-          title: Body
-          default: ''
-      type: object
-      required:
-      - category
-      - title
-      title: FeedbackRequest

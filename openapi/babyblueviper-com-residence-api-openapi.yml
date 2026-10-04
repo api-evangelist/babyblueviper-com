@@ -279,6 +279,26 @@ components:
       - msg
       - type
       title: ValidationError
+    HousePolicy:
+      properties:
+        max_spend_sats:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Spend Sats
+          description: Hard cap; the act is rejected before any work if its cost exceeds this (deterministic, not LLM).
+        require_review:
+          type: boolean
+          title: Require Review
+          description: Force the constitutional review gate even if no artifact is given.
+          default: true
+        remember:
+          type: boolean
+          title: Remember
+          description: Persist this act to wallet-keyed memory (continuity).
+          default: true
+      type: object
+      title: HousePolicy
     HTTPValidationError:
       properties:
         detail:
@@ -288,6 +308,15 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    DirectoryOptInRequest:
+      properties:
+        listed:
+          type: boolean
+          title: Listed
+          description: true to appear in the resident directory; false to opt out
+          default: true
+      type: object
+      title: DirectoryOptInRequest
     ProfileRequest:
       properties:
         autonomy:
@@ -319,26 +348,6 @@ components:
       type: object
       title: ProfileRequest
       description: Optional self-declared profile — all fields optional, sanitised server-side.
-    HousePolicy:
-      properties:
-        max_spend_sats:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Max Spend Sats
-          description: Hard cap; the act is rejected before any work if its cost exceeds this (deterministic, not LLM).
-        require_review:
-          type: boolean
-          title: Require Review
-          description: Force the constitutional review gate even if no artifact is given.
-          default: true
-        remember:
-          type: boolean
-          title: Remember
-          description: Persist this act to wallet-keyed memory (continuity).
-          default: true
-      type: object
-      title: HousePolicy
     ResidenceActRequest:
       properties:
         intent:
@@ -361,12 +370,3 @@ components:
       required:
       - intent
       title: ResidenceActRequest
-    DirectoryOptInRequest:
-      properties:
-        listed:
-          type: boolean
-          title: Listed
-          description: true to appear in the resident directory; false to opt out
-          default: true
-      type: object
-      title: DirectoryOptInRequest

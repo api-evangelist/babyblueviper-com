@@ -427,34 +427,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    BuyOfferRequest:
-      properties:
-        offer_id:
-          type: string
-          minLength: 1
-          title: Offer Id
-        verify_before_buy:
-          type: boolean
-          title: Verify Before Buy
-          description: Run a neutral /review verdict on this offer BEFORE charging; a reject blocks the purchase (no sats spent).
-          default: false
-        intent:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Intent
-          description: What you intend to use this offer for — context for the verification gate (optional).
-        buyer_input:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Buyer Input
-          description: Optional buyer-supplied data the seller needs to fulfil this specific purchase (e.g. a Lightning node pubkey for a node-analysis report). Passed through opaquely — never validated or interpreted by the platform — and surfaced to the seller via GET /offers/my/purchases. Do not put credentials, private keys, or seed phrases here.
-      type: object
-      required:
-      - offer_id
-      title: BuyOfferRequest
     CreateOfferRequest:
       properties:
         seller_id:
@@ -527,6 +499,34 @@ components:
       - description
       - price_sats
       title: CreateOfferRequest
+    BuyOfferRequest:
+      properties:
+        offer_id:
+          type: string
+          minLength: 1
+          title: Offer Id
+        verify_before_buy:
+          type: boolean
+          title: Verify Before Buy
+          description: Run a neutral /review verdict on this offer BEFORE charging; a reject blocks the purchase (no sats spent).
+          default: false
+        intent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intent
+          description: What you intend to use this offer for — context for the verification gate (optional).
+        buyer_input:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Buyer Input
+          description: Optional buyer-supplied data the seller needs to fulfil this specific purchase (e.g. a Lightning node pubkey for a node-analysis report). Passed through opaquely — never validated or interpreted by the platform — and surfaced to the seller via GET /offers/my/purchases. Do not put credentials, private keys, or seed phrases here.
+      type: object
+      required:
+      - offer_id
+      title: BuyOfferRequest
     FulfillPurchaseRequest:
       properties:
         fulfillment_ref:

@@ -208,6 +208,24 @@ paths:
       security: []
 components:
   schemas:
+    MemoryGetRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        key:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Key
+      type: object
+      required:
+      - agent_id
+      - key
+      title: MemoryGetRequest
     ValidationError:
       properties:
         loc:
@@ -234,86 +252,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MemoryDeleteRequest:
-      properties:
-        agent_id:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Agent Id
-          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
-        key:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Key
-      type: object
-      required:
-      - agent_id
-      - key
-      title: MemoryDeleteRequest
-    MemoryGetRequest:
-      properties:
-        agent_id:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Agent Id
-          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
-        key:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Key
-      type: object
-      required:
-      - agent_id
-      - key
-      title: MemoryGetRequest
-    MemoryStoreRequest:
-      properties:
-        agent_id:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Agent Id
-          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
-        key:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Key
-        value:
-          type: string
-          minLength: 1
-          title: Value
-      type: object
-      required:
-      - agent_id
-      - key
-      - value
-      title: MemoryStoreRequest
-    MemoryListRequest:
-      properties:
-        agent_id:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: Agent Id
-          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
-      type: object
-      required:
-      - agent_id
-      title: MemoryListRequest
     MemorySearchRequest:
       properties:
         agent_id:
@@ -338,3 +276,65 @@ components:
       - agent_id
       - query
       title: MemorySearchRequest
+    MemoryDeleteRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        key:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Key
+      type: object
+      required:
+      - agent_id
+      - key
+      title: MemoryDeleteRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MemoryListRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+      type: object
+      required:
+      - agent_id
+      title: MemoryListRequest
+    MemoryStoreRequest:
+      properties:
+        agent_id:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Agent Id
+          description: Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key.
+        key:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: Key
+        value:
+          type: string
+          minLength: 1
+          title: Value
+      type: object
+      required:
+      - agent_id
+      - key
+      - value
+      title: MemoryStoreRequest

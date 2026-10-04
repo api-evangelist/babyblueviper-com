@@ -554,23 +554,6 @@ paths:
       security: []
 components:
   schemas:
-    VerdictOutcomeDemoRequest:
-      properties:
-        citing_entries:
-          items:
-            $ref: '#/components/schemas/VerdictOutcomeDemoCitation'
-          type: array
-          maxItems: 50
-          title: Citing Entries
-          description: Your own synthetic citation set -- construct any mix of anchored/unanchored, proven_right/proven_wrong/inconclusive/evidence_unavailable entries you want to check the real resolution logic against.
-        decision_ref:
-          type: string
-          title: Decision Ref
-          default: demo:custom (SYNTHETIC — not a real /ledger entry)
-      type: object
-      required:
-      - citing_entries
-      title: VerdictOutcomeDemoRequest
     ValidationError:
       properties:
         loc:
@@ -597,6 +580,23 @@ components:
       - msg
       - type
       title: ValidationError
+    VerdictOutcomeDemoRequest:
+      properties:
+        citing_entries:
+          items:
+            $ref: '#/components/schemas/VerdictOutcomeDemoCitation'
+          type: array
+          maxItems: 50
+          title: Citing Entries
+          description: Your own synthetic citation set -- construct any mix of anchored/unanchored, proven_right/proven_wrong/inconclusive/evidence_unavailable entries you want to check the real resolution logic against.
+        decision_ref:
+          type: string
+          title: Decision Ref
+          default: demo:custom (SYNTHETIC — not a real /ledger entry)
+      type: object
+      required:
+      - citing_entries
+      title: VerdictOutcomeDemoRequest
     HTTPValidationError:
       properties:
         detail:
@@ -606,23 +606,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    LedgerSubmitRequest:
-      properties:
-        event:
-          additionalProperties: true
-          type: object
-          title: Event
-          description: The signed Nostr event from a prior /review(sign=true) call -- the exact `proof.event` object that response returned.
-        note:
-          type: string
-          maxLength: 500
-          title: Note
-          description: 'Optional short context: what this verdict was for.'
-          default: ''
-      type: object
-      required:
-      - event
-      title: LedgerSubmitRequest
     VerdictOutcomeDemoCitation:
       properties:
         outcome:
@@ -645,3 +628,20 @@ components:
       - outcome
       - anchor_timestamp
       title: VerdictOutcomeDemoCitation
+    LedgerSubmitRequest:
+      properties:
+        event:
+          additionalProperties: true
+          type: object
+          title: Event
+          description: The signed Nostr event from a prior /review(sign=true) call -- the exact `proof.event` object that response returned.
+        note:
+          type: string
+          maxLength: 500
+          title: Note
+          description: 'Optional short context: what this verdict was for.'
+          default: ''
+      type: object
+      required:
+      - event
+      title: LedgerSubmitRequest

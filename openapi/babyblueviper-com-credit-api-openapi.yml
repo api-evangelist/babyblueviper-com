@@ -447,6 +447,34 @@ components:
       - msg
       - type
       title: ValidationError
+    WithdrawProxyRequest:
+      properties:
+        bolt11:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bolt11
+          description: Bolt11 Lightning invoice to pay
+        lightning_invoice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lightning Invoice
+          description: Alias for bolt11
+        lightning_address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lightning Address
+          description: Lightning address support is planned; use bolt11 today
+        amount_sats:
+          type: integer
+          minimum: 5000.0
+          title: Amount Sats
+      type: object
+      required:
+      - amount_sats
+      title: WithdrawProxyRequest
     HTTPValidationError:
       properties:
         detail:
@@ -481,34 +509,6 @@ components:
       - tool
       - price_sats
       title: VerifyRequest
-    WithdrawProxyRequest:
-      properties:
-        bolt11:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bolt11
-          description: Bolt11 Lightning invoice to pay
-        lightning_invoice:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lightning Invoice
-          description: Alias for bolt11
-        lightning_address:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lightning Address
-          description: Lightning address support is planned; use bolt11 today
-        amount_sats:
-          type: integer
-          minimum: 5000.0
-          title: Amount Sats
-      type: object
-      required:
-      - amount_sats
-      title: WithdrawProxyRequest
     ConfirmRequest:
       properties:
         payment_hash:
@@ -545,6 +545,22 @@ components:
       - payment_hash
       - preimage
       title: SettleTopupProxyRequest
+    GrantFirstCallRequest:
+      properties:
+        token:
+          type: string
+          maxLength: 2048
+          minLength: 20
+          title: Token
+        target_api_key:
+          type: string
+          minLength: 10
+          title: Target Api Key
+      type: object
+      required:
+      - token
+      - target_api_key
+      title: GrantFirstCallRequest
     WithdrawToAddressRequest:
       properties:
         lightning_address:
@@ -568,19 +584,3 @@ components:
       - lightning_address
       - amount_sats
       title: WithdrawToAddressRequest
-    GrantFirstCallRequest:
-      properties:
-        token:
-          type: string
-          maxLength: 2048
-          minLength: 20
-          title: Token
-        target_api_key:
-          type: string
-          minLength: 10
-          title: Target Api Key
-      type: object
-      required:
-      - token
-      - target_api_key
-      title: GrantFirstCallRequest

@@ -280,6 +280,48 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    DecisionRequest:
+      properties:
+        goal:
+          type: string
+          title: Goal
+          description: The overall goal or objective
+        context:
+          type: string
+          title: Context
+          description: Background context (market conditions, positions, risk tolerance, etc.)
+          default: ''
+        question:
+          type: string
+          title: Question
+          description: The specific decision question
+        style:
+          type: string
+          enum:
+          - short
+          - concise
+          - normal
+          - detailed
+          title: Style
+          description: 'Response style: short, concise, normal, or detailed'
+          default: normal
+        want_confidence:
+          type: boolean
+          title: Want Confidence
+          description: Include confidence score, risk level, and uncertainty factors (recommended for decisions)
+          default: true
+        response_format:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response Format
+          description: Optional JSON schema for structured output
+      type: object
+      required:
+      - goal
+      - question
+      title: DecisionRequest
     ReviewRequest:
       properties:
         artifact:
@@ -473,45 +515,3 @@ components:
       required:
       - question
       title: ReasoningRequest
-    DecisionRequest:
-      properties:
-        goal:
-          type: string
-          title: Goal
-          description: The overall goal or objective
-        context:
-          type: string
-          title: Context
-          description: Background context (market conditions, positions, risk tolerance, etc.)
-          default: ''
-        question:
-          type: string
-          title: Question
-          description: The specific decision question
-        style:
-          type: string
-          enum:
-          - short
-          - concise
-          - normal
-          - detailed
-          title: Style
-          description: 'Response style: short, concise, normal, or detailed'
-          default: normal
-        want_confidence:
-          type: boolean
-          title: Want Confidence
-          description: Include confidence score, risk level, and uncertainty factors (recommended for decisions)
-          default: true
-        response_format:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Response Format
-          description: Optional JSON schema for structured output
-      type: object
-      required:
-      - goal
-      - question
-      title: DecisionRequest

@@ -321,15 +321,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     TopupBody:
       properties:
         api_key:
@@ -343,6 +334,28 @@ components:
       - api_key
       - usd_amount
       title: TopupBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    X402TopupBody:
+      properties:
+        api_key:
+          type: string
+          title: Api Key
+        usd_amount:
+          type: number
+          title: Usd Amount
+      type: object
+      required:
+      - api_key
+      - usd_amount
+      title: X402TopupBody
     CheckoutBody:
       properties:
         plan:
@@ -366,16 +379,3 @@ components:
       required:
       - plan
       title: CheckoutBody
-    X402TopupBody:
-      properties:
-        api_key:
-          type: string
-          title: Api Key
-        usd_amount:
-          type: number
-          title: Usd Amount
-      type: object
-      required:
-      - api_key
-      - usd_amount
-      title: X402TopupBody
