@@ -1,0 +1,26 @@
+slug: babyblueviper-com
+provider: invinoveritas
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Billing
+  spec_file: babyblueviper-com-billing-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.7
+  evidence: POST /billing/checkout Create Checkout; POST /billing/topup Create Topup; POST /billing/webhook
+    Stripe Webhook; GET /billing/plans Billing Plans
+  reason: Checkout, customer billing portal, balance top-ups and Stripe payment webhooks for API consumption
+    — payment collection within subscription billing. Sub-capability split is slightly ambiguous (plans
+    endpoint touches plan design), hence 0.7.
