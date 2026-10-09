@@ -112,3 +112,47 @@ x-evidence:
   - {url: 'https://api.babyblueviper.com/billing/plans', status: 200, content_type: application/json, plans: 6, configured: true}
   - {url: 'https://api.babyblueviper.com/prices', status: 200, content_type: application/json}
   - {url: 'https://api.babyblueviper.com/discovery/x402', status: 200, content_type: application/json, resources: 20}
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - subscription
+  units: []
+  plans:
+  - name: invinoveritas Governance — Starter
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
+  - name: invinoveritas Governance — Pro
+    access: other
+    model: hybrid
+    model_how: derived
+    units: []
+    periods: []
+  - name: invinoveritas Agent Trust Audit
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: invinoveritas Agent Trust Audit + Review Call
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: invinoveritas Governance — Advisory
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: invinoveritas Review Gate — per seat
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
