@@ -190,6 +190,24 @@ paths:
       security: []
 components:
   schemas:
+    VoteRequest:
+      properties:
+        vote:
+          type: boolean
+          title: Vote
+          description: true to upvote, false to remove your vote
+          default: true
+      type: object
+      title: VoteRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     FeedbackRequest:
       properties:
         category:
@@ -211,24 +229,6 @@ components:
       - category
       - title
       title: FeedbackRequest
-    VoteRequest:
-      properties:
-        vote:
-          type: boolean
-          title: Vote
-          description: true to upvote, false to remove your vote
-          default: true
-      type: object
-      title: VoteRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

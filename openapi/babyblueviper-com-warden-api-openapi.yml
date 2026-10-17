@@ -477,22 +477,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    WardenDecisionRequest:
-      properties:
-        idempotency_key:
-          type: string
-          maxLength: 80
-          minLength: 8
-          title: Idempotency Key
-        reason:
-          type: string
-          maxLength: 512
-          title: Reason
-          default: ''
-      type: object
-      required:
-      - idempotency_key
-      title: WardenDecisionRequest
     ValidationError:
       properties:
         loc:
@@ -519,3 +503,19 @@ components:
       - msg
       - type
       title: ValidationError
+    WardenDecisionRequest:
+      properties:
+        idempotency_key:
+          type: string
+          maxLength: 80
+          minLength: 8
+          title: Idempotency Key
+        reason:
+          type: string
+          maxLength: 512
+          title: Reason
+          default: ''
+      type: object
+      required:
+      - idempotency_key
+      title: WardenDecisionRequest

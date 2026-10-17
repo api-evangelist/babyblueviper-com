@@ -245,32 +245,6 @@ paths:
         - x402: {}
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -322,6 +296,39 @@ components:
       - goal
       - question
       title: DecisionRequest
+    ReasoningRequest:
+      properties:
+        question:
+          type: string
+          title: Question
+          description: The question to reason about
+        style:
+          type: string
+          enum:
+          - short
+          - concise
+          - normal
+          - detailed
+          - comprehensive
+          title: Style
+          description: 'Response style: short (1 sentence), concise (2-3 sentences), normal, detailed, or comprehensive'
+          default: normal
+        want_confidence:
+          type: boolean
+          title: Want Confidence
+          description: Whether to include confidence score and uncertainty flags
+          default: false
+        response_format:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Response Format
+          description: Optional JSON schema for structured output
+      type: object
+      required:
+      - question
+      title: ReasoningRequest
     ReviewRequest:
       properties:
         artifact:
@@ -482,36 +489,29 @@ components:
       required:
       - artifact
       title: ReviewRequest
-    ReasoningRequest:
+    ValidationError:
       properties:
-        question:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Question
-          description: The question to reason about
-        style:
+          title: Message
+        type:
           type: string
-          enum:
-          - short
-          - concise
-          - normal
-          - detailed
-          - comprehensive
-          title: Style
-          description: 'Response style: short (1 sentence), concise (2-3 sentences), normal, detailed, or comprehensive'
-          default: normal
-        want_confidence:
-          type: boolean
-          title: Want Confidence
-          description: Whether to include confidence score and uncertainty flags
-          default: false
-        response_format:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Response Format
-          description: Optional JSON schema for structured output
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - question
-      title: ReasoningRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError

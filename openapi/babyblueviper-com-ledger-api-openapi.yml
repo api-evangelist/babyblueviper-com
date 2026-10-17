@@ -554,6 +554,54 @@ paths:
       security: []
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    LedgerSubmitRequest:
+      properties:
+        event:
+          additionalProperties: true
+          type: object
+          title: Event
+          description: The signed Nostr event from a prior /review(sign=true) call -- the exact `proof.event` object that response returned.
+        note:
+          type: string
+          maxLength: 500
+          title: Note
+          description: 'Optional short context: what this verdict was for.'
+          default: ''
+      type: object
+      required:
+      - event
+      title: LedgerSubmitRequest
+    VerdictOutcomeDemoCitation:
+      properties:
+        outcome:
+          type: string
+          title: Outcome
+          description: e.g. proven_right, proven_wrong, inconclusive, evidence_unavailable
+        anchor_timestamp:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Anchor Timestamp
+          description: unix seconds, or null for an unanchored citation -- REQUIRED key (omitting it 422s); use null, not omission, to declare 'unanchored'
+        entry:
+          type: string
+          title: Entry
+          description: free-text label for this synthetic citation, not a real /ledger entry
+          default: ''
+      type: object
+      required:
+      - outcome
+      - anchor_timestamp
+      title: VerdictOutcomeDemoCitation
     ValidationError:
       properties:
         loc:
@@ -597,51 +645,3 @@ components:
       required:
       - citing_entries
       title: VerdictOutcomeDemoRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    VerdictOutcomeDemoCitation:
-      properties:
-        outcome:
-          type: string
-          title: Outcome
-          description: e.g. proven_right, proven_wrong, inconclusive, evidence_unavailable
-        anchor_timestamp:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Anchor Timestamp
-          description: unix seconds, or null for an unanchored citation -- REQUIRED key (omitting it 422s); use null, not omission, to declare 'unanchored'
-        entry:
-          type: string
-          title: Entry
-          description: free-text label for this synthetic citation, not a real /ledger entry
-          default: ''
-      type: object
-      required:
-      - outcome
-      - anchor_timestamp
-      title: VerdictOutcomeDemoCitation
-    LedgerSubmitRequest:
-      properties:
-        event:
-          additionalProperties: true
-          type: object
-          title: Event
-          description: The signed Nostr event from a prior /review(sign=true) call -- the exact `proof.event` object that response returned.
-        note:
-          type: string
-          maxLength: 500
-          title: Note
-          description: 'Optional short context: what this verdict was for.'
-          default: ''
-      type: object
-      required:
-      - event
-      title: LedgerSubmitRequest
