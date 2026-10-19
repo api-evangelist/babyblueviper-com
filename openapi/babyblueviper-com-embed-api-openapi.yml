@@ -1,0 +1,80 @@
+openapi: 3.2.0
+info:
+  title: invinoveritas Embed API
+  description: 'The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us. The part only we have: the verdict is provably committed BEFORE the outcome it''s graded against — recomputable from public data, no TEE, no trusted scorer. Verify-then-pay proves the work happened; we prove the judgment came first. We also run the open conformance registry where agent verifiers are graded against the same recomputable bar — ours included, no green by assertion. Competitors conform to and certify against our suite, across more than one anchoring mechanism; we report our own gaps in the open. Model-agnostic by construction: we verify the output, not the model that produced it. As inference commoditizes and agents route to the cheapest interchangeable model, output-quality variance — not capability — becomes the risk on an irreversible action, and the one thing an agent cannot self-serve is a verdict on its own correctness. This matters most exactly where it''s least obvious: a local or open-weight model has no vendor safety layer, no ToS enforcement, no accountable party upstream — the independent check matters MORE, not less, the further a model runs from a hosted, policed provider. Route to any model, local or hosted; verify before you act. Dogfooded on our own important decisions. A reasoning / structured-decision / agent-memory / sandboxed-execution / Lightning-native-marketplace stack runs underneath as supporting infrastructure. Pay-per-use via Lightning Network — Bearer Token (recommended) or L402, plus x402 (USDC on Base) or card. Free registration (api_key); top-up and withdrawal flows; agent-to-agent coordination primitives; agent Lightning addresses (agent_id@api.babyblueviper.com); BearerProvider for LangChain.'
+  contact:
+    name: invinoveritas
+    url: https://invinoveritas.dev/
+    email: contact@invinoveritas.dev
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.13.0
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+tags:
+- name: Embed
+paths:
+  /embed/{sha256}:
+    get:
+      summary: Media Embed
+      description: Small badge for publishers to iframe beside a clip. Links to the full public page. Frameable from any site.
+      operationId: media_embed_embed__sha256__get
+      parameters:
+      - name: sha256
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sha256
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+      tags:
+      - Embed
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

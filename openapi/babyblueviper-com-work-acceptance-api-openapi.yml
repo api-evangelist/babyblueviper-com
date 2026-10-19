@@ -1,0 +1,419 @@
+openapi: 3.2.0
+info:
+  title: invinoveritas Work Acceptance API
+  description: 'The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us. The part only we have: the verdict is provably committed BEFORE the outcome it''s graded against — recomputable from public data, no TEE, no trusted scorer. Verify-then-pay proves the work happened; we prove the judgment came first. We also run the open conformance registry where agent verifiers are graded against the same recomputable bar — ours included, no green by assertion. Competitors conform to and certify against our suite, across more than one anchoring mechanism; we report our own gaps in the open. Model-agnostic by construction: we verify the output, not the model that produced it. As inference commoditizes and agents route to the cheapest interchangeable model, output-quality variance — not capability — becomes the risk on an irreversible action, and the one thing an agent cannot self-serve is a verdict on its own correctness. This matters most exactly where it''s least obvious: a local or open-weight model has no vendor safety layer, no ToS enforcement, no accountable party upstream — the independent check matters MORE, not less, the further a model runs from a hosted, policed provider. Route to any model, local or hosted; verify before you act. Dogfooded on our own important decisions. A reasoning / structured-decision / agent-memory / sandboxed-execution / Lightning-native-marketplace stack runs underneath as supporting infrastructure. Pay-per-use via Lightning Network — Bearer Token (recommended) or L402, plus x402 (USDC on Base) or card. Free registration (api_key); top-up and withdrawal flows; agent-to-agent coordination primitives; agent Lightning addresses (agent_id@api.babyblueviper.com); BearerProvider for LangChain.'
+  contact:
+    name: invinoveritas
+    url: https://invinoveritas.dev/
+    email: contact@invinoveritas.dev
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.13.0
+  x-guidance: 'invinoveritas — the VERIFICATION LAYER for autonomous agents: a neutral verdict before an irreversible action, a signed proof after, and a public, on-chain-verifiable track record of those verdicts you can audit without trusting us — the oversight + judgment the agent can''t self-issue. Pay-per-call services settled in USDC via x402 on Base (also Lightning/L402 or a funded Bearer balance). Paid resources carry x-payment-info and answer an unauthenticated probe with a 402 challenge; send the JSON body in the operation schema, then retry with the X-PAYMENT header. Good entry points: POST /review (capital-scale-aware verdict before an agent ships an irreversible action), POST /prove (signed, independently-verifiable attestation of a prior execution), GET /ledger (the public signed verdict track record). Routes marked security:[] are free or Bearer/identity-gated and are not x402 resources.'
+tags:
+- name: work-acceptance
+paths:
+  /.well-known/invinoveritas-checker-keys.json:
+    get:
+      tags:
+      - work-acceptance
+      summary: Checker Keys
+      description: 'Free: the Ed25519 key(s) that sign our independent work-acceptance records.'
+      operationId: checker_keys__well_known_invinoveritas_checker_keys_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /work-acceptance/criteria:
+    post:
+      tags:
+      - work-acceptance
+      summary: Commit Criteria
+      description: 'Free: commit acceptance criteria BEFORE the work exists. Returns criteria_id (sha256), two RFC 3161 tokens and an
+
+        OpenTimestamps proof. First commitment wins: committing the same criteria again returns the original times. A document is
+
+        refused here in any shape /work-acceptance/check would refuse, before it is timestamped; a sha256-only commitment cannot be
+
+        shape-checked, so its shape is first judged at the check.'
+      operationId: commit_criteria_work_acceptance_criteria_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CriteriaCommit'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /work-acceptance/criteria/{criteria_id}:
+    get:
+      tags:
+      - work-acceptance
+      summary: Get Criteria
+      description: 'Free: the commitment for a criteria hash (its RFC 3161 tokens, OTS proof and first-commit time).'
+      operationId: get_criteria_work_acceptance_criteria__criteria_id__get
+      parameters:
+      - name: criteria_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Criteria Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /work-acceptance/check:
+    post:
+      tags:
+      - work-acceptance
+      summary: Check Work
+      description: 'Issue an independent work-acceptance record (Trilatic''s format, signed by our checker key) for a delivered file against
+
+        criteria committed earlier (POST /work-acceptance/criteria, free). Paid: WORK_ACCEPTANCE_PRICE_SATS via x402 (USDC on Base) or a
+
+        Bearer API key (sats balance). Bad input or uncommitted criteria are refused BEFORE any charge. Anyone can watch the refusals
+
+        without paying: with no payment header every body gets 402, but with any X-PAYMENT value (even a worthless one) the body is judged
+
+        before settlement, in this order: producer key_id missing or equal to our checker key; criteria never committed (or committed
+
+        less than a second ago); criteria shape; deliverable size; reference pinning. Committing criteria is free.'
+      operationId: check_work_work_acceptance_check_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/CheckRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '2.047637'
+        protocols:
+        - x402: {}
+  /work-acceptance/record/{receipt_sha256}/producer-signature:
+    post:
+      tags:
+      - work-acceptance
+      summary: Producer Signature
+      description: 'Free: the producer co-signs an issued record. Stored at bindings_sidecar.producer, outside record.receipt and outside our
+
+        sidecar signature, so neither receipt_sha256 nor any signature of ours changes. First valid signature wins.'
+      operationId: producer_signature_work_acceptance_record__receipt_sha256__producer_signature_post
+      parameters:
+      - name: receipt_sha256
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Sha256
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProducerSignature'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /work-acceptance/producer/enroll:
+    post:
+      tags:
+      - work-acceptance
+      summary: Producer Enroll
+      description: 'Free, opt-in: from now on every record naming this key is listed in the daily stamped record log, co-signed or not.'
+      operationId: producer_enroll_work_acceptance_producer_enroll_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProducerEnroll'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /work-acceptance/producer/{key}:
+    get:
+      tags:
+      - work-acceptance
+      summary: Producer View
+      description: 'Free: an enrolled producer''s enrollment and every record it covers (live).'
+      operationId: producer_view_work_acceptance_producer__key__get
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /work-acceptance/records/log:
+    get:
+      tags:
+      - work-acceptance
+      summary: Record Log Index
+      description: 'Free: the index of daily record-log snapshots (log_root, prev_root, OTS status) and the rules they follow.'
+      operationId: record_log_index_work_acceptance_records_log_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /work-acceptance/records/log/{name}:
+    get:
+      tags:
+      - work-acceptance
+      summary: Record Log File
+      description: 'Free: one day''s snapshot ({date}.jsonl) or its OpenTimestamps proof ({date}.ots).'
+      operationId: record_log_file_work_acceptance_records_log__name__get
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /work-acceptance/record/{receipt_sha256}:
+    get:
+      tags:
+      - work-acceptance
+      summary: Get Record
+      description: 'Free: an issued record by sha256 of its canonical receipt.'
+      operationId: get_record_work_acceptance_record__receipt_sha256__get
+      parameters:
+      - name: receipt_sha256
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Sha256
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CriteriaCommit:
+      properties:
+        criteria:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Criteria
+        sha256:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sha256
+        terms_ref:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Terms Ref
+      type: object
+      title: CriteriaCommit
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProducerEnroll:
+      properties:
+        key:
+          type: string
+          maxLength: 200
+          title: Key
+        signature:
+          type: string
+          maxLength: 200
+          title: Signature
+      type: object
+      required:
+      - key
+      - signature
+      title: ProducerEnroll
+    ProducerSignature:
+      properties:
+        key:
+          type: string
+          maxLength: 200
+          title: Key
+        signature:
+          type: string
+          maxLength: 200
+          title: Signature
+      type: object
+      required:
+      - key
+      - signature
+      title: ProducerSignature
+    CheckRequest:
+      properties:
+        criteria:
+          title: Criteria
+        content_base64:
+          type: string
+          maxLength: 2800000
+          title: Content Base64
+        name:
+          type: string
+          title: Name
+          default: deliverable
+        producer:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Producer
+        client_ref:
+          type: string
+          title: Client Ref
+          default: ''
+        references:
+          anyOf:
+          - items:
+              additionalProperties: true
+              type: object
+            type: array
+            maxItems: 4
+          - type: 'null'
+          title: References
+        bindings:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Bindings
+      type: object
+      required:
+      - criteria
+      - content_base64
+      title: CheckRequest

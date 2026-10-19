@@ -850,6 +850,86 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+- aid: babyblueviper-com:babyblueviper-com-admission-chain-api
+  name: invinoveritas Admission Chain API
+  description: The Admission Chain API from invinoveritas — 3 operation(s) for admission chain.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Admission Chain
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-admission-chain-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-check-api
+  name: invinoveritas Check API
+  description: The Check API from invinoveritas — 1 operation(s) for check.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Check
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-check-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-embed-api
+  name: invinoveritas Embed API
+  description: The Embed API from invinoveritas — 1 operation(s) for embed.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-embed-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-keys-api
+  name: invinoveritas Keys API
+  description: The Keys API from invinoveritas — 1 operation(s) for keys.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-keys-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-media-api
+  name: invinoveritas Media API
+  description: The Media API from invinoveritas — 1 operation(s) for media.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-media-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-register-media-api
+  name: invinoveritas Register Media API
+  description: The Register Media API from invinoveritas — 1 operation(s) for register media.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Register Media
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-register-media-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-verify-media-api
+  name: invinoveritas Verify Media API
+  description: The Verify Media API from invinoveritas — 1 operation(s) for verify media.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - Verify Media
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-verify-media-api-openapi.yml
+- aid: babyblueviper-com:babyblueviper-com-work-acceptance-api
+  name: invinoveritas Work Acceptance API
+  description: The work-acceptance API from invinoveritas — 10 operation(s) for work-acceptance.
+  humanURL: https://api.babyblueviper.com/install
+  baseURL: https://api.babyblueviper.com/mcp
+  tags:
+  - work-acceptance
+  properties:
+  - type: OpenAPI
+    url: openapi/babyblueviper-com-work-acceptance-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

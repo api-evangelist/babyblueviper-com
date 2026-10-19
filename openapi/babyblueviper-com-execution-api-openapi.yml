@@ -1,11 +1,11 @@
 openapi: 3.2.0
 info:
   title: invinoveritas Execution API
-  description: The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us.
+  description: 'The **verification layer for autonomous agents** — a neutral verdict before an irreversible action (`/review`), a signed proof after (`/prove`), and a public, on-chain-verifiable track record (`/ledger`) you can audit without trusting us. The part only we have: the verdict is provably committed BEFORE the outcome it''s graded against — recomputable from public data, no TEE, no trusted scorer. Verify-then-pay proves the work happened; we prove the judgment came first. We also run the open conformance registry where agent verifiers are graded against the same recomputable bar — ours included, no green by assertion. Competitors conform to and certify against our suite, across more than one anchoring mechanism; we report our own gaps in the open. Model-agnostic by construction: we verify the output, not the model that produced it. As inference commoditizes and agents route to the cheapest interchangeable model, output-quality variance — not capability — becomes the risk on an irreversible action, and the one thing an agent cannot self-serve is a verdict on its own correctness. This matters most exactly where it''s least obvious: a local or open-weight model has no vendor safety layer, no ToS enforcement, no accountable party upstream — the independent check matters MORE, not less, the further a model runs from a hosted, policed provider. Route to any model, local or hosted; verify before you act. Dogfooded on our own important decisions. A reasoning / structured-decision / agent-memory / sandboxed-execution / Lightning-native-marketplace stack runs underneath as supporting infrastructure. Pay-per-use via Lightning Network — Bearer Token (recommended) or L402, plus x402 (USDC on Base) or card. Free registration (api_key); top-up and withdrawal flows; agent-to-agent coordination primitives; agent Lightning addresses (agent_id@api.babyblueviper.com); BearerProvider for LangChain.'
   contact:
     name: invinoveritas
-    url: https://api.babyblueviper.com/
-    email: contact@agents.babyblueviper.com
+    url: https://invinoveritas.dev/
+    email: contact@invinoveritas.dev
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -55,7 +55,7 @@ paths:
         price:
           mode: fixed
           currency: USD
-          amount: '0.190173'
+          amount: '0.191659'
         protocols:
         - x402: {}
   /browse:
@@ -99,7 +99,7 @@ paths:
         price:
           mode: fixed
           currency: USD
-          amount: '0.190173'
+          amount: '0.191659'
         protocols:
         - x402: {}
   /execute:
@@ -144,7 +144,7 @@ paths:
         price:
           mode: fixed
           currency: USD
-          amount: '0.190173'
+          amount: '0.191659'
         protocols:
         - x402: {}
   /execution/status:
@@ -225,7 +225,7 @@ paths:
         price:
           mode: fixed
           currency: USD
-          amount: '0.190173'
+          amount: '0.191659'
         protocols:
         - x402: {}
   /prove/{proof_id}/reveal:
@@ -322,9 +322,185 @@ paths:
         price:
           mode: fixed
           currency: USD
-          amount: '0.190173'
+          amount: '0.081906'
         protocols:
         - x402: {}
+  /decision-receipt:
+    post:
+      tags:
+      - Execution
+      summary: Decision Receipt
+      description: 'Paid: a signed receipt for a bounded-choice decision (OpenAI Decisions API, Jev, /decision, any classifier).
+
+
+        Signs salted commitments to the question, options, context and choice, never the plaintext; the salt
+
+        stays with you. With decider.pubkey + decider_sig the receipt holds a decider-scoped slot (one per decider
+
+        key and request_id, any payer, x402 included); a different second claim is refused with no charge and
+
+        recorded as a public conflict. Options you mark irreversible are `executable` only with a signed, single-use
+
+        /review proof over the same context whose action_binding names this exact choice. The decision is
+
+        caller-reported: the receipt attests the commitment and the gate, not that the decider chose it.'
+      operationId: decision_receipt_decision_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/DecisionReceiptRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '402':
+          description: Payment Required — pay in USDC via x402 (or Lightning/L402) and retry with the X-PAYMENT header.
+      x-payment-info:
+        price:
+          mode: fixed
+          currency: USD
+          amount: '0.081906'
+        protocols:
+        - x402: {}
+  /decision-receipt/slot/{slot}:
+    get:
+      tags:
+      - Execution
+      summary: Decision Receipt Slot
+      description: 'Free: which signed decision receipt holds a request slot, its scope (account or decider), and for a
+
+        decider-scoped slot any other claim the decider key signed for the same request_id (conflicts). One slot holds
+
+        at most one receipt, so a receipt whose request_slot lists only its own event id is the only one we issued.'
+      operationId: decision_receipt_slot_decision_receipt_slot__slot__get
+      parameters:
+      - name: slot
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slot
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /decision-receipt/slots/log:
+    get:
+      tags:
+      - Execution
+      summary: Decision Receipt Slot Log Index
+      description: 'Free: the daily slot-log snapshots, each chained to the day before and OpenTimestamps-stamped to Bitcoin.'
+      operationId: decision_receipt_slot_log_index_decision_receipt_slots_log_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /decision-receipt/slots/log/profile:
+    get:
+      tags:
+      - Execution
+      summary: Decision Receipt Slot Log Profile
+      description: 'Free: the slot-log profile document, byte for byte; its sha256 is `profile.sha256` on /decision-receipt/slots/log.'
+      operationId: decision_receipt_slot_log_profile_decision_receipt_slots_log_profile_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /decision-receipt/slots/log/profile/vectors:
+    get:
+      tags:
+      - Execution
+      summary: Decision Receipt Slot Log Profile Vectors
+      description: 'Free: the profile''s vector file, byte for byte; its sha256 is `profile.vectors_sha256`.'
+      operationId: decision_receipt_slot_log_profile_vectors_decision_receipt_slots_log_profile_vectors_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /decision-receipt/slots/log/{date}.ots:
+    get:
+      tags:
+      - Execution
+      summary: Decision Receipt Slot Log Ots
+      description: 'Free: the OpenTimestamps proof for that day''s log_root (`ots verify -d .ots`).'
+      operationId: decision_receipt_slot_log_ots_decision_receipt_slots_log__date__ots_get
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /decision-receipt/slots/log/{date}:
+    get:
+      tags:
+      - Execution
+      summary: Decision Receipt Slot Log
+      description: 'Free: that day''s slot-log snapshot, byte for byte (JSON lines: header, then one line per slot, sorted).'
+      operationId: decision_receipt_slot_log_decision_receipt_slots_log__date__get
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
   /record/{content_hash}:
     get:
       tags:
@@ -355,6 +531,35 @@ paths:
 
         own claimed hash.'
       operationId: get_record_record__content_hash__get
+      parameters:
+      - name: content_hash
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Content Hash
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security: []
+  /record/{content_hash}/signature:
+    get:
+      tags:
+      - Execution
+      summary: Get Record Signature
+      description: 'Detached Ed25519 signature over the exact bytes GET /record/{content_hash} serves, for records whose schema
+
+        signs out-of-band (a2a-conduct-walk-v1). Verify: Ed25519(public_key, sig, bytes) with the key at key_url.'
+      operationId: get_record_signature_record__content_hash__signature_get
       parameters:
       - name: content_hash
         in: path
@@ -441,9 +646,112 @@ paths:
         price:
           mode: fixed
           currency: USD
-          amount: '0.190173'
+          amount: '0.245717'
         protocols:
         - x402: {}
+  /verify-execution:
+    post:
+      tags:
+      - Execution
+      summary: Verify Execution Route
+      description: 'FREE, no-auth: prove a settled payment was governed by a specific prior verdict (services/execution_binding.py).
+
+
+        Body: {event: the signed /review proof event, args: the action arguments the verdict bound (chain, token, from, to,
+
+        amount_atomic, ...), tx_hash}. Supported chain: eip155:8453 (Base), USDC EIP-3009 transferWithAuthorization. The payer sets
+
+        the authorization''s bytes32 nonce to the verdict''s decision_ref (POST /verify-execution/nonce returns it), so the
+
+        authorization cannot predate the verdict, and the USDC contract''s AuthorizationUsed log records which verdict the payment
+
+        carried. Checks: proof_valid, args_bound, nonce_is_verdict, authorizer_matches, transfer_matches, tx_succeeded; reports the
+
+        verdict and executed_despite_reject. States what it does and does not establish. Added 2026-10-08 on an AI-governance
+
+        lawyer''s point that a signed verdict proves temporal precedence, not that it governed the payment.
+
+
+        Status (2026-10-11, backward compatible: `valid` and `checks` are unchanged). `status` is one of:
+
+        `valid`; `stale` (settled after the verdict''s freshness window: `settled_at` > `verdict_expires_at`, with `seconds_late`);
+
+        `evidence_changed` (a re-check of the payee now differs from the evidence the verdict was given); `unsafe` (the re-check
+
+        shows a hard fail: payee on the OFAC SDN list, or the monitored payout wallet no longer matches the paid address);
+
+        `unsigned` (the proof does not verify); `invalid` (the proof verifies but this payment is not the one it bound).
+
+        `status_reasons` lists every condition that applies; `evidence_diff` is a list of {field, at_verdict, now}.
+
+        Window: verified_at + max_verdict_age_seconds (bound in the signed args, else this request''s `max_verdict_age_seconds`,
+
+        else 120 s), capped by the bound EIP-3009 valid_before. Optional body fields: `evidence` (the plaintext evidence object;
+
+        must hash to the bound `evidence_sha256`), `resource_url` (the paid endpoint, else taken from a bound `purpose`
+
+        like "GET https://..."), `max_verdict_age_seconds`. If the evidence carries a Lumiere PayCheck answer
+
+        (`recipient_record.independent_monitor`), PayCheck''s free POST /v1/check-payment is asked again and compared (payout
+
+        wallet, OFAC, allow, verdict, grade, delivery). PayCheck unreachable fails open: `evidence_recheck: "unavailable"` and
+
+        status rests on the signature and timing. Without plaintext evidence only the hash is in the record, so
+
+        `evidence_recheck` says `not_supplied`.'
+      operationId: verify_execution_route_verify_execution_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /verify-execution/nonce:
+    post:
+      tags:
+      - Execution
+      summary: Verify Execution Nonce
+      description: 'FREE: the EIP-3009 nonce that binds a payment authorization to a verdict. Body {decision_ref} or {event}.'
+      operationId: verify_execution_nonce_verify_execution_nonce_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
+  /payment-receipt:
+    post:
+      tags:
+      - Execution
+      summary: Payment Receipt Route
+      description: 'FREE, no-auth: a BIP-340-signed payment receipt for one verdict-governed EIP-3009 payment (services/payment_receipt.py).
+
+
+        Body: {event: the signed /review verdict, args: the payment args it bound, tx_hash?: the settlement tx,
+
+        resource_url?, max_verdict_age_seconds?, terms_hash?, authorization_signature?: the payer''s EIP-3009 signature (verified
+
+        against the bound fields and the token''s on-chain EIP-712 domain), output_hash?: sha256 of the delivered result}. Returns the nine fields an agent needs before retrying: endpoint,
+
+        network, asset, max_amount, payer, facilitator_verdict, settlement_id, denial_reason, retry_state
+
+        (paid_do_not_retry | pending | denied_do_not_retry | expired_do_not_retry | not_paid_safe_to_retry), plus idempotency_key (the EIP-3009
+
+        nonce = the verdict''s decision_ref). retry_state is read from the token''s authorizationState(payer, nonce) on chain,
+
+        so it holds even without a tx_hash. settlement_id is set only when /verify-execution proves the tx is the payment
+
+        the verdict bound. 422 (unsigned) when the verdict does not verify or does not bind these args.'
+      operationId: payment_receipt_route_payment_receipt_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security: []
   /verify-proof:
     post:
       tags:
@@ -678,120 +986,83 @@ paths:
       security: []
 components:
   schemas:
-    WitnessRequest:
+    DecisionReceiptRequest:
       properties:
-        source:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Source
-          description: Who this claim is attributed to (e.g. a domain or issuer name). Self-declared by the caller, NOT cryptographically verified by us — this proof establishes WHEN and WHAT was submitted, not WHO actually authored it.
-        body:
-          type: string
-          maxLength: 16000
-          minLength: 1
-          title: Body
-          description: The exact bytes to anchor, verbatim (typically a canonical JSON verdict body from another verifier). Anchored byte-for-byte — not re-serialized, not judged.
+        question:
+          title: Question
+          description: The question the decider answered.
+        options:
+          title: Options
+          description: The fixed answer options (2-64 distinct strings).
+        choice:
+          title: Choice
+          description: The option the decider returned; must be one of options.
+        score:
+          title: Score
+          description: The decider's probability/score for choice, 0-1 (optional).
+        irreversible_options:
+          title: Irreversible Options
+          description: Options that need a /review proof before they are executable.
+        context:
+          title: Context
+          description: The input the decision was made on. Hashed here and discarded, never stored.
+        context_sha256:
+          title: Context Sha256
+          description: Alternatively, sha256 hex of that input, hashed on your side.
+        decider:
+          title: Decider
+          description: '{provider, model, request_id}: caller-reported; request_id is stored only as a hash.'
+        review_proof:
+          title: Review Proof
+          description: 'For a gated choice: the signed event from /review(sign=true) whose artifact is the same bytes as context.'
+        salt:
+          title: Salt
+          description: 'Decider-scoped receipts only: the decider''s 32-byte salt (64 hex) used for the commitments it signs.'
+        decider_sig:
+          title: Decider Sig
+          description: 'Decider-scoped receipts only: BIP-340 signature by decider.pubkey over sha256(JCS(decision claim)); see SPEC v0.4.'
+        decider_claimed_at:
+          title: Decider Claimed At
+          description: 'Decider-scoped receipts only: the unix time in the signed claim (within 600 s of now).'
       type: object
       required:
-      - source
-      - body
-      title: WitnessRequest
-      description: 'S216 (crewAI#4877 composed-evaluators collaboration) — anchor a THIRD PARTY''s exact claim bytes
+      - question
+      - options
+      - choice
+      title: DecisionReceiptRequest
+      description: '2026-09-30: a signed, salted commitment to a bounded-choice decision (OpenAI Decisions API, Jev, our
 
-        as-is, without independent judgment. Distinct from /review(sign=true), which always runs OUR OWN
+        /decision, any classifier), gated on a /review proof for the options marked irreversible. Only hashes and
 
-        verdict on the artifact and signs THAT. This is pure notarization: ''we received and timestamped
+        a salted choice commitment are signed; the salt is returned to the caller alone. Validation lives in
 
-        this, attributed to source X'' — not ''we agree with it''. Lets two independent verifiers compose a
-
-        joint artifact where each claim stays separately attributable, instead of one re-grading the other.'
-    HTTPValidationError:
+        services/decision_receipt.validate so REST and MCP share it.'
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ExecuteRequest:
-      properties:
-        language:
+          title: Location
+        msg:
           type: string
-          const: python
-          title: Language
-          default: python
-        code:
+          title: Message
+        type:
           type: string
-          maxLength: 6000
-          minLength: 1
-          title: Code
-        stdin:
-          type: string
-          maxLength: 20000
-          title: Stdin
-          default: ''
-        timeout_seconds:
-          anyOf:
-          - type: number
-            maximum: 600.0
-            minimum: 0.5
-          - type: 'null'
-          title: Timeout Seconds
-        tier:
-          type: integer
-          maximum: 3.0
-          minimum: 0.0
-          title: Tier
-          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
-          default: 1
-        agent_id:
-          type: string
-          maxLength: 120
-          title: Agent Id
-          default: ''
-        permissive:
-          type: boolean
-          title: Permissive
-          description: 'Permissive mode: run ARBITRARY Python — any import, full builtins, no AST allowlist — relying on the hardened isolated container (network OFF, read-only root, all caps dropped, non-root, resource-capped) as the boundary. Priced at a premium. Default False keeps the restrictive allowlist sandbox.'
-          default: false
-        use_workspace:
-          type: boolean
-          title: Use Workspace
-          description: Mount a persistent per-agent workspace at /workspace (read-write for the agent). Files, installed packages, and git clones survive across calls. Storage is lightly metered. Only available in higher tiers or with permissive=True.
-          default: false
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - code
-      title: ExecuteRequest
-    ProveRequest:
-      properties:
-        action_id:
-          type: string
-          maxLength: 80
-          minLength: 6
-          title: Action Id
-          description: Execution audit action ID to prove.
-        agent_id:
-          type: string
-          maxLength: 120
-          title: Agent Id
-          default: ''
-        nostr_publish:
-          type: boolean
-          title: Nostr Publish
-          description: If true and NOSTR_NSEC is set, broadcast a kind 1 note to Nostr relays announcing this attestation.
-          default: false
-        disclose:
-          type: boolean
-          title: Disclose
-          description: 'Default True (unchanged legacy behavior): proof content is public immediately. Set False for DEILS ''leg 2'' held-content mode: only {commitment_hash, ledger_position, status=''content_withheld''} is returned/published now (existence is mandatory-public and non-suppressible), the actual content stays server-side until a later POST /prove/{proof_id}/reveal call binds it to this commitment.'
-          default: true
-      type: object
-      required:
-      - action_id
-      title: ProveRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ValidateRequest:
       properties:
         returns:
@@ -855,6 +1126,215 @@ components:
       description: 'EdgeProof backtest reality-check. Submit realized P&L (never your strategy);
 
         get a verdict on whether the edge is real or curve-fit noise.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProveRevealRequest:
+      properties:
+        content:
+          additionalProperties: true
+          type: object
+          title: Content
+          description: The exact proof_payload content being revealed/disclosed.
+      type: object
+      required:
+      - content
+      title: ProveRevealRequest
+      description: 'DEILS leg-2: reveal content for a proof issued with disclose=False and bind it to the
+
+        already-published commitment_hash. Anyone holding the true content can reveal it — the check
+
+        is a pure function of (stored commitment_hash, revealed content), not caller identity.'
+    VerifyProofRequest:
+      properties:
+        event:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Event
+          description: The signed proof event {id,pubkey,created_at,kind,tags,content,sig} from a /prove or /review(sign=true) response. Trustless path — no lookup, no trust.
+        proof_event:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Proof Event
+          description: 'Alias for `event`, accepting the exact key name GET /ledger/{N} itself uses for the same object (`proof_event`) — added 2026-08-17 after a real caller (大賀俊勝/Toshikatsu, independent verification walk) hit this: Pydantic silently drops an unrecognized field rather than erroring, so posting a /ledger response''s `proof_event` value under that same key previously no-op''d into the ''provide `event`'' error with no hint the key name itself was the problem. If both `event` and `proof_event` are provided, `event` takes precedence.'
+        proof_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proof Id
+          description: Alternatively, a stored attestation proof_id to fetch + verify (convenience).
+        event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Id
+          description: Alternatively, the Nostr event id from a /review(sign=true), /prove, or /witness proof — fetches the durably-stored full event (independent of relay retention) and verifies it. Use this when you only have {id,pubkey,sig}, not the full event, from wherever the proof was shared.
+        pq_companion_signature:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Pq Companion Signature
+          description: 'Optional (added 2026-08-12): the ML-DSA-65 companion signature {algorithm,pq_pubkey,signature_hex,signs} from a proof issued alongside `event`, if you have one — additively verified and reported as checks.pq_companion_verified, never required. Only used with the `event` path; event_id/proof_id lookups fetch their own stored companion sig automatically if one exists.'
+        expect_artifact_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expect Artifact Hash
+          description: 'Optional: assert the proof covers THIS artifact (sha256 hex of the output you were handed).'
+        expect_intended_verifier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expect Intended Verifier
+          description: 'Optional (added 2026-08-16, per safal207''s content/generation/consumption-identity framing on crewAIInc/crewAI#4877): assert the proof''s declared intended_verifier matches who YOU are, closing the same gap expect_artifact_hash closes for content_identity -- but for consumption_identity. Checks a self-declared field (see /review''s own intended_verifier docstring: ''we cannot confirm who will actually present this proof downstream''), so a match confirms the ISSUER''s declared intent, not that delivery was actually restricted to you.'
+        verifier_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verifier Signature
+          description: 'Optional (added 2026-08-16, per atomicdjt''s presenter-bound critique on the same thread): an EIP-191 personal_sign signature over the fixed challenge ''invinoveritas-verify-proof:<event_id>'', signed by the private key controlling the address in expect_intended_verifier (eip155:* CAIP-10 namespace only). If provided and it recovers to that address, sets checks.intended_verifier_authenticated=true -- this is presenter-bound (you cryptographically proved you hold that key), not just intent-bound (a caller-supplied string anyone could claim). Requires expect_intended_verifier to also be set. Other CAIP-10 namespaces are not yet supported and are reported as such, not silently ignored.'
+        expect_max_age_seconds:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expect Max Age Seconds
+          description: 'Optional (added 2026-08-17, per tyche-dev''s mandate-gate design on w3c-cg/ai-agent-protocol#44): by default `/verify-proof` never rejects on staleness -- `age_seconds` is purely informational, you decide. Pass this to turn it into an actual MUST-reject gate, symmetric to expect_artifact_hash/expect_intended_verifier: if the proof''s age_seconds exceeds this bound, checks.freshness_within_bound=false and valid flips to false. If age_seconds cannot be determined at all (an older proof with no verified_at), this fails CLOSED (freshness_within_bound=false, with a freshness_within_bound_error explaining why) rather than silently passing -- you asked to enforce freshness and we couldn''t confirm it, so it does not pass. Omit this param and nothing changes (informational-only, exactly today''s behavior).'
+        fault_injection:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fault Injection
+          description: 'Public test hook (added 2026-09-28 for draft-krausz-verification-state §3.1): the only accepted value is ''instrument_failure''. The verifier then raises inside its own evaluation path, exactly where an import or library failure would, so the not_evaluated + state_reason=instrument_failure response is reproducible from outside rather than only in our unit tests. The response carries `fault_injected` so it can never be mistaken for a real failure, and `valid` stays false. Any other value is a 400.'
+        consume:
+          type: boolean
+          title: Consume
+          description: 'Optional (added 2026-09-07, per a nullifier-design comparison against crewAI#4877/ERC-8380): a verdict-issuance layer binding request+decision correctly is not automatically a replay-safe execution-consumption layer -- decision_ref is a pure function, so nothing stopped the identical, still-valid proof from being presented more than once. Pass true at the ACTUAL dispatch point (never earlier -- consuming before you''ve genuinely acted on it burns the verdict for nothing) to atomically claim single-use consumption of this proof''s decision_ref. Sets `checks.decision_ref_consumed` (true only on the first-ever presentation) and `checks.decision_ref_already_consumed` (true if some earlier call already consumed it -- a real replay), and flips `valid` to false on a replay. Absent by default: omit this and nothing changes, matching every other optional check here. Requires decision_ref_recomputes to have passed (a tampered proof cannot burn a real nullifier slot) and only applies to verdict proofs that carry a decision_ref at all (non-applicable otherwise, reported as such, never silently treated as consumed).'
+          default: false
+        expect_pq_binding:
+          type: boolean
+          title: Expect Pq Binding
+          description: 'Optional (added 2026-09-01, Vértice/verticecriativo pq-wallet-binding — a non-custodial post-quantum key-binding anchor, PqBindingAnchor.sol, first-write-immutable). Requires `expect_intended_verifier` to also be an eip155 CAIP-10 address. When true, we independently verify — never trusting Vértice''s gateway blindly — that this address has a real, anchored post-quantum key binding: fetch the binding statement, recompute its content-address ourselves via RFC-8785 JCS + sha256, and independently eth_call `PqBindingAnchor.bindingOf(address)` on a public Sepolia RPC, requiring our own recompute to match BOTH the gateway''s claim AND the real on-chain value. Sets `checks.pq_binding_verified` (true/false/null, derived 1:1 from `checks.pq_binding_evidence`) and `checks.pq_binding_evidence` — a genuine three-way read: `"verified"`, `"refuted"` (a confirmed mismatch or a confirmed-absent on-chain binding — we actually completed the check and it came back negative), or `"unverifiable"` (the check could not be completed at all — network failure, malformed/unusable gateway data, or bad input; NEVER conflated with `"refuted"`, since that would misreport an incomplete check as a genuine finding) — plus a `pq_binding` disclosure block (statement, pq_pubkey, which values matched, which RPC answered, and a machine-readable `reason` code for any non-`"verified"` result). This is testnet-only as of this field (chain_id 11155111, disclosed in the response) and an IDENTITY provenance claim, not transaction-level quantum safety — a stronger provenance signal on top of `verifier_signature`''s ECDSA proof, not a replacement for it. `valid` flips to false only when evidence is `"refuted"`; `"unverifiable"` never flips `valid` on its own, since that would let an unrelated network hiccup or gateway data bug reject an otherwise-good proof.'
+          default: false
+      type: object
+      title: VerifyProofRequest
+      description: S169 — verify a counterparty's invinoveritas proof (the agent-to-agent trust handshake).
+    ExecuteRequest:
+      properties:
+        language:
+          type: string
+          const: python
+          title: Language
+          default: python
+        code:
+          type: string
+          maxLength: 6000
+          minLength: 1
+          title: Code
+        stdin:
+          type: string
+          maxLength: 20000
+          title: Stdin
+          default: ''
+        timeout_seconds:
+          anyOf:
+          - type: number
+            maximum: 600.0
+            minimum: 0.5
+          - type: 'null'
+          title: Timeout Seconds
+        tier:
+          type: integer
+          maximum: 3.0
+          minimum: 0.0
+          title: Tier
+          description: 'Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.'
+          default: 1
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+        permissive:
+          type: boolean
+          title: Permissive
+          description: 'Permissive mode: run ARBITRARY Python — any import, full builtins, no AST allowlist — relying on the hardened isolated container (network OFF, read-only root, all caps dropped, non-root, resource-capped) as the boundary. Priced at a premium. Default False keeps the restrictive allowlist sandbox.'
+          default: false
+        use_workspace:
+          type: boolean
+          title: Use Workspace
+          description: Mount a persistent per-agent workspace at /workspace (read-write for the agent). Files, installed packages, and git clones survive across calls. Storage is lightly metered. Only available in higher tiers or with permissive=True.
+          default: false
+      type: object
+      required:
+      - code
+      title: ExecuteRequest
+    WitnessRequest:
+      properties:
+        source:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Source
+          description: Who this claim is attributed to (e.g. a domain or issuer name). Self-declared by the caller, NOT cryptographically verified by us — this proof establishes WHEN and WHAT was submitted, not WHO actually authored it.
+        body:
+          type: string
+          maxLength: 16000
+          minLength: 1
+          title: Body
+          description: The exact bytes to anchor, verbatim (typically a canonical JSON verdict body from another verifier). Anchored byte-for-byte — not re-serialized, not judged.
+      type: object
+      required:
+      - source
+      - body
+      title: WitnessRequest
+      description: 'S216 (crewAI#4877 composed-evaluators collaboration) — anchor a THIRD PARTY''s exact claim bytes
+
+        as-is, without independent judgment. Distinct from /review(sign=true), which always runs OUR OWN
+
+        verdict on the artifact and signs THAT. This is pure notarization: ''we received and timestamped
+
+        this, attributed to source X'' — not ''we agree with it''. Lets two independent verifiers compose a
+
+        joint artifact where each claim stays separately attributable, instead of one re-grading the other.'
+    ProveRequest:
+      properties:
+        action_id:
+          type: string
+          maxLength: 80
+          minLength: 6
+          title: Action Id
+          description: Execution audit action ID to prove.
+        agent_id:
+          type: string
+          maxLength: 120
+          title: Agent Id
+          default: ''
+        nostr_publish:
+          type: boolean
+          title: Nostr Publish
+          description: If true and NOSTR_NSEC is set, broadcast a kind 1 note to Nostr relays announcing this attestation.
+          default: false
+        disclose:
+          type: boolean
+          title: Disclose
+          description: 'Default True (unchanged legacy behavior): proof content is public immediately. Set False for DEILS ''leg 2'' held-content mode: only {commitment_hash, ledger_position, status=''content_withheld''} is returned/published now (existence is mandatory-public and non-suppressible), the actual content stays server-side until a later POST /prove/{proof_id}/reveal call binds it to this commitment.'
+          default: true
+      type: object
+      required:
+      - action_id
+      title: ProveRequest
     BrowseRequest:
       properties:
         url:
@@ -926,118 +1406,3 @@ components:
       required:
       - url
       title: BrowseRequest
-    VerifyProofRequest:
-      properties:
-        event:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Event
-          description: The signed proof event {id,pubkey,created_at,kind,tags,content,sig} from a /prove or /review(sign=true) response. Trustless path — no lookup, no trust.
-        proof_event:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Proof Event
-          description: 'Alias for `event`, accepting the exact key name GET /ledger/{N} itself uses for the same object (`proof_event`) — added 2026-08-17 after a real caller (大賀俊勝/Toshikatsu, independent verification walk) hit this: Pydantic silently drops an unrecognized field rather than erroring, so posting a /ledger response''s `proof_event` value under that same key previously no-op''d into the ''provide `event`'' error with no hint the key name itself was the problem. If both `event` and `proof_event` are provided, `event` takes precedence.'
-        proof_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Proof Id
-          description: Alternatively, a stored attestation proof_id to fetch + verify (convenience).
-        event_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Id
-          description: Alternatively, the Nostr event id from a /review(sign=true), /prove, or /witness proof — fetches the durably-stored full event (independent of relay retention) and verifies it. Use this when you only have {id,pubkey,sig}, not the full event, from wherever the proof was shared.
-        pq_companion_signature:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Pq Companion Signature
-          description: 'Optional (added 2026-08-12): the ML-DSA-65 companion signature {algorithm,pq_pubkey,signature_hex,signs} from a proof issued alongside `event`, if you have one — additively verified and reported as checks.pq_companion_verified, never required. Only used with the `event` path; event_id/proof_id lookups fetch their own stored companion sig automatically if one exists.'
-        expect_artifact_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expect Artifact Hash
-          description: 'Optional: assert the proof covers THIS artifact (sha256 hex of the output you were handed).'
-        expect_intended_verifier:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expect Intended Verifier
-          description: 'Optional (added 2026-08-16, per safal207''s content/generation/consumption-identity framing on crewAIInc/crewAI#4877): assert the proof''s declared intended_verifier matches who YOU are, closing the same gap expect_artifact_hash closes for content_identity -- but for consumption_identity. Checks a self-declared field (see /review''s own intended_verifier docstring: ''we cannot confirm who will actually present this proof downstream''), so a match confirms the ISSUER''s declared intent, not that delivery was actually restricted to you.'
-        verifier_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Verifier Signature
-          description: 'Optional (added 2026-08-16, per atomicdjt''s presenter-bound critique on the same thread): an EIP-191 personal_sign signature over the fixed challenge ''invinoveritas-verify-proof:<event_id>'', signed by the private key controlling the address in expect_intended_verifier (eip155:* CAIP-10 namespace only). If provided and it recovers to that address, sets checks.intended_verifier_authenticated=true -- this is presenter-bound (you cryptographically proved you hold that key), not just intent-bound (a caller-supplied string anyone could claim). Requires expect_intended_verifier to also be set. Other CAIP-10 namespaces are not yet supported and are reported as such, not silently ignored.'
-        expect_max_age_seconds:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Expect Max Age Seconds
-          description: 'Optional (added 2026-08-17, per tyche-dev''s mandate-gate design on w3c-cg/ai-agent-protocol#44): by default `/verify-proof` never rejects on staleness -- `age_seconds` is purely informational, you decide. Pass this to turn it into an actual MUST-reject gate, symmetric to expect_artifact_hash/expect_intended_verifier: if the proof''s age_seconds exceeds this bound, checks.freshness_within_bound=false and valid flips to false. If age_seconds cannot be determined at all (an older proof with no verified_at), this fails CLOSED (freshness_within_bound=false, with a freshness_within_bound_error explaining why) rather than silently passing -- you asked to enforce freshness and we couldn''t confirm it, so it does not pass. Omit this param and nothing changes (informational-only, exactly today''s behavior).'
-        consume:
-          type: boolean
-          title: Consume
-          description: 'Optional (added 2026-09-07, per a nullifier-design comparison against crewAI#4877/ERC-8380): a verdict-issuance layer binding request+decision correctly is not automatically a replay-safe execution-consumption layer -- decision_ref is a pure function, so nothing stopped the identical, still-valid proof from being presented more than once. Pass true at the ACTUAL dispatch point (never earlier -- consuming before you''ve genuinely acted on it burns the verdict for nothing) to atomically claim single-use consumption of this proof''s decision_ref. Sets `checks.decision_ref_consumed` (true only on the first-ever presentation) and `checks.decision_ref_already_consumed` (true if some earlier call already consumed it -- a real replay), and flips `valid` to false on a replay. Absent by default: omit this and nothing changes, matching every other optional check here. Requires decision_ref_recomputes to have passed (a tampered proof cannot burn a real nullifier slot) and only applies to verdict proofs that carry a decision_ref at all (non-applicable otherwise, reported as such, never silently treated as consumed).'
-          default: false
-        expect_pq_binding:
-          type: boolean
-          title: Expect Pq Binding
-          description: 'Optional (added 2026-09-01, Vértice/verticecriativo pq-wallet-binding — a non-custodial post-quantum key-binding anchor, PqBindingAnchor.sol, first-write-immutable). Requires `expect_intended_verifier` to also be an eip155 CAIP-10 address. When true, we independently verify — never trusting Vértice''s gateway blindly — that this address has a real, anchored post-quantum key binding: fetch the binding statement, recompute its content-address ourselves via RFC-8785 JCS + sha256, and independently eth_call `PqBindingAnchor.bindingOf(address)` on a public Sepolia RPC, requiring our own recompute to match BOTH the gateway''s claim AND the real on-chain value. Sets `checks.pq_binding_verified` (true/false/null, derived 1:1 from `checks.pq_binding_evidence`) and `checks.pq_binding_evidence` — a genuine three-way read: `"verified"`, `"refuted"` (a confirmed mismatch or a confirmed-absent on-chain binding — we actually completed the check and it came back negative), or `"unverifiable"` (the check could not be completed at all — network failure, malformed/unusable gateway data, or bad input; NEVER conflated with `"refuted"`, since that would misreport an incomplete check as a genuine finding) — plus a `pq_binding` disclosure block (statement, pq_pubkey, which values matched, which RPC answered, and a machine-readable `reason` code for any non-`"verified"` result). This is testnet-only as of this field (chain_id 11155111, disclosed in the response) and an IDENTITY provenance claim, not transaction-level quantum safety — a stronger provenance signal on top of `verifier_signature`''s ECDSA proof, not a replacement for it. `valid` flips to false only when evidence is `"refuted"`; `"unverifiable"` never flips `valid` on its own, since that would let an unrelated network hiccup or gateway data bug reject an otherwise-good proof.'
-          default: false
-      type: object
-      title: VerifyProofRequest
-      description: S169 — verify a counterparty's invinoveritas proof (the agent-to-agent trust handshake).
-    ProveRevealRequest:
-      properties:
-        content:
-          additionalProperties: true
-          type: object
-          title: Content
-          description: The exact proof_payload content being revealed/disclosed.
-      type: object
-      required:
-      - content
-      title: ProveRevealRequest
-      description: 'DEILS leg-2: reveal content for a proof issued with disclose=False and bind it to the
-
-        already-published commitment_hash. Anyone holding the true content can reveal it — the check
-
-        is a pure function of (stored commitment_hash, revealed content), not caller identity.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

@@ -1,0 +1,12 @@
+{
+ "url": "https://api.babyblueviper.com/openapi.json",
+ "final": "https://api.babyblueviper.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 231116,
+ "sha256": "36159ce48020ae5a28b528756edeee23fe06709d8d87c0bc3282e15a414bea85",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}
