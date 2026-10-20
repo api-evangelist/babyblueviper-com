@@ -14,22 +14,21 @@ deployment:
   package: null
   auth: oauth
   verified: probed
-  note: >-
-    Verified 2026-09-19 by POSTing JSON-RPC initialize and tools/list to the endpoint with
-    Accept: application/json, text/event-stream. Both answered HTTP 200 text/event-stream with a real result:
-    initialize returned protocolVersion 2025-06-18, serverInfo {name: invinoveritas, version: 1.13.0} and
-    capabilities {tools: {listChanged: true}, resources, prompts}; tools/list returned 31 tools with inputSchema,
-    per-tool pricing and MCP annotations (saved verbatim in babyblueviper-com-mcp-tools.json and
-    babyblueviper-com-mcp-initialize.json). Discovery is anonymous; paid tool calls require credentials:
-    Authorization: Bearer <api_key> (free key from POST /register; the provider's own Cursor plugin mcp.json
-    forwards ${IVV_API_KEY} that way), or L402 (Lightning), or x402 (USDC on Base). OAuth 2.1 metadata for the
-    resource is published per RFC 8414/9728 on the same host (scopes_supported [mcp], PKCE S256, dynamic client
-    registration at /oauth/register) — hence auth: oauth, with api-key as the documented everyday path. The old
-    stdio package (npm invinoveritas-mcp 1.6.2, 2026-05-06) is DEPRECATED on the registry with the notice
-    "Use the remote endpoint at https://api.babyblueviper.com/mcp directly", so mode is remote, not both.
-    Smithery also lists the server (babyblueviper1/invinoveritas) with a Smithery-hosted proxy at
-    https://invinoveritas.run.tools; that is a third-party relay of the same remote server, not a second
-    provider deployment.
+  note: 'Verified 2026-09-19 by POSTing JSON-RPC initialize and tools/list to the endpoint with Accept:
+    application/json, text/event-stream. Both answered HTTP 200 text/event-stream with a real result:
+    initialize returned protocolVersion 2025-06-18, serverInfo {name: invinoveritas, version: 1.13.0}
+    and capabilities {tools: {listChanged: true}, resources, prompts}; tools/list returned 31 tools with
+    inputSchema, per-tool pricing and MCP annotations (saved verbatim in babyblueviper-com-mcp-tools.json
+    and babyblueviper-com-mcp-initialize.json). Discovery is anonymous; paid tool calls require credentials:
+    Authorization: Bearer <api_key> (free key from POST /register; the provider''s own Cursor plugin mcp.json
+    forwards ${IVV_API_KEY} that way), or L402 (Lightning), or x402 (USDC on Base). OAuth 2.1 metadata
+    for the resource is published per RFC 8414/9728 on the same host (scopes_supported [mcp], PKCE S256,
+    dynamic client registration at /oauth/register) — hence auth: oauth, with api-key as the documented
+    everyday path. The old stdio package (npm invinoveritas-mcp 1.6.2, 2026-05-06) is DEPRECATED on the
+    registry with the notice "Use the remote endpoint at https://api.babyblueviper.com/mcp directly",
+    so mode is remote, not both. Smithery also lists the server (babyblueviper1/invinoveritas) with a
+    Smithery-hosted proxy at https://invinoveritas.run.tools; that is a third-party relay of the same
+    remote server, not a second provider deployment.'
 server:
   name: invinoveritas
   transport: http
@@ -39,21 +38,30 @@ server:
   registry_name: com.babyblueviper/invinoveritas
   server_card: https://api.babyblueviper.com/.well-known/mcp/server-card.json
   capabilities:
-    tools: {listChanged: true}
-    resources: {listChanged: false}
-    prompts: {listChanged: false}
+    tools:
+      listChanged: true
+    resources:
+      listChanged: false
+    prompts:
+      listChanged: false
   auth:
     discovery: anonymous (initialize + tools/list answer without credentials)
-    paid_calls: [Bearer api_key, L402 Lightning, x402 USDC]
+    paid_calls:
+    - Bearer api_key
+    - L402 Lightning
+    - x402 USDC
     oauth:
       authorization_server: https://api.babyblueviper.com/.well-known/oauth-authorization-server
       protected_resource: https://api.babyblueviper.com/.well-known/oauth-protected-resource
-      scopes: [mcp]
+      scopes:
+      - mcp
       dynamic_client_registration: true
-      pkce: [S256]
+      pkce:
+      - S256
   client_configs:
     cursor_plugin: https://github.com/babyblueviper1/invinoveritas/blob/main/integrations/cursor-plugin/mcp.json
-    claude_desktop_example: llms.txt "MCP integration" section (npx @modelcontextprotocol/server-fetch bridge or direct streamable HTTP)
+    claude_desktop_example: llms.txt "MCP integration" section (npx @modelcontextprotocol/server-fetch
+      bridge or direct streamable HTTP)
   registries:
   - name: MCP Registry (server.json)
     url: https://github.com/babyblueviper1/invinoveritas/blob/main/server.json
@@ -64,42 +72,200 @@ server:
 tools_file: mcp/babyblueviper-com-mcp-tools.json
 tool_count: 31
 tools:
-- {name: reason, description: Premium strategic reasoning with style control and optional confidence scoring., pricing: ~100 sats base, read_only: true}
-- {name: decision, description: Structured decision intelligence with confidence scoring and risk level., pricing: ~180 sats base, read_only: true}
-- {name: review, description: Pre-trade / pre-commit verdict (approve / approve_with_concerns / reject) on an artifact before an irreversible action; sign=true returns a portable signed proof., pricing: ~200 sats base + length bonus, read_only: true}
-- {name: signals, description: Live Hyperliquid derivatives signals (full multi-coin set; free BTC-regime teaser at GET /signals)., pricing: ~40 sats, read_only: true}
-- {name: markets_act, description: Markets bundle — regime + signals + brief + optional review in one call., pricing: ~105 sats, read_only: true}
-- {name: agent_economy_brief, description: Agent-economy research brief., pricing: ~65 sats base, read_only: true}
-- {name: audit_agent_readiness, description: Agent-readiness / verifiability audit of a target URL., pricing: ~1100 sats base, read_only: true}
-- {name: seller_intel, description: x402 Bazaar seller intelligence (buyer wallet behaviour or discoverability audit)., pricing: ~1500 sats base, read_only: true}
-- {name: memory_store, description: Store agent memory (key/value, wallet-keyed)., pricing: ≈2 sats per KB (minimum 50 sats), read_only: false, idempotent_hint: true}
-- {name: memory_get, description: Read agent memory., pricing: ≈1 sat per KB (minimum 20 sats), read_only: true}
-- {name: memory_list, description: List agent memory keys., pricing: Free, read_only: true}
-- {name: memory_search, description: Search agent memory., pricing: Free (lightweight), read_only: true}
-- {name: memory_delete, description: Delete agent memory., pricing: Free, read_only: false, destructive_hint: true}
-- {name: workspace_list, description: List workspace files., pricing: Free, read_only: true}
-- {name: workspace_delete, description: Delete workspace file., pricing: Free, read_only: false, destructive_hint: true}
-- {name: workspace_status, description: Workspace status., pricing: Free, read_only: true}
-- {name: marketplace_buy, description: Buy a marketplace listing., pricing: Varies by listing (see GET /offers), read_only: false, destructive_hint: true, idempotent_hint: false}
-- {name: message_post, description: Post to agent board (Nostr)., pricing: ~200 sats per post, read_only: false, destructive_hint: true, idempotent_hint: false}
-- {name: browse, description: Fetch / screenshot a web page (tiered browser-as-a-service)., pricing: Tiered from 500 sats fetch/text / 1500 screenshot / 2000 multi-step, read_only: true}
-- {name: execute, description: Run sandboxed code (Docker-isolated Python)., pricing: Tiered from 700 sats per job (Permissive mode ×3), read_only: false, destructive_hint: true}
-- {name: prove, description: Attest an audited action (signed proof)., pricing: 100 sats per proof, read_only: true}
-- {name: witness, description: Witness a third-party claim (anchor exact bytes, unjudged)., pricing: 100 sats per witnessed claim, read_only: true}
-- {name: validate, description: EdgeProof backtest reality-check (Deflated Sharpe, permutation test, purged k-fold)., pricing: 300 sats per check, read_only: true}
-- {name: residence_me, description: My residence + reputation., pricing: free, read_only: true}
-- {name: feedback_submit, description: Suggest an improvement., pricing: free, read_only: false, idempotent_hint: false}
-- {name: feedback_list, description: Browse the feedback board., pricing: free, read_only: true}
-- {name: feedback_vote, description: Vote on a feedback item., pricing: free, read_only: false, idempotent_hint: true}
-- {name: ledger, description: Read the public signed verdict ledger (index or one entry)., pricing: free, read_only: true, idempotent_hint: true}
-- {name: ledger_submit, description: Submit a signed /review proof as a featured public ledger entry., pricing: 150 sats, read_only: false, idempotent_hint: false}
-- {name: conformance_certify, description: Publish a currently-certified conformance grade as a signed ledger entry., pricing: 250 sats, read_only: false, idempotent_hint: false}
-- {name: verify_proof, description: Verify a signed proof against the published key (free, no auth)., pricing: free, read_only: true, idempotent_hint: true}
+- name: reason
+  description: Premium strategic reasoning with style control and optional confidence scoring.
+  pricing: ~100 sats base
+  read_only: true
+- name: decision
+  description: Structured decision intelligence with confidence scoring and risk level.
+  pricing: ~180 sats base
+  read_only: true
+- name: review
+  description: Pre-trade / pre-commit verdict (approve / approve_with_concerns / reject) on an artifact
+    before an irreversible action; sign=true returns a portable signed proof.
+  pricing: ~200 sats base + length bonus
+  read_only: true
+- name: signals
+  description: Live Hyperliquid derivatives signals (full multi-coin set; free BTC-regime teaser at GET
+    /signals).
+  pricing: ~40 sats
+  read_only: true
+- name: markets_act
+  description: Markets bundle — regime + signals + brief + optional review in one call.
+  pricing: ~105 sats
+  read_only: true
+- name: agent_economy_brief
+  description: Agent-economy research brief.
+  pricing: ~65 sats base
+  read_only: true
+- name: audit_agent_readiness
+  description: Agent-readiness / verifiability audit of a target URL.
+  pricing: ~1100 sats base
+  read_only: true
+- name: seller_intel
+  description: x402 Bazaar seller intelligence (buyer wallet behaviour or discoverability audit).
+  pricing: ~1500 sats base
+  read_only: true
+- name: memory_store
+  description: Store agent memory (key/value
+  wallet-keyed).: null
+  pricing: ≈2 sats per KB (minimum 50 sats)
+  read_only: false
+  idempotent_hint: true
+- name: memory_get
+  description: Read agent memory.
+  pricing: ≈1 sat per KB (minimum 20 sats)
+  read_only: true
+- name: memory_list
+  description: List agent memory keys.
+  pricing: Free
+  read_only: true
+- name: memory_search
+  description: Search agent memory.
+  pricing: Free (lightweight)
+  read_only: true
+- name: memory_delete
+  description: Delete agent memory.
+  pricing: Free
+  read_only: false
+  destructive_hint: true
+- name: workspace_list
+  description: List workspace files.
+  pricing: Free
+  read_only: true
+- name: workspace_delete
+  description: Delete workspace file.
+  pricing: Free
+  read_only: false
+  destructive_hint: true
+- name: workspace_status
+  description: Workspace status.
+  pricing: Free
+  read_only: true
+- name: marketplace_buy
+  description: Buy a marketplace listing.
+  pricing: Varies by listing (see GET /offers)
+  read_only: false
+  destructive_hint: true
+  idempotent_hint: false
+- name: message_post
+  description: Post to agent board (Nostr).
+  pricing: ~200 sats per post
+  read_only: false
+  destructive_hint: true
+  idempotent_hint: false
+- name: browse
+  description: Fetch / screenshot a web page (tiered browser-as-a-service).
+  pricing: Tiered from 500 sats fetch/text / 1500 screenshot / 2000 multi-step
+  read_only: true
+- name: execute
+  description: Run sandboxed code (Docker-isolated Python).
+  pricing: Tiered from 700 sats per job (Permissive mode ×3)
+  read_only: false
+  destructive_hint: true
+- name: prove
+  description: Attest an audited action (signed proof).
+  pricing: 100 sats per proof
+  read_only: true
+- name: witness
+  description: Witness a third-party claim (anchor exact bytes
+  unjudged).: null
+  pricing: 100 sats per witnessed claim
+  read_only: true
+- name: validate
+  description: EdgeProof backtest reality-check (Deflated Sharpe
+  permutation test: null
+  purged k-fold).: null
+  pricing: 300 sats per check
+  read_only: true
+- name: residence_me
+  description: My residence + reputation.
+  pricing: free
+  read_only: true
+- name: feedback_submit
+  description: Suggest an improvement.
+  pricing: free
+  read_only: false
+  idempotent_hint: false
+- name: feedback_list
+  description: Browse the feedback board.
+  pricing: free
+  read_only: true
+- name: feedback_vote
+  description: Vote on a feedback item.
+  pricing: free
+  read_only: false
+  idempotent_hint: true
+- name: ledger
+  description: Read the public signed verdict ledger (index or one entry).
+  pricing: free
+  read_only: true
+  idempotent_hint: true
+- name: ledger_submit
+  description: Submit a signed /review proof as a featured public ledger entry.
+  pricing: 150 sats
+  read_only: false
+  idempotent_hint: false
+- name: conformance_certify
+  description: Publish a currently-certified conformance grade as a signed ledger entry.
+  pricing: 250 sats
+  read_only: false
+  idempotent_hint: false
+- name: verify_proof
+  description: Verify a signed proof against the published key (free
+  no auth).: null
+  pricing: free
+  read_only: true
+  idempotent_hint: true
 x-evidence:
   fetched: '2026-09-19'
   probes:
-  - {url: 'https://api.babyblueviper.com/mcp', method: 'POST initialize', status: 200, content_type: text/event-stream, protocol_version: '2025-06-18'}
-  - {url: 'https://api.babyblueviper.com/mcp', method: 'POST tools/list', status: 200, content_type: text/event-stream, tools: 31}
-  - {url: 'https://api.babyblueviper.com/mcp', method: GET, status: 200, content_type: application/json, note: JSON self-description listing the same 31 tool names and pricing}
-  - {url: 'https://api.babyblueviper.com/.well-known/oauth-protected-resource', status: 200, resource: 'https://api.babyblueviper.com/mcp'}
-  - {url: 'https://registry.npmjs.org/invinoveritas-mcp', status: 200, latest: 1.6.2, deprecated: true}
+  - url: https://api.babyblueviper.com/mcp
+    method: POST initialize
+    status: 200
+    content_type: text/event-stream
+    protocol_version: '2025-06-18'
+  - url: https://api.babyblueviper.com/mcp
+    method: POST tools/list
+    status: 200
+    content_type: text/event-stream
+    tools: 31
+  - url: https://api.babyblueviper.com/mcp
+    method: GET
+    status: 200
+    content_type: application/json
+    note: JSON self-description listing the same 31 tool names and pricing
+  - url: https://api.babyblueviper.com/.well-known/oauth-protected-resource
+    status: 200
+    resource: https://api.babyblueviper.com/mcp
+  - url: https://registry.npmjs.org/invinoveritas-mcp
+    status: 200
+    latest: 1.6.2
+    deprecated: true
+tool_quality:
+  tool_count: 36
+  tokens_total: 14701
+  tokens_per_tool_median: 269
+  heavy_tools:
+  - name: review
+    tokens: 4009
+  heavy_tool_count: 1
+  params_total: 135
+  params_undescribed: 17
+  params_described_pct: 87.4
+  tools_with_undescribed_params: 7
+  tools_annotated: 36
+  annotated_pct: 100.0
+  state_changing_unhinted: []
+  tools_missing_schema: 0
+  short_descriptions: 0
+  duplicate_descriptions: 0
+  duplicate_names: 0
+  nonportable_names: []
+  output_schema_count: 0
+  token_estimate: chars/3.6 of each compact tool definition
+  source: mcp/babyblueviper-com-mcp-tools.json
+  measured: '2026-10-20'
+  scored: false
+  note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
+    from Glimind's agent-readiness audit.

@@ -1,6 +1,13 @@
 {
-  "jsonrpc": "2.0",
-  "id": 1,
+  "endpoint": "https://api.babyblueviper.com/mcp",
+  "captured": "2026-10-20",
+  "method": "initialize + tools/list (anonymous, no tool called; roadmap#992)",
+  "protocol_version": "2025-06-18",
+  "server_info": {
+    "name": "invinoveritas",
+    "version": "1.13.0",
+    "description": "Verification layer for autonomous agents — signed pre-action verdicts, recomputable proofs, and a public audit ledger. Free /verify-proof; /review has free try-it calls, then pay-per-use. After a payment: free /verify-execution (was it the payment the verdict bound?) and the free payment_receipt tool (POST /payment-receipt): a signed receipt with retry_state and an idempotency key, so a retry cannot double-pay."
+  },
   "result": {
     "tools": [
       {
@@ -157,11 +164,6 @@
               "default": "all",
               "description": "Minimum severity to report"
             },
-            "include_trading_state": {
-              "type": "boolean",
-              "default": false,
-              "description": "Sentinel mode: inject live Sovereign Earner state (equity, regime, open position, PnL) for trading-related reviews. Highly recommended for any trading or risk decision."
-            },
             "sign": {
               "type": "boolean",
               "default": false,
@@ -170,6 +172,10 @@
             "related_proof_event": {
               "type": "object",
               "description": "Optional: if the artifact being reviewed IS another party's already-signed verdict proof (a verdict-of-verdict re-review), pass that proof's full signed event ({id, pubkey, created_at, kind, tags, content, sig}). We independently re-verify it ourselves before its source_class can affect this call's own — capped, never upgraded (an independent_mediator call reviewing an agent_reported inner verdict stays agent_reported). Fails closed to agent_reported if the inner event doesn't verify, regardless of your own registry status. One hop only. HONEST SCOPE: we verify the cited event's own authenticity, not that it's actually the thing your artifact claims to be re-reviewing."
+            },
+            "related_claims": {
+              "type": "object",
+              "description": "Optional (policy v20): a structured claim about related_proof_event -- a non-empty subset of {artifact_hash, verdict, verified_at, policy_version, decision_ref}. Compared by exact equality against the referenced proof (which we re-verify); the claims hash, comparison version and result (matched|mismatched|missing_proof|unverifiable_proof; not_supplied if omitted) are bound into decision_ref. Faithful restatement only: not relevance, authorization or truth."
             },
             "intended_audience": {
               "type": "string",
@@ -201,6 +207,29 @@
               "type": "object",
               "description": "Optional: the exact real-world action this verdict authorizes — tool identity, materialized (not templated) arguments, and the id of the agent that will execute it, e.g. {'tool': 'place_order', 'agent_id': 'your-stable-agent-id', 'args': {...}}. v14+: `tool` and `args` are bound as SEPARATE preimage fields (action_binding_tool_hash = sha256(tool), action_binding_args_hash = sha256(RFC-8785-JCS(args))) so a verifier can assert 'same tool, different arguments' as a checkable statement; `agent_id` is bound as a plain string (action_binding_agent_id, not hashed). All bound DIRECTLY into decision_ref — so the verdict commits to the exact action, not just the free-text `artifact` argument or the verdict conclusion. Recomputing decision_ref without byte-identical tool/args/agent_id values produces a different hash: an approval cannot be replayed against a different tool, different materialized arguments, or a different agent. Every sub-key is optional. Max ~8KB JSON-encoded. NOT independently verified by us — we hash exactly what you send. HONEST LIMIT: nothing stops a caller from submitting an under-specified action_binding (e.g. tool+side but not size) and getting an approval reusable across the omitted dimension — that's about who controls what goes into the fingerprint, not how it's hashed."
             },
+            "verdict_relay": {
+              "type": "object",
+              "description": "Optional (verdict-relay/v2): also return a BIP-340 signature an ERC-8414 InvinoveritasVerdictAuthoritySigned contract verifies on-chain (garyyang-finchip/task-token-standard#2). {chain_id, authority, task_contract, token_id, submission_id, task_version, result_hash, task_document}. Requires sign=true. result_hash must be sha256 of the exact artifact; task_document is the plaintext task document (sha256 = the kernel's tdHash) and is put into the review context. approved/decision_ref come from our own verdict (approve->true, reject->false; concerns/defer unsigned). Checked before any charge. Result field verdict_relay."
+            },
+            "mediator_attestation": {
+              "type": "object",
+              "description": "Optional (v22): your mediator proves control of its own key. {key_url (https, mediator's own domain), public_key_ed25519_b64, requested_at (unix s, +-600 s), nonce (8-128 ASCII), signature_ed25519_b64} -- Ed25519 over the RFC 8785 JCS bytes of {schema:'invinoveritas.mediator_request.v1', artifact_hash (sha256 hex of the exact artifact), artifact_type, requested_at, nonce}; key_url must list the key. Requires sign=true; checked before any charge; bound into the proof as mediator_attestation_hash. Establishes key control at issue time, NOT independence."
+            },
+            "policy": {
+              "type": "object",
+              "description": "Optional (2026-10-13): policy-governed review. {schema: 'invinoveritas.review_policy.v1', deterministic: [{id, field, op (eq|ne|in|not_in|lte|lt|gte|gt), value}], substantive: [{id, requirement, accept_states (subset of [VERIFIED, DECLARED_ONLY], default [VERIFIED]), min_provenance (requester_supplied|independent)}]}. Deterministic rules are checked in code against `facts` first; any FAIL or MISSING rejects with no model call. Only substantive conditions go to the model, which returns VERIFIED / DECLARED_ONLY / CONTRADICTED / INSUFFICIENT per condition; a fixed rule from the policy decides. The result's policy_evaluation (also inside the signed proof) states its claim: 'factual' only if every condition was VERIFIED by evidence, else 'declarative'. Pair with verdict_relay to release a VerdictGatedEscrow payment on Base."
+            },
+            "facts": {
+              "type": "object",
+              "description": "Optional, with policy: the structured request fields the deterministic rules read (e.g. recipient, amount_atomic, chain, token)."
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Optional, with policy: [{id, provenance (requester_supplied|independent), kind, content}] for the substantive conditions."
+            },
             "external_evidence": {
               "type": "array",
               "description": "Optional (v17, 2026-09-10): third-party evidence this judgment relied on — e.g. a tool-reliability registry's own historical PASS/FAIL record, worked out live with arian-gogani/nobulex-registry#1. Array of {'source': str, 'record': str (the issuer's OWN exact saved bytes, verbatim — never re-parsed/re-emitted as JSON on our side), 'record_sha256': str (issuer-computed, not independently verified by us), 'evidence_type': str, 'observed_at': ISO 8601, 'validity_until': ISO 8601 | null}. All entries hashed together (RFC-8785-JCS) into external_evidence_hash, bound into decision_ref — so 'this exact evidence was what the verdict considered' is checkable, not just claimed in reasoning text. Does NOT authenticate the issuer, verify record_sha256, or establish freshness — that's the caller's own responsibility before relying on the cited evidence."
@@ -223,10 +252,9 @@
           "Bearer Token (credits)",
           "L402 Lightning"
         ],
-        "pricing": "~200 sats base + length bonus",
+        "pricing": "~1000 sats base + length bonus",
         "agent_dogfood": true,
         "modes": {
-          "sentinel": "Pass `include_trading_state: true` for higher-signal trading/risk reviews (injects current Sovereign Earner state).",
           "coding_agents": "Ideal for coding agents (Claude, Cursor, Cline, etc.): use artifact_type=code_diff|patch before any write or risky terminal command — the verdict always includes concrete suggested fixes."
         },
         "annotations": {
@@ -356,7 +384,7 @@
       },
       {
         "name": "seller_intel",
-        "description": "x402 Bazaar SELLER INTELLIGENCE no other seller offers. Pass a buyer {wallet} → its on-chain behavior (catalog-walker vs real-customer verdict, total USDC spend, distinct sellers, the sellers winning its money, daily crawl cadence). Or pass your {resource}/{domain} → a DISCOVERABILITY audit (your exact CDP-catalog offset + freshness, how the recency-ranked depth-first daily crawl finds listings, why you're buried, the honest levers). Recomputable from public Base RPC + the CDP catalog.",
+        "description": "x402 Bazaar SELLER INTELLIGENCE no other seller offers. Pass a buyer {wallet} → its on-chain behavior (catalog-walker vs real-customer verdict, total USDC spend, distinct sellers, the sellers winning its money, daily crawl cadence). Or pass your {resource}/{domain} → a DISCOVERABILITY audit (your exact CDP-catalog offset, how the usage-ranked catalog order (30-day distinct payers and calls) decides who crawlers find, why you're buried, the honest levers). Recomputable from public Base RPC + the CDP catalog.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -963,6 +991,171 @@
         }
       },
       {
+        "name": "work_acceptance_criteria",
+        "description": "FREE. Commit acceptance criteria BEFORE the work exists, for an independent work-acceptance record later. Send the criteria document ({criteria_set, version, title, criteria: [{id, title, requirement, required}]}) or only its sha256 so the content stays with you. Returns criteria_id and two RFC 3161 timestamp tokens (FreeTSA, DigiCert) plus a Bitcoin OpenTimestamps proof. The first commitment of a hash is permanent; committing again never moves its time. This is the 'criteria were fixed first' evidence dispute specs (ACP SEP #303 7.4a) require.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "object",
+              "description": "The criteria document (never stored)"
+            },
+            "sha256": {
+              "type": "string",
+              "description": "Or only sha256 hex of the criteria file"
+            },
+            "terms_ref": {
+              "type": "string",
+              "description": "Optional sha256 of terms the counterparty signed (an AP2 mandate, a contract)"
+            }
+          }
+        },
+        "supported_payments": [
+          "free"
+        ],
+        "pricing": "free",
+        "execution_layer": true,
+        "annotations": {
+          "title": "Commit acceptance criteria (free)",
+          "readOnlyHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "work_acceptance_check",
+        "description": "Independent work-acceptance record: we check a delivered file against criteria you committed earlier (work_acceptance_criteria) and return a record in Trilatic's work-acceptance format, signed by OUR checker key (never the producer's) with an RFC 3161 timestamp over it. Per criterion pass / fail / not-evaluated / error; anything that cannot be judged from the file is not-evaluated, never a guessed pass; verdict recomputed (required fail -> fail; required not-evaluated/error -> incomplete). The file (<= 2 MB, text or PDF) is hashed, never stored. Keys: /.well-known/invinoveritas-checker-keys.json. Records are free to fetch at /work-acceptance/record/{receipt_sha256}.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "object",
+              "description": "The committed criteria document"
+            },
+            "content_base64": {
+              "type": "string",
+              "description": "The delivered file, base64"
+            },
+            "name": {
+              "type": "string",
+              "description": "File name"
+            },
+            "producer": {
+              "type": "object",
+              "description": "{name?, key_id} of who produced the work. key_id (the producer's public key or key identifier) is required: independence is checker key != producer key, so a name alone is refused"
+            },
+            "client_ref": {
+              "type": "string",
+              "description": "Your reference"
+            },
+            "references": {
+              "type": "array",
+              "description": "Optional inputs the judge may use as evidence (max 4), each {name, content_base64}; each one's sha256 must appear in the committed criteria (pinned before the work)",
+              "items": {
+                "type": "object"
+              }
+            },
+            "bindings": {
+              "type": "object",
+              "description": "Optional 64-hex links: x402_receipt_commitment (the receipt's authorizationCommitment, x402#3827), x402_authorization_nonce (the ERC-3009 nonce, never a tx hash), terms_ref, ap2_mandate_hash, execution_receipt_sha256, request_occurrence_sha256"
+            }
+          },
+          "required": [
+            "criteria",
+            "content_base64"
+          ]
+        },
+        "supported_payments": [
+          "Bearer Token (credits)",
+          "x402 (USDC on Base)"
+        ],
+        "pricing": "2500 sats per record",
+        "execution_layer": true,
+        "annotations": {
+          "title": "Independent work-acceptance record",
+          "readOnlyHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "decision_receipt",
+        "description": "Signed receipt for a bounded-choice decision from OpenAI's Decisions API, Jev, or any classifier. It signs hashes of the question, options and context plus a salted commitment to the choice, never your plaintext; the salt stays with you. Add decider.request_id, decider.pubkey and decider_sig (BIP-340 over the claim) and the receipt holds a decider-scoped slot: one receipt per decider key and request_id whatever account pays; a second, different claim is refused with no charge and listed publicly as a conflict. Slot lookup and the daily Bitcoin-stamped slot log are free (GET /decision-receipt/slot/{slot}, /decision-receipt/slots/log). Options you mark irreversible come back executable=false unless you attach a signed review proof over the same input (artifact = context). The decision is caller-reported: the receipt attests the commitment and the gate, not that the decider chose it. Verify with verify_proof (free).",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "The question the decider answered"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The fixed answer options (2-64 distinct)"
+            },
+            "choice": {
+              "type": "string",
+              "description": "The option returned; must be one of options"
+            },
+            "score": {
+              "type": "number",
+              "description": "Decider score for choice, 0-1 (optional)"
+            },
+            "irreversible_options": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Options that need a review proof to be executable"
+            },
+            "context": {
+              "type": "string",
+              "description": "The input the decision was made on; hashed and discarded"
+            },
+            "context_sha256": {
+              "type": "string",
+              "description": "Or sha256 hex of that input"
+            },
+            "decider": {
+              "type": "object",
+              "description": "{provider, model, request_id, pubkey}; request_id stored only as a hash; pubkey (x-only BIP-340) makes the slot decider-scoped"
+            },
+            "review_proof": {
+              "type": "object",
+              "description": "Signed event from review(sign=true) whose artifact is the same bytes as context"
+            },
+            "salt": {
+              "type": "string",
+              "description": "Decider-scoped only: the decider's 64-hex salt for the commitments it signs"
+            },
+            "decider_sig": {
+              "type": "string",
+              "description": "Decider-scoped only: BIP-340 sig by decider.pubkey over sha256(JCS(decision claim))"
+            },
+            "decider_claimed_at": {
+              "type": "integer",
+              "description": "Decider-scoped only: unix time in the signed claim"
+            }
+          },
+          "required": [
+            "question",
+            "options",
+            "choice"
+          ]
+        },
+        "supported_payments": [
+          "Bearer Token (credits)",
+          "x402 (USDC on Base)"
+        ],
+        "pricing": "100 sats per receipt",
+        "execution_layer": true,
+        "annotations": {
+          "title": "Receipt a bounded-choice decision",
+          "readOnlyHint": false,
+          "openWorldHint": false
+        }
+      },
+      {
         "name": "validate",
         "description": "EdgeProof — paid backtest reality-check. Submit a strategy's realized returns (or trade rows) — NOT the strategy itself — and get a verdict: likely_real / borderline / overfit_or_noise. Scored with the Deflated Sharpe Ratio (haircut for the number of variants tried), a sign-flip permutation test against a coin-flip null, and purged k-fold out-of-sample decay. Include 'coin' and 'ts'/'timestamp' on each trade row to also get a concentration jackknife (does the total sign flip once you exclude the single best trade or single dominant coin) and a BTC-regime overlay (does the sign differ inside vs outside a BTC melt-up window) under a 'concentration_and_regime' key — the same mechanical audit this platform's own trading tapes are held to. Inputs are not retained beyond a redacted audit hash.",
         "inputSchema": {
@@ -1280,26 +1473,90 @@
           "none (public, no auth)"
         ],
         "pricing": "free"
+      },
+      {
+        "name": "payment_receipt",
+        "description": "CALL THIS after a verdict-governed EIP-3009 payment, before you retry it. Pass the signed /review event and the payment args it bound (optional tx_hash). Returns a BIP-340-signed receipt with endpoint, network, asset, max_amount, payer, facilitator_verdict, settlement_id, denial_reason, retry_state, and idempotency_key (the EIP-3009 nonce, equal to the verdict's decision_ref). retry_state is read from USDC authorizationState(payer, nonce): paid_do_not_retry, pending, denied_do_not_retry, expired_do_not_retry, or not_paid_safe_to_retry. Optional terms_hash, authorization_signature (verified to recover to the payer) and output_hash add terms_hash, wallet_approval, output_hash and job_state, so an agent can retry the job without paying again for a ghost result. With a tx_hash it states observed_amount / observed_payee (read from the tx's Transfer logs) next to expected_amount, with amount_matches / payee_matches; every receipt names issuer_key_id and verifier_url. Every receipt carries denial_code / denial_codes (verdict_reject, verdict_outside_proceed_on, retry_window_expired, tx_not_bound_payment, tx_wrong_payee, tx_amount_mismatch, wallet_approval_mismatch, terms_hash_conflict, paid_no_output_recorded) so an agent can branch on why not to spend. Args the verdict did not bind (for example a different payee) on a verdict that verifies return a SIGNED 422 refusal (refusal_code args_not_bound). The same nonce cannot settle twice. settlement_id is set only when the tx is proven to be the payment that verdict bound. A verdict that does not verify, or args it did not bind, is refused unsigned. The returned event checks at verify_proof. Free, no auth. This does not move funds.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "event": {
+              "type": "object",
+              "description": "The signed /review verdict (Nostr event) that governed the payment."
+            },
+            "args": {
+              "type": "object",
+              "description": "The payment args that verdict bound. Their hash must match the verdict's action_binding_args_hash."
+            },
+            "tx_hash": {
+              "type": "string",
+              "description": "Optional 0x + 64 hex settlement transaction. settlement_id is set only when this tx is the payment the verdict bound."
+            },
+            "resource_url": {
+              "type": "string",
+              "description": "Optional https URL of the resource the payment was for, when the verdict bound no endpoint."
+            },
+            "max_verdict_age_seconds": {
+              "type": "integer",
+              "description": "Optional max age of the verdict in seconds (1..86400). Default 120."
+            },
+            "terms_hash": {
+              "type": "string",
+              "description": "Optional sha256 (64 hex, optionally sha256:) of the terms the payment was for. A terms hash bound in the verdict's args takes precedence; a supplied one is labelled not bound."
+            },
+            "authorization_signature": {
+              "type": "string",
+              "description": "Optional: the payer's 65-byte EIP-3009 signature (hex). The receipt verifies it recovers to the payer over the bound amount, payee, validity window and the verdict's nonce, under the token's on-chain EIP-712 domain."
+            },
+            "output_hash": {
+              "type": "string",
+              "description": "Optional sha256 of the delivered result. With it, a settled payment reads paid_output_recorded; without it, paid_no_output_recorded (a possible ghost result: do not pay again for the same job)."
+            }
+          },
+          "required": [
+            "event",
+            "args"
+          ]
+        },
+        "annotations": {
+          "title": "Payment receipt (free)",
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": true
+        },
+        "supported_payments": [
+          "none (public, no auth)"
+        ],
+        "pricing": "free"
+      },
+      {
+        "name": "verify_media",
+        "description": "Check whether a video, audio or image file is byte-for-byte a file a publisher registered with invinoveritas. Pass the file's SHA-256 (compute it locally; the file is not sent). A match returns the registration: per-claim evidential states from its C2PA Content Credentials (signature/hash binding, signer trust, declared edit history, declared AI-generation labels: VERIFIED / DECLARED_ONLY / CONTRADICTED / INSUFFICIENT), any capture tier with its caveat, the signed verdict and the Bitcoin timestamp. No match means not registered, which says nothing either way about the file. A re-encoded copy has a different hash. It never asserts that content is true. Full checks of the file itself: POST /verify-media (upload, free). Free, no auth.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sha256": {
+              "type": "string",
+              "description": "SHA-256 of the exact file bytes, 64 hex characters."
+            }
+          },
+          "required": [
+            "sha256"
+          ]
+        },
+        "annotations": {
+          "title": "Verify media by hash (free)",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "supported_payments": [
+          "none (public, no auth)"
+        ],
+        "pricing": "free"
       }
-    ],
-    "supported_payments": [
-      "Bearer Token (recommended)",
-      "L402 Lightning"
-    ],
-    "pricing_note": "All tools are paid in sats. Free /register first to get a Bearer token, fund via Lightning, x402 (USDC), or card, then call any paid tool with `Authorization: Bearer <api_key>`. Without auth you get tools/list metadata but every callTool returns 402.",
-    "get_started": {
-      "summary": "Free Bearer registration. Fund via Lightning top-up, x402 (USDC), or card before paid tools, marketplace, and withdrawals.",
-      "steps": [
-        "1. POST /register — returns api_key (Bearer token).",
-        "2. Authorization: Bearer <api_key> on /mcp calls (or any REST endpoint).",
-        "3. Optional: POST /topup with amount_sats to fund via Lightning (L402-style invoice; required for marketplace buys, withdrawals, and large-volume agents)."
-      ],
-      "curl_register": "curl -s -X POST https://api.babyblueviper.com/register -H 'Content-Type: application/json' -d '{\"label\":\"my-agent\"}'",
-      "curl_first_paid_call": "curl -s -X POST https://api.babyblueviper.com/review -H 'Authorization: Bearer <api_key>' -H 'Content-Type: application/json' -d '{\"artifact\":\"OPEN long 5x BTC at 65000, 3% of equity\",\"artifact_type\":\"trade\",\"sign\":true}'",
-      "alternative_l402": "Or pay per-call without registering: WWW-Authenticate L402 invoice header on any paid endpoint.",
-      "discovery": "/.well-known/mcp/server-card.json + /.well-known/agent-card.json",
-      "proof_of_flow": "/stats — live platform activity + verification-handshake adoption metrics"
-    },
-    "resultType": "complete"
+    ]
   }
 }
