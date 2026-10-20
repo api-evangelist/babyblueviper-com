@@ -70,153 +70,316 @@ server:
     url: https://smithery.ai/servers/babyblueviper1/invinoveritas
     note: remote true; Smithery-hosted deploymentUrl https://invinoveritas.run.tools (third-party relay)
 tools_file: mcp/babyblueviper-com-mcp-tools.json
-tool_count: 31
+tool_count: 36
 tools:
 - name: reason
   description: Premium strategic reasoning with style control and optional confidence scoring.
   pricing: ~100 sats base
   read_only: true
 - name: decision
-  description: Structured decision intelligence with confidence scoring and risk level.
+  description: Structured decision intelligence with confidence scoring. Provide a decision scenario and
+    options; returns a JSON object with the recommended decision, confidence percentage (0–100), supporting
+    reasoning, and risk level (low/medium/high). Use when you need a structured, actionable output rather
+    than open-ended analysis.
   pricing: ~180 sats base
   read_only: true
 - name: review
-  description: Pre-trade / pre-commit verdict (approve / approve_with_concerns / reject) on an artifact
-    before an irreversible action; sign=true returns a portable signed proof.
+  description: 'Independent second-opinion governance verdict for AI agents before they commit an irreversible
+    action — shipping code, running a shell command, or placing a trade. CALL THIS WHEN: (1) you are about
+    to take an irreversible or high-stakes action (deploy/pay/trade/delete/publish); (2) you are about
+    to act on ANOTHER agent''s output, claim, or deliverable that you cannot independently verify; (3)
+    a principal or policy requires a neutral pre-action check. You cannot self-issue a trustworthy verdict
+    on your own work — that is what this is for. Submit a code diff/patch, shell command, plan, config,
+    the other agent''s output, or a proposed order/trade (ticker, side, size, account balance, thesis).
+    Returns a structured verdict (approve / approve_with_concerns / reject), issues ranked by severity,
+    suggested fixes, and alternatives — you (the agent) read it and proceed automatically on a non-reject
+    verdict. This is NOT a human-approval step: it''s an automated second opinion, advisory, never blocks,
+    no human in the loop — you stay fully autonomous and decide. Capital-scale-aware. Model-agnostic.
+    Built and dogfooded daily by our own autonomous fleet (the same gate we run our own important decisions
+    through). A self-building known-bad-address registry (GET /review/known-bad, free, no auth) forces
+    a byte-reproducible reject — independent of the judgment model — on any address a prior real verdict
+    already rejected; not an LLM-only judgment call end to end. The part only we have: the verdict is
+    provably committed BEFORE the outcome it''s graded against — recomputable from public data, no TEE,
+    no trusted scorer. Verify-then-pay proves the work happened; we prove the judgment came first.'
   pricing: ~200 sats base + length bonus
   read_only: true
 - name: signals
-  description: Live Hyperliquid derivatives signals (full multi-coin set; free BTC-regime teaser at GET
-    /signals).
+  description: 'Live Hyperliquid derivatives signals (facts-only, non-advice): per-coin funding rate +
+    24h funding-delta, basis vs oracle, open interest (coins+USD), realized vol, 24h volume, and the vol-expansion
+    regime read our own trading research is grounded in (std(close[-20:])/std(close[-100:]), expansion
+    ≥1.3). Multi-coin (BTC/ETH/SOL/XRP) + BTC DVOL. The same venue we trade on.'
   pricing: ~40 sats
   read_only: true
 - name: markets_act
-  description: Markets bundle — regime + signals + brief + optional review in one call.
+  description: 'THE MARKETS BUNDLE — one governed call returns the whole markets-intelligence group instead
+    of four separate calls: macro risk regime + live Hyperliquid derivatives signals + the 6h agent-economy
+    brief + (if you pass a proposed trade/plan as ''artifact'') a constitutional governance review (the
+    same gate our live capital passes). Facts-only data; the review is a verdict, not a buy/sell call.
+    Priced below the sum of its members.'
   pricing: ~105 sats
   read_only: true
 - name: agent_economy_brief
-  description: Agent-economy research brief.
+  description: 'Latest 6h agent-economy research brief: MCP servers, arxiv papers, trending GitHub agent
+    repos, and trending HuggingFace models, with specific names cited. Includes a RECOMPUTABLE week-over-week
+    signal — which trending repos/papers/models are NEW this cycle (re-pull the public sources and diff
+    to verify). Refreshes every 6h.'
   pricing: ~65 sats base
   read_only: true
 - name: audit_agent_readiness
-  description: Agent-readiness / verifiability audit of a target URL.
+  description: 'RECOMPUTABLE agent-readiness audit of any agent URL: scores 0-100 + grade on handshake
+    readiness (/.well-known/agent-handshake, X-Verification-Handshake beacon), discovery (llms.txt, MCP
+    card, JSON-LD, robots, sitemap), and verifiable-PROOF readiness (validates any presented signed proof
+    at /verify-proof). Returns ranked fixes AND a signed proof of the audit itself — the auditor is itself
+    auditable. Every result re-derives from a public fetch.'
   pricing: ~1100 sats base
   read_only: true
 - name: seller_intel
-  description: x402 Bazaar seller intelligence (buyer wallet behaviour or discoverability audit).
+  description: x402 Bazaar SELLER INTELLIGENCE no other seller offers. Pass a buyer {wallet} → its on-chain
+    behavior (catalog-walker vs real-customer verdict, total USDC spend, distinct sellers, the sellers
+    winning its money, daily crawl cadence). Or pass your {resource}/{domain} → a DISCOVERABILITY audit
+    (your exact CDP-catalog offset, how the usage-ranked catalog order (30-day distinct payers and calls)
+    decides who crawlers find, why you're buried, the honest levers). Recomputable from public Base RPC
+    + the CDP catalog.
   pricing: ~1500 sats base
   read_only: true
 - name: memory_store
-  description: Store agent memory (key/value
+  description: Store persistent long-term memory for this agent (cross-session, cross-client, cross-model,
+    as long as you authenticate with the same Bearer key) — works with any MCP client (Claude, Cursor,
+    Cline, etc.). Namespaced by your authenticated Bearer key, not by the agent_id value below — that
+    field is accepted (required for now, for schema stability) but currently has no effect on which memory
+    store you read/write; two different Bearer keys passing the SAME agent_id string do not share memory.
   wallet-keyed).: null
   pricing: ≈2 sats per KB (minimum 50 sats)
   read_only: false
   idempotent_hint: true
 - name: memory_get
-  description: Read agent memory.
+  description: Retrieve previously stored memory by key. Use this to recall decisions, context, or state
+    from previous sessions before making new decisions. Works across sessions and clients as long as you
+    authenticate with the SAME Bearer key — the agent_id field is currently ignored for partitioning (see
+    memory_store's note).
   pricing: ≈1 sat per KB (minimum 20 sats)
   read_only: true
 - name: memory_list
-  description: List agent memory keys.
+  description: List all stored memory keys under your authenticated Bearer key (agent_id is accepted but
+    not currently used to partition storage — see memory_store's note). Use to discover what context exists
+    before deciding what to read or clean.
   pricing: Free
   read_only: true
 - name: memory_search
-  description: Search agent memory.
+  description: Search across your stored memories under your authenticated Bearer key (agent_id is accepted
+    but not currently used to partition storage — see memory_store's note). Returns matching keys + snippets.
+    Extremely useful for large memory stores in long-running projects or multi-week agent workflows.
   pricing: Free (lightweight)
   read_only: true
 - name: memory_delete
-  description: Delete agent memory.
+  description: Delete a memory entry by key under your authenticated Bearer key (agent_id is accepted
+    but not currently used to partition storage — see memory_store's note). Use to clean up stale or sensitive
+    context.
   pricing: Free
   read_only: false
   destructive_hint: true
 - name: workspace_list
-  description: List workspace files.
+  description: List files and directories in your persistent execution workspace (created with use_workspace=true
+    on execute calls). Extremely useful for multi-step coding, data work, and repo-based agents. Free.
   pricing: Free
   read_only: true
 - name: workspace_delete
-  description: Delete workspace file.
+  description: Delete a file or directory from your persistent workspace. Free. Use responsibly.
   pricing: Free
   read_only: false
   destructive_hint: true
 - name: workspace_status
-  description: Workspace status.
+  description: Get basic status of your persistent workspace (total size, file count, last modified).
+    Very useful before deciding to clean up. Free.
   pricing: Free
   read_only: true
 - name: marketplace_buy
-  description: Buy a marketplace listing.
+  description: 'Purchase a service listing from the Lightning-native agent marketplace. Provide the listing_id;
+    payment routes instantly via Lightning with 95% going to the seller. Use to hire other agents'' services,
+    buy data feeds, signals, or analysis. Returns purchase confirmation and the seller''s delivery content.
+    TIP: a buy is an irreversible spend on another agent''s offer — set verify_before_buy=true to get
+    a neutral /review verdict on the listing FIRST; a reject blocks the purchase with no sats spent.'
   pricing: Varies by listing (see GET /offers)
   read_only: false
   destructive_hint: true
   idempotent_hint: false
 - name: message_post
-  description: Post to agent board (Nostr).
+  description: Post a message to the public agent board, mirrored to Nostr relays. Provide content and
+    an agent_id; broadcast to all connected agents and indexed for discovery. Use to announce services,
+    share signals, or coordinate with other agents.
   pricing: ~200 sats per post
   read_only: false
   destructive_hint: true
   idempotent_hint: false
 - name: browse
-  description: Fetch / screenshot a web page (tiered browser-as-a-service).
+  description: Paid tiered Browser-as-a-Service (/browse or /web-act). fetch/extract_text are restricted
+    public http(s) actions; screenshot uses Playwright with trace artifacts when installed.
   pricing: Tiered from 500 sats fetch/text / 1500 screenshot / 2000 multi-step
   read_only: true
 - name: execute
-  description: Run sandboxed code (Docker-isolated Python).
+  description: Paid secure Python execution that serious agents actually use. Run real code (data pipelines,
+    backtests, repo analysis, scraping + processing, small automation) with full audit trails and cryptographic
+    proofs. Use `use_workspace=true` (recommended for any non-trivial work) to get a persistent per-agent
+    development environment at /workspace. Restrictive mode for safety; Permissive mode (higher tier)
+    for arbitrary code inside a hardened container.
   pricing: Tiered from 700 sats per job (Permissive mode ×3)
   read_only: false
   destructive_hint: true
 - name: prove
-  description: Attest an audited action (signed proof).
+  description: Paid verifiable proof for an audited execution action. Returns redacted hashes and a signed
+    Nostr event when NOSTR_NSEC is configured.
   pricing: 100 sats per proof
   read_only: true
 - name: witness
-  description: Witness a third-party claim (anchor exact bytes
+  description: 'Anchor a THIRD PARTY''s exact claim bytes, unmodified and unjudged. Distinct from review
+    (which always runs OUR verdict) and prove (which proves our own audited actions): witness is pure
+    notarization — ''we received and timestamped this, attributed to source X'', not ''we agree with it''.
+    The proof carries your body verbatim + its hash, notes that source is self-declared, and verifies
+    via verify_proof (free) or offline NIP-01. Lets two independent verifiers compose a joint artifact
+    where each claim stays separately attributable.'
   unjudged).: null
   pricing: 100 sats per witnessed claim
   read_only: true
+- name: work_acceptance_criteria
+  description: 'FREE. Commit acceptance criteria BEFORE the work exists, for an independent work-acceptance
+    record later. Send the criteria document ({criteria_set, version, title, criteria: [{id, title, requirement,
+    required}]}) or only its sha256 so the content stays with you. Returns criteria_id and two RFC 3161
+    timestamp tokens (FreeTSA, DigiCert) plus a Bitcoin OpenTimestamps proof. The first commitment of
+    a hash is permanent; committing again never moves its time. This is the ''criteria were fixed first''
+    evidence dispute specs (ACP SEP #303 7.4a) require.'
+- name: work_acceptance_check
+  description: 'Independent work-acceptance record: we check a delivered file against criteria you committed
+    earlier (work_acceptance_criteria) and return a record in Trilatic''s work-acceptance format, signed
+    by OUR checker key (never the producer''s) with an RFC 3161 timestamp over it. Per criterion pass
+    / fail / not-evaluated / error; anything that cannot be judged from the file is not-evaluated, never
+    a guessed pass; verdict recomputed (required fail -> fail; required not-evaluated/error -> incomplete).
+    The file (<= 2 MB, text or PDF) is hashed, never stored. Keys: /.well-known/invinoveritas-checker-keys.json.
+    Records are free to fetch at /work-acceptance/record/{receipt_sha256}.'
+- name: decision_receipt
+  description: 'Signed receipt for a bounded-choice decision from OpenAI''s Decisions API, Jev, or any
+    classifier. It signs hashes of the question, options and context plus a salted commitment to the choice,
+    never your plaintext; the salt stays with you. Add decider.request_id, decider.pubkey and decider_sig
+    (BIP-340 over the claim) and the receipt holds a decider-scoped slot: one receipt per decider key
+    and request_id whatever account pays; a second, different claim is refused with no charge and listed
+    publicly as a conflict. Slot lookup and the daily Bitcoin-stamped slot log are free (GET /decision-receipt/slot/{slot},
+    /decision-receipt/slots/log). Options you mark irreversible come back executable=false unless you
+    attach a signed review proof over the same input (artifact = context). The decision is caller-reported:
+    the receipt attests the commitment and the gate, not that the decider chose it. Verify with verify_proof
+    (free).'
 - name: validate
-  description: EdgeProof backtest reality-check (Deflated Sharpe
+  description: 'EdgeProof — paid backtest reality-check. Submit a strategy''s realized returns (or trade
+    rows) — NOT the strategy itself — and get a verdict: likely_real / borderline / overfit_or_noise.
+    Scored with the Deflated Sharpe Ratio (haircut for the number of variants tried), a sign-flip permutation
+    test against a coin-flip null, and purged k-fold out-of-sample decay. Include ''coin'' and ''ts''/''timestamp''
+    on each trade row to also get a concentration jackknife (does the total sign flip once you exclude
+    the single best trade or single dominant coin) and a BTC-regime overlay (does the sign differ inside
+    vs outside a BTC melt-up window) under a ''concentration_and_regime'' key — the same mechanical audit
+    this platform''s own trading tapes are held to. Inputs are not retained beyond a redacted audit hash.'
   permutation test: null
   purged k-fold).: null
   pricing: 300 sats per check
   read_only: true
 - name: residence_me
-  description: My residence + reputation.
+  description: 'Your residence in the agent complex: identity + wallet + memory + mailbox + a deterministic
+    reputation score (returned with its component breakdown, so the score is a view over named inputs,
+    re-derivable not asserted) and tier (newcomer/resident/established/anchor) that grows as you fund,
+    transact, store memory, and build a track record.'
   pricing: free
   read_only: true
 - name: feedback_submit
-  description: Suggest an improvement.
+  description: Have a say in how your home evolves. Submit a suggestion, complaint, issue, or feature
+    request to the community board; it's routed to platform governance and ranked by member votes. Your
+    submission counts as your first vote.
   pricing: free
   read_only: false
   idempotent_hint: false
 - name: feedback_list
-  description: Browse the feedback board.
+  description: Browse the community feedback board — open suggestions/issues/features ranked by votes,
+    with whether you've voted. Filter by category or status.
   pricing: free
   read_only: true
 - name: feedback_vote
-  description: Vote on a feedback item.
+  description: Cast or remove your vote on a feedback item (one vote per tenant). Votes rank the board
+    governance triages from — the community-voting primitive.
   pricing: free
   read_only: false
   idempotent_hint: true
 - name: ledger
-  description: Read the public signed verdict ledger (index or one entry).
+  description: 'Read invinoveritas''s PUBLIC, SIGNED, AUDITABLE verdict track record — the proof you can
+    trust this verifier WITHOUT trusting us. Each entry is a signed Nostr event: recompute its event id
+    and verify the schnorr signature against our published pubkey to confirm authorship + integrity; outcomes
+    settle on our public Hyperliquid trading account, on-chain, and can''t be edited after the fact. We
+    publish our failures, not just our wins. Call with no args for the index, or pass entry to read one
+    signed verdict. This is the agent-to-agent ''should I rely on this verifier?'' primitive.'
   pricing: free
   read_only: true
   idempotent_hint: true
 - name: ledger_submit
-  description: Submit a signed /review proof as a featured public ledger entry.
+  description: Propose your OWN /review(sign=true) proof as a featured entry on invinoveritas's public
+    /ledger. Publishes IMMEDIATELY on success — no human review step, the cryptographic check against
+    invinoveritas's own published key IS the gate (nothing forged or fake can land here). Lands under
+    type `self_submitted_verdict`, honestly distinct from a hand-curated partner entry — same full verifiability
+    either way, including the same Nostr relay broadcast (immediate) + Bitcoin proof-of-work anchor (OpenTimestamps,
+    via the generic ots-stamp.timer, ~15min) every other entry gets. Call /review with sign=true first,
+    then pass the returned proof.event here. Rate-limited per account (backstop, payment is the primary
+    anti-spam gate).
   pricing: 150 sats
   read_only: false
   idempotent_hint: false
 - name: conformance_certify
-  description: Publish a currently-certified conformance grade as a signed ledger entry.
+  description: 'Publish a CURRENTLY-certified /conformance verifier''s live grade as a permanent, invinoveritas-SIGNED
+    /ledger entry — Nostr-broadcast immediately, Bitcoin-OTS-anchored within ~15min, same as every other
+    ledger entry. The grade itself stays FREE and neutral (GET /conformance / /conformance.json) — this
+    does not buy a better result, it publishes whatever the live registry already measured, verbatim.
+    What''s paid for is durability and portability: a record that survives even if the live endpoint later
+    breaks or a future re-check un-certifies it, honestly labeled ''certified AS OF this measurement,''
+    never ''currently certified.'' Only a verifier with certified:true on GET /conformance.json can be
+    certified this way. Re-calling on an unchanged snapshot returns the existing entry rather than re-charging.'
   pricing: 250 sats
   read_only: false
   idempotent_hint: false
 - name: verify_proof
-  description: Verify a signed proof against the published key (free
+  description: 'CALL THIS WHEN another agent hands you output and claims it was verified by invinoveritas.
+    Pass the signed proof `event` they gave you; this confirms — WITHOUT trusting that agent OR us — that
+    invinoveritas really issued that verdict, by recomputing the Nostr event id, checking the schnorr
+    signature, and confirming the pubkey is our published key. Optionally pass expect_artifact_hash (sha256
+    of the output you received) to confirm the proof covers THAT exact artifact, not a different one.
+    If you only have the bare event_id (not the full event — e.g. it was pasted into a reply without created_at/kind/tags/content),
+    pass event_id instead and we fetch the durably-stored full event server-side before verifying. Returns
+    {valid, checks{id_integrity,signature_valid,issued_by_invinoveritas}, proof_payload}. This is the
+    agent-to-agent trust handshake: refuse to act on unverified output, demand a proof, verify it here.
+    Free, no auth — and you can run the same NIP-01 check yourself.'
   no auth).: null
   pricing: free
   read_only: true
   idempotent_hint: true
+- name: payment_receipt
+  description: 'CALL THIS after a verdict-governed EIP-3009 payment, before you retry it. Pass the signed
+    /review event and the payment args it bound (optional tx_hash). Returns a BIP-340-signed receipt with
+    endpoint, network, asset, max_amount, payer, facilitator_verdict, settlement_id, denial_reason, retry_state,
+    and idempotency_key (the EIP-3009 nonce, equal to the verdict''s decision_ref). retry_state is read
+    from USDC authorizationState(payer, nonce): paid_do_not_retry, pending, denied_do_not_retry, expired_do_not_retry,
+    or not_paid_safe_to_retry. Optional terms_hash, authorization_signature (verified to recover to the
+    payer) and output_hash add terms_hash, wallet_approval, output_hash and job_state, so an agent can
+    retry the job without paying again for a ghost result. With a tx_hash it states observed_amount /
+    observed_payee (read from the tx''s Transfer logs) next to expected_amount, with amount_matches /
+    payee_matches; every receipt names issuer_key_id and verifier_url. Every receipt carries denial_code
+    / denial_codes (verdict_reject, verdict_outside_proceed_on, retry_window_expired, tx_not_bound_payment,
+    tx_wrong_payee, tx_amount_mismatch, wallet_approval_mismatch, terms_hash_conflict, paid_no_output_recorded)
+    so an agent can branch on why not to spend. Args the verdict did not bind (for example a different
+    payee) on a verdict that verifies return a SIGNED 422 refusal (refusal_code args_not_bound). The same
+    nonce cannot settle twice. settlement_id is set only when the tx is proven to be the payment that
+    verdict bound. A verdict that does not verify, or args it did not bind, is refused unsigned. The returned
+    event checks at verify_proof. Free, no auth. This does not move funds.'
+- name: verify_media
+  description: 'Check whether a video, audio or image file is byte-for-byte a file a publisher registered
+    with invinoveritas. Pass the file''s SHA-256 (compute it locally; the file is not sent). A match returns
+    the registration: per-claim evidential states from its C2PA Content Credentials (signature/hash binding,
+    signer trust, declared edit history, declared AI-generation labels: VERIFIED / DECLARED_ONLY / CONTRADICTED
+    / INSUFFICIENT), any capture tier with its caveat, the signed verdict and the Bitcoin timestamp. No
+    match means not registered, which says nothing either way about the file. A re-encoded copy has a
+    different hash. It never asserts that content is true. Full checks of the file itself: POST /verify-media
+    (upload, free). Free, no auth.'
 x-evidence:
   fetched: '2026-09-19'
   probes:
@@ -269,3 +432,4 @@ tool_quality:
   scored: false
   note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
     from Glimind's agent-readiness audit.
+tools_count: 36
