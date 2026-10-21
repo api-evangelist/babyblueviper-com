@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-execute-request-schema.json",
+  "title": "ExecuteRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-execution-api-openapi.yml#/components/schemas/ExecuteRequest",
+  "properties": {
+    "language": {
+      "type": "string",
+      "const": "python",
+      "title": "Language",
+      "default": "python"
+    },
+    "code": {
+      "type": "string",
+      "maxLength": 6000,
+      "minLength": 1,
+      "title": "Code"
+    },
+    "stdin": {
+      "type": "string",
+      "maxLength": 20000,
+      "title": "Stdin",
+      "default": ""
+    },
+    "timeout_seconds": {
+      "anyOf": [
+        {
+          "type": "number",
+          "maximum": 600.0,
+          "minimum": 0.5
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Timeout Seconds"
+    },
+    "tier": {
+      "type": "integer",
+      "maximum": 3.0,
+      "minimum": 0.0,
+      "title": "Tier",
+      "description": "Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.",
+      "default": 1
+    },
+    "agent_id": {
+      "type": "string",
+      "maxLength": 120,
+      "title": "Agent Id",
+      "default": ""
+    },
+    "permissive": {
+      "type": "boolean",
+      "title": "Permissive",
+      "description": "Permissive mode: run ARBITRARY Python — any import, full builtins, no AST allowlist — relying on the hardened isolated container (network OFF, read-only root, all caps dropped, non-root, resource-capped) as the boundary. Priced at a premium. Default False keeps the restrictive allowlist sandbox.",
+      "default": false
+    },
+    "use_workspace": {
+      "type": "boolean",
+      "title": "Use Workspace",
+      "description": "Mount a persistent per-agent workspace at /workspace (read-write for the agent). Files, installed packages, and git clones survive across calls. Storage is lightly metered. Only available in higher tiers or with permissive=True.",
+      "default": false
+    }
+  },
+  "type": "object",
+  "required": [
+    "code"
+  ]
+}

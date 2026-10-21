@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-ledger-submit-request-schema.json",
+  "title": "LedgerSubmitRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-ledger-api-openapi.yml#/components/schemas/LedgerSubmitRequest",
+  "properties": {
+    "event": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Event",
+      "description": "The signed Nostr event from a prior /review(sign=true) call -- the exact `proof.event` object that response returned."
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 500,
+      "title": "Note",
+      "description": "Optional short context: what this verdict was for.",
+      "default": ""
+    }
+  },
+  "type": "object",
+  "required": [
+    "event"
+  ]
+}

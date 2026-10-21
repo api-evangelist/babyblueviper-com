@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-residence-act-request-schema.json",
+  "title": "ResidenceActRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-residence-api-openapi.yml#/components/schemas/ResidenceActRequest",
+  "properties": {
+    "intent": {
+      "type": "string",
+      "title": "Intent",
+      "description": "What you want your home to reason about / govern."
+    },
+    "artifact": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Artifact",
+      "description": "A concrete trade/diff/command/plan to govern, if any."
+    },
+    "artifact_type": {
+      "type": "string",
+      "title": "Artifact Type",
+      "default": "general"
+    },
+    "policy": {
+      "$ref": "#/$defs/HousePolicy"
+    }
+  },
+  "type": "object",
+  "required": [
+    "intent"
+  ],
+  "$defs": {
+    "HousePolicy": {
+      "properties": {
+        "max_spend_sats": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Max Spend Sats",
+          "description": "Hard cap; the act is rejected before any work if its cost exceeds this (deterministic, not LLM)."
+        },
+        "require_review": {
+          "type": "boolean",
+          "title": "Require Review",
+          "description": "Force the constitutional review gate even if no artifact is given.",
+          "default": true
+        },
+        "remember": {
+          "type": "boolean",
+          "title": "Remember",
+          "description": "Persist this act to wallet-keyed memory (continuity).",
+          "default": true
+        }
+      },
+      "type": "object",
+      "title": "HousePolicy"
+    }
+  }
+}

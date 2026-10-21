@@ -295,6 +295,29 @@ paths:
       - Billing
 components:
   schemas:
+    CheckoutBody:
+      properties:
+        plan:
+          type: string
+          title: Plan
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        client_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Client Reference Id
+        seats:
+          type: integer
+          title: Seats
+          default: 1
+      type: object
+      required:
+      - plan
+      title: CheckoutBody
     ValidationError:
       properties:
         loc:
@@ -321,19 +344,6 @@ components:
       - msg
       - type
       title: ValidationError
-    TopupBody:
-      properties:
-        api_key:
-          type: string
-          title: Api Key
-        usd_amount:
-          type: number
-          title: Usd Amount
-      type: object
-      required:
-      - api_key
-      - usd_amount
-      title: TopupBody
     HTTPValidationError:
       properties:
         detail:
@@ -356,26 +366,16 @@ components:
       - api_key
       - usd_amount
       title: X402TopupBody
-    CheckoutBody:
+    TopupBody:
       properties:
-        plan:
+        api_key:
           type: string
-          title: Plan
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        client_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Client Reference Id
-        seats:
-          type: integer
-          title: Seats
-          default: 1
+          title: Api Key
+        usd_amount:
+          type: number
+          title: Usd Amount
       type: object
       required:
-      - plan
-      title: CheckoutBody
+      - api_key
+      - usd_amount
+      title: TopupBody

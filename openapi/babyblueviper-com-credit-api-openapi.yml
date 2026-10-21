@@ -421,6 +421,22 @@ paths:
       security: []
 components:
   schemas:
+    GrantFirstCallRequest:
+      properties:
+        token:
+          type: string
+          maxLength: 2048
+          minLength: 20
+          title: Token
+        target_api_key:
+          type: string
+          minLength: 10
+          title: Target Api Key
+      type: object
+      required:
+      - token
+      - target_api_key
+      title: GrantFirstCallRequest
     ValidationError:
       properties:
         loc:
@@ -447,6 +463,74 @@ components:
       - msg
       - type
       title: ValidationError
+    ConfirmRequest:
+      properties:
+        payment_hash:
+          type: string
+          title: Payment Hash
+        preimage:
+          type: string
+          title: Preimage
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      required:
+      - payment_hash
+      - preimage
+      title: ConfirmRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WithdrawToAddressRequest:
+      properties:
+        lightning_address:
+          type: string
+          minLength: 3
+          title: Lightning Address
+          description: LN address like user@domain
+        amount_sats:
+          type: integer
+          minimum: 5000.0
+          title: Amount Sats
+        comment:
+          anyOf:
+          - type: string
+            maxLength: 280
+          - type: 'null'
+          title: Comment
+          description: Optional LNURL-pay comment (truncated if exceeds commentAllowed)
+      type: object
+      required:
+      - lightning_address
+      - amount_sats
+      title: WithdrawToAddressRequest
+    SettleTopupProxyRequest:
+      properties:
+        api_key:
+          type: string
+          minLength: 10
+          title: Api Key
+        payment_hash:
+          type: string
+          title: Payment Hash
+        preimage:
+          type: string
+          title: Preimage
+      type: object
+      required:
+      - api_key
+      - payment_hash
+      - preimage
+      title: SettleTopupProxyRequest
     WithdrawProxyRequest:
       properties:
         bolt11:
@@ -475,56 +559,6 @@ components:
       required:
       - amount_sats
       title: WithdrawProxyRequest
-    WithdrawToAddressRequest:
-      properties:
-        lightning_address:
-          type: string
-          minLength: 3
-          title: Lightning Address
-          description: LN address like user@domain
-        amount_sats:
-          type: integer
-          minimum: 5000.0
-          title: Amount Sats
-        comment:
-          anyOf:
-          - type: string
-            maxLength: 280
-          - type: 'null'
-          title: Comment
-          description: Optional LNURL-pay comment (truncated if exceeds commentAllowed)
-      type: object
-      required:
-      - lightning_address
-      - amount_sats
-      title: WithdrawToAddressRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ConfirmRequest:
-      properties:
-        payment_hash:
-          type: string
-          title: Payment Hash
-        preimage:
-          type: string
-          title: Preimage
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
-      type: object
-      required:
-      - payment_hash
-      - preimage
-      title: ConfirmRequest
     VerifyRequest:
       properties:
         api_key:
@@ -550,37 +584,3 @@ components:
       - tool
       - price_sats
       title: VerifyRequest
-    GrantFirstCallRequest:
-      properties:
-        token:
-          type: string
-          maxLength: 2048
-          minLength: 20
-          title: Token
-        target_api_key:
-          type: string
-          minLength: 10
-          title: Target Api Key
-      type: object
-      required:
-      - token
-      - target_api_key
-      title: GrantFirstCallRequest
-    SettleTopupProxyRequest:
-      properties:
-        api_key:
-          type: string
-          minLength: 10
-          title: Api Key
-        payment_hash:
-          type: string
-          title: Payment Hash
-        preimage:
-          type: string
-          title: Preimage
-      type: object
-      required:
-      - api_key
-      - payment_hash
-      - preimage
-      title: SettleTopupProxyRequest

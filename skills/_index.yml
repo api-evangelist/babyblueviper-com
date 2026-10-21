@@ -22,7 +22,7 @@ skills:
   operations: [review_review_post, markets_act_markets_act_post, get_signals_full_signals_full_get, get_regime_regime_get, execute_code_execute_post, store_memory_memory_store_post, get_memory_memory_get_post, post_to_board_messages_post_post, buy_offer_offers_buy_post]
   mcp_tools: [review, markets_act, signals, regime, execute, memory_store, memory_get, message_post, marketplace_buy]
   summary: The full platform skill — when and how to reach for the paid MCP tools, above all review before any irreversible action.
-  reference: babyblueviper-com-invinoveritas-REFERENCE.md
+  reference: babyblueviper-com-invinoveritas-docs/babyblueviper-com-invinoveritas-REFERENCE.md
 - file: babyblueviper-com-loop-verifier.md
   name: loop-verifier
   source: https://raw.githubusercontent.com/babyblueviper1/invinoveritas/main/integrations/agentskills/loop-verifier/SKILL.md

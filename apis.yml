@@ -1,13 +1,14 @@
 aid: babyblueviper-com
+
 name: invinoveritas
-description: >-
-  invinoveritas, published by Baby Blue Viper, is a verification layer for autonomous agents: a neutral,
-  model-agnostic verdict before an irreversible action (POST /review), a schnorr-signed portable proof after
-  (POST /prove), and a public, Nostr- and Bitcoin-anchored track record (GET /ledger) that anyone can recompute
-  against the published key. It is exposed as a REST API (OpenAPI 3.1, 187 operations on api.babyblueviper.com),
-  a remote MCP server with 31 tools at /mcp (OAuth 2.1 metadata, anonymous tools/list), and an A2A agent with a
-  conformant 0.3.0 agent card. Paid calls settle per call in Bitcoin Lightning sats (Bearer credits or L402), USDC
-  via x402 on Base, or by card through Stripe governance subscriptions; /verify-proof and /ledger are free.
+
+description: 'invinoveritas, published by Baby Blue Viper, is a verification layer for autonomous agents: a neutral, model-agnostic verdict before
+  an irreversible action (POST /review), a schnorr-signed portable proof after (POST /prove), and a public, Nostr- and Bitcoin-anchored track
+  record (GET /ledger) that anyone can recompute against the published key. It is exposed as a REST API (OpenAPI 3.1, 187 operations on api.babyblueviper.com),
+  a remote MCP server with 31 tools at /mcp (OAuth 2.1 metadata, anonymous tools/list), and an A2A agent with a conformant 0.3.0 agent card. Paid
+  calls settle per call in Bitcoin Lightning sats (Bearer credits or L402), USDC via x402 on Base, or by card through Stripe governance subscriptions;
+  /verify-proof and /ledger are free.'
+
 deliveryModel:
   model: open-core
   license: Apache-2.0
@@ -26,15 +27,25 @@ deliveryModel:
   - repository-license
   generated: '2026-09-25'
   method: derived
+
 image: https://api.babyblueviper.com/logo.svg
+
 url: https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/refs/heads/main/apis.yml
+
 x-type: company
+
 x-source: harvest:a2a-registry
+
 x-tier: profiled
+
 x-tier-reason: enrichment pass 2026-09-19 (local-v3; was a2a-registry harvest stub)
+
 specificationVersion: '0.20'
+
 created: '2026-09-19'
+
 modified: '2026-09-19'
+
 tags:
 - AI Agents
 - Agent Verification
@@ -46,15 +57,121 @@ tags:
 - Trading
 - Cryptographic Proofs
 - Agent Marketplace
+
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: APIs.json
+  email: info@apis.io
+
+common:
+- type: Spectral
+  url: rules/babyblueviper-com-rules.yml
+- type: JSONLD
+  url: json-ld/babyblueviper-com-context.jsonld
+- type: Vocabulary
+  url: vocabulary/babyblueviper-com-vocabulary.yml
+- type: Idempotency
+  url: conventions/babyblueviper-com-conventions.yml
+- type: Deprecation
+  url: lifecycle/babyblueviper-com-lifecycle.yml
+- type: Hosts
+  url: hosts/babyblueviper-com-hosts.yml
+- type: IntegrationEdges
+  url: integrations/babyblueviper-com-integration-edges.yml
+- type: Vendors
+  url: vendors/babyblueviper-com-vendors.yml
+- type: CapabilityMap
+  url: capabilities/babyblueviper-com-capability-edges.yml
+  name: invinoveritas Business Capability Map
+- type: AgenticAccess
+  url: agentic-access/babyblueviper-com-agentic-access.yml
+- type: DomainSecurity
+  url: security/babyblueviper-com-domain-security.yml
+- type: Website
+  url: https://babyblueviper.com/
+- type: DeveloperPortal
+  url: https://api.babyblueviper.com/
+- type: Documentation
+  url: https://api.babyblueviper.com/docs
+- type: APIReference
+  url: https://api.babyblueviper.com/redoc
+- type: GettingStarted
+  url: https://api.babyblueviper.com/install
+- type: Pricing
+  url: https://api.babyblueviper.com/billing/plans
+- type: Roadmap
+  url: https://api.babyblueviper.com/roadmap
+- type: Support
+  url: https://github.com/babyblueviper1/invinoveritas/issues
+- type: Blog
+  url: https://www.babyblueviper.com/
+- type: BlogRSS
+  url: https://www.babyblueviper.com/feed
+- type: GitHubOrganization
+  url: https://github.com/babyblueviper1
+- type: GitHub
+  url: https://github.com/babyblueviper1/invinoveritas
+- type: TermsOfService
+  url: https://api.babyblueviper.com/terms
+- type: PrivacyPolicy
+  url: https://api.babyblueviper.com/privacy
+- type: ChangeLog
+  url: changelog/babyblueviper-com-changelog.yml
+- type: ChangeLog
+  name: GitHub releases
+  url: https://github.com/babyblueviper1/invinoveritas/releases
+- type: AgentCard
+  url: a2a/babyblueviper-com-a2a.yml
+- type: MCPServer
+  url: mcp/babyblueviper-com-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/babyblueviper-com-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/babyblueviper-com-llms.txt
+- type: WellKnown
+  url: well-known/babyblueviper-com-well-known.yml
+- type: SecurityTxt
+  url: well-known/babyblueviper-com-security.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Packages
+  url: packages/babyblueviper-com-packages.yml
+- type: SDKs
+  url: packages/babyblueviper-com-packages.yml
+- type: CLI
+  url: cli/babyblueviper-com-cli.yml
+- type: Authentication
+  url: authentication/babyblueviper-com-authentication.yml
+- type: OAuthScopes
+  url: scopes/babyblueviper-com-scopes.yml
+- type: Conventions
+  url: conventions/babyblueviper-com-conventions.yml
+- type: ErrorCatalog
+  url: errors/babyblueviper-com-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/babyblueviper-com-lifecycle.yml
+- type: Conformance
+  url: conformance/babyblueviper-com-conformance.yml
+- type: Plans
+  url: plans/babyblueviper-com-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/babyblueviper-com-rate-limits.yml
+- type: Sandbox
+  url: sandbox/babyblueviper-com-sandbox.yml
+- type: DataModel
+  url: data-model/babyblueviper-com-data-model.yml
+- type: Overlay
+  url: overlays/babyblueviper-com-openapi-overlay.yaml
+- type: DataSubjectRequest
+  url: https://api.babyblueviper.com/privacy
+
 apis:
 - name: invinoveritas MCP Server
-  description: >-
-    Remote MCP server (streamable HTTP, protocol 2025-06-18) at https://api.babyblueviper.com/mcp exposing
-    31 tools with inputSchema, pricing and annotations: review, reason, decision, signals, markets_act,
-    memory_*, execute, browse, prove, witness, validate, verify_proof, ledger, ledger_submit, conformance_certify,
-    feedback_*, and residence_me. tools/list and initialize answer anonymously; paid tool calls need a
-    Bearer key, an L402 payment, or x402. RFC 8414 and RFC 9728 metadata are served on the same host with
-    dynamic client registration and PKCE.
+  description: 'Remote MCP server (streamable HTTP, protocol 2025-06-18) at https://api.babyblueviper.com/mcp exposing 31 tools with inputSchema,
+    pricing and annotations: review, reason, decision, signals, markets_act, memory_*, execute, browse, prove, witness, validate, verify_proof,
+    ledger, ledger_submit, conformance_certify, feedback_*, and residence_me. tools/list and initialize answer anonymously; paid tool calls need
+    a Bearer key, an L402 payment, or x402. RFC 8414 and RFC 9728 metadata are served on the same host with dynamic client registration and PKCE.'
   image: https://api.babyblueviper.com/logo.svg
   humanURL: https://api.babyblueviper.com/install
   baseURL: https://api.babyblueviper.com/mcp
@@ -77,11 +194,11 @@ apis:
   - type: LLMsTxt
     name: Provider-hosted llms.txt (source of the local copy)
     url: https://api.babyblueviper.com/llms.txt
+  aid: babyblueviper-com:invinoveritas-mcp-server
 - name: invinoveritas A2A Agent
-  description: >-
-    A2A agent "invinoveritas-reasoning-agent" (protocolVersion 0.3.0, JSONRPC transport) at https://api.babyblueviper.com/a2a
-    with 15 skills mirroring the MCP tools. The agent card is served at both the canonical /.well-known/agent-card.json
-    and the legacy /.well-known/agent.json path and grades conformant against A2A 1.0.0.
+  description: A2A agent "invinoveritas-reasoning-agent" (protocolVersion 0.3.0, JSONRPC transport) at https://api.babyblueviper.com/a2a with
+    15 skills mirroring the MCP tools. The agent card is served at both the canonical /.well-known/agent-card.json and the legacy /.well-known/agent.json
+    path and grades conformant against A2A 1.0.0.
   image: https://api.babyblueviper.com/logo.svg
   humanURL: https://api.babyblueviper.com/.well-known/agent-card.json
   baseURL: https://api.babyblueviper.com/a2a
@@ -94,6 +211,7 @@ apis:
   - type: AgentCard
     name: Provider-served agent card (verbatim copy in a2a/)
     url: https://api.babyblueviper.com/.well-known/agent-card.json
+  aid: babyblueviper-com:invinoveritas-a2a-agent
 - aid: babyblueviper-com:babyblueviper-com-agents-api
   name: invinoveritas Agents API
   description: The agents API from invinoveritas — 1 operation(s) for agents.
@@ -158,6 +276,8 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-markets-act-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-billing-api
   name: invinoveritas Billing API
   description: The Billing API from invinoveritas — 10 operation(s) for billing.
@@ -188,6 +308,12 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-checkout-body-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-x402-topup-body-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-topup-body-schema.json
 - aid: babyblueviper-com:babyblueviper-com-community-api
   name: invinoveritas Community API
   description: The community API from invinoveritas — 3 operation(s) for community.
@@ -220,6 +346,10 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-feedback-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-vote-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-corpus-api
   name: invinoveritas Corpus API
   description: The corpus API from invinoveritas — 3 operation(s) for corpus.
@@ -284,6 +414,18 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-withdraw-proxy-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-withdraw-to-address-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-settle-topup-proxy-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-confirm-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-grant-first-call-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-discovery-api
   name: invinoveritas Discovery API
   description: The discovery API from invinoveritas — 3 operation(s) for discovery.
@@ -378,6 +520,18 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-verify-proof-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-validate-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-decision-receipt-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-browse-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-execute-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-witness-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-inference-api
   name: invinoveritas Inference API
   description: Reasoning and decision endpoints
@@ -410,6 +564,12 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-review-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-decision-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-reasoning-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-ledger-api
   name: invinoveritas Ledger API
   description: The ledger API from invinoveritas — 12 operation(s) for ledger.
@@ -442,6 +602,10 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-verdict-outcome-demo-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-ledger-submit-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-llms-txt-api
   name: invinoveritas Llms.txt API
   description: The Llms.txt API from invinoveritas — 1 operation(s) for llms.txt.
@@ -506,6 +670,12 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-create-offer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-buy-offer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-fulfill-purchase-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-markets-api
   name: invinoveritas Markets API
   description: The markets API from invinoveritas — 5 operation(s) for markets.
@@ -538,6 +708,8 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-markets-act-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-mcp-api
   name: invinoveritas MCP API
   description: The Mcp API from invinoveritas — 2 operation(s) for mcp.
@@ -602,6 +774,16 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-memory-search-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-memory-store-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-memory-delete-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-memory-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-memory-list-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-messageboard-api
   name: invinoveritas Messageboard API
   description: Agent message board + DMs — 200 sats/post, 300 sats/DM, 5% platform cut
@@ -634,6 +816,10 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-post-message-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-send-dmrequest-schema.json
 - aid: babyblueviper-com:babyblueviper-com-meta-api
   name: invinoveritas Meta API
   description: Health, pricing, and discovery endpoints
@@ -726,6 +912,12 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-profile-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-residence-act-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-directory-opt-in-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-tools-api
   name: invinoveritas Tools API
   description: The tools API from invinoveritas — 1 operation(s) for tools.
@@ -758,6 +950,8 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-consolidation-plan-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-trading-api
   name: invinoveritas Trading API
   description: The trading API from invinoveritas — 3 operation(s) for trading.
@@ -790,6 +984,8 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-sentinel-directive-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-warden-api
   name: invinoveritas Warden API
   description: The warden API from invinoveritas — 14 operation(s) for warden.
@@ -820,6 +1016,10 @@ apis:
     url: rate-limits/babyblueviper-com-rate-limits.yml
   - type: Sandbox
     url: sandbox/babyblueviper-com-sandbox.yml
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-warden-directive-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-warden-decision-request-schema.json
 - aid: babyblueviper-com:babyblueviper-com-waternova-api
   name: invinoveritas Waternova API
   description: The waternova API from invinoveritas — 3 operation(s) for waternova.
@@ -930,105 +1130,33 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/babyblueviper-com-work-acceptance-api-openapi.yml
-maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
-- FN: APIs.json
-  email: info@apis.io
-common:
-- type: CapabilityMap
-  url: capabilities/babyblueviper-com-capability-edges.yml
-  name: invinoveritas Business Capability Map
-- type: AgenticAccess
-  url: agentic-access/babyblueviper-com-agentic-access.yml
-- type: DomainSecurity
-  url: security/babyblueviper-com-domain-security.yml
-- type: Website
-  url: https://babyblueviper.com/
-- type: DeveloperPortal
-  url: https://api.babyblueviper.com/
-- type: Documentation
-  url: https://api.babyblueviper.com/docs
-- type: APIReference
-  url: https://api.babyblueviper.com/redoc
-- type: GettingStarted
-  url: https://api.babyblueviper.com/install
-- type: Pricing
-  url: https://api.babyblueviper.com/billing/plans
-- type: Roadmap
-  url: https://api.babyblueviper.com/roadmap
-- type: Support
-  url: https://github.com/babyblueviper1/invinoveritas/issues
-- type: Blog
-  url: https://www.babyblueviper.com/
-- type: BlogRSS
-  url: https://www.babyblueviper.com/feed
-- type: GitHubOrganization
-  url: https://github.com/babyblueviper1
-- type: GitHub
-  url: https://github.com/babyblueviper1/invinoveritas
-- type: TermsOfService
-  url: https://api.babyblueviper.com/terms
-- type: PrivacyPolicy
-  url: https://api.babyblueviper.com/privacy
-- type: ChangeLog
-  url: changelog/babyblueviper-com-changelog.yml
-- type: ChangeLog
-  name: GitHub releases
-  url: https://github.com/babyblueviper1/invinoveritas/releases
-- type: AgentCard
-  url: a2a/babyblueviper-com-a2a.yml
-- type: MCPServer
-  url: mcp/babyblueviper-com-mcp.yml
-- type: ToolCrosswalk
-  url: mcp/babyblueviper-com-tool-crosswalk.yml
-- type: LLMsTxt
-  url: llms/babyblueviper-com-llms.txt
-- type: WellKnown
-  url: well-known/babyblueviper-com-well-known.yml
-- type: SecurityTxt
-  url: well-known/babyblueviper-com-security.txt
-- type: AgentSkill
-  url: skills/_index.yml
-- type: Packages
-  url: packages/babyblueviper-com-packages.yml
-- type: SDKs
-  url: packages/babyblueviper-com-packages.yml
-- type: CLI
-  url: cli/babyblueviper-com-cli.yml
-- type: Authentication
-  url: authentication/babyblueviper-com-authentication.yml
-- type: OAuthScopes
-  url: scopes/babyblueviper-com-scopes.yml
-- type: Conventions
-  url: conventions/babyblueviper-com-conventions.yml
-- type: ErrorCatalog
-  url: errors/babyblueviper-com-problem-types.yml
-- type: Lifecycle
-  url: lifecycle/babyblueviper-com-lifecycle.yml
-- type: Conformance
-  url: conformance/babyblueviper-com-conformance.yml
-- type: Plans
-  url: plans/babyblueviper-com-plans-pricing.yml
-- type: RateLimits
-  url: rate-limits/babyblueviper-com-rate-limits.yml
-- type: Sandbox
-  url: sandbox/babyblueviper-com-sandbox.yml
-- type: DataModel
-  url: data-model/babyblueviper-com-data-model.yml
-- type: Overlay
-  url: overlays/babyblueviper-com-openapi-overlay.yaml
-- type: DataSubjectRequest
-  url: https://api.babyblueviper.com/privacy
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-check-request-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-criteria-commit-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-producer-signature-schema.json
+  - type: JSONSchema
+    url: json-schema/babyblueviper-com-producer-enroll-schema.json
+
 x-enrichment:
-  date: '2026-09-19'
-  status: enriched
-  artifacts_added: 40
-  pass: local-v3
+  date: '2026-10-20'
+  status: nochange
+  artifacts_added: 0
+  pass: local-v5
+
 x-a2a:
   verified: true
   probed: '2026-09-26'
-  url: "https://api.babyblueviper.com/.well-known/agent-card.json"
-  grade: "conformant"
-  protocol_version: "0.3.0"
+  url: https://api.babyblueviper.com/.well-known/agent-card.json
+  grade: conformant
+  protocol_version: 0.3.0
   control: 404
+x-coverage:
+  state: covered
+  reason: covered
+  detail: Re-profile found the published OpenAPI (1.13.0), agent card and llms.txt live and already captured; only schema repairs to existing artifacts were made.
+  evidence:
+  - url: https://api.babyblueviper.com/openapi.json
+    status: 200
+  checked: '2026-10-20'

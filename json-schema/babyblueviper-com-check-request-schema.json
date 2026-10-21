@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-check-request-schema.json",
+  "title": "CheckRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-work-acceptance-api-openapi.yml#/components/schemas/CheckRequest",
+  "properties": {
+    "criteria": {
+      "title": "Criteria"
+    },
+    "content_base64": {
+      "type": "string",
+      "maxLength": 2800000,
+      "title": "Content Base64"
+    },
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "default": "deliverable"
+    },
+    "producer": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Producer"
+    },
+    "client_ref": {
+      "type": "string",
+      "title": "Client Ref",
+      "default": ""
+    },
+    "references": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array",
+          "maxItems": 4
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "References"
+    },
+    "bindings": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Bindings"
+    }
+  },
+  "type": "object",
+  "required": [
+    "criteria",
+    "content_base64"
+  ]
+}

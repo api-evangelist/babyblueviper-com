@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-create-offer-request-schema.json",
+  "title": "CreateOfferRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-marketplace-api-openapi.yml#/components/schemas/CreateOfferRequest",
+  "properties": {
+    "seller_id": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Seller Id"
+    },
+    "ln_address": {
+      "type": "string",
+      "title": "Ln Address",
+      "description": "Lightning address (user@domain.com) to receive 95% payouts"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 3,
+      "title": "Title"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000,
+      "minLength": 10,
+      "title": "Description"
+    },
+    "price_sats": {
+      "type": "integer",
+      "title": "Price Sats",
+      "description": "Price in sats (buyer pays this)"
+    },
+    "category": {
+      "type": "string",
+      "maxLength": 50,
+      "title": "Category",
+      "default": "agent"
+    },
+    "content_file": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Content File",
+      "description": "Filename in /content/ to deliver on purchase (Waternova)"
+    },
+    "preview_text": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 280
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Preview Text",
+      "description": "Short teaser displayed on marketplace cards"
+    },
+    "thumbnail_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Thumbnail Url",
+      "description": "Optional HTTPS thumbnail/preview image URL"
+    },
+    "eligibility_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Eligibility Url",
+      "description": "Optional HTTPS server-to-server endpoint we call BEFORE charging the buyer or paying you, to confirm this specific purchase is sellable (e.g. real-time inventory tied to buyer_input). Only an ACCEPT response authorizes the charge; REJECT, a timeout, or any non-2xx/invalid response refuses the purchase with nothing charged. See docs for the exact request/response contract."
+    },
+    "eligibility_bearer": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Eligibility Bearer",
+      "description": "Bearer credential we send as Authorization on the eligibility_url call. Stored server-side only -- never returned by any endpoint, including your own /offers/my."
+    }
+  },
+  "type": "object",
+  "required": [
+    "seller_id",
+    "ln_address",
+    "title",
+    "description",
+    "price_sats"
+  ]
+}

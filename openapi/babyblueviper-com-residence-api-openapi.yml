@@ -253,37 +253,28 @@ paths:
       security: []
 components:
   schemas:
-    ProfileRequest:
+    ResidenceActRequest:
       properties:
-        autonomy:
+        intent:
+          type: string
+          title: Intent
+          description: What you want your home to reason about / govern.
+        artifact:
           anyOf:
           - type: string
           - type: 'null'
-          title: Autonomy
-          description: unattended | supervised | assisted | exploring
-        agent_type:
-          anyOf:
-          - type: string
-            maxLength: 40
-          - type: 'null'
-          title: Agent Type
-          description: e.g. claude, gpt, langchain, custom
-        goal:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Goal
-          description: trading | research | coding | data | outreach | other
-        building:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Building
-          description: 'one line: what you''re building / what you need'
+          title: Artifact
+          description: A concrete trade/diff/command/plan to govern, if any.
+        artifact_type:
+          type: string
+          title: Artifact Type
+          default: general
+        policy:
+          $ref: '#/components/schemas/HousePolicy'
       type: object
-      title: ProfileRequest
-      description: Optional self-declared profile — all fields optional, sanitised server-side.
+      required:
+      - intent
+      title: ResidenceActRequest
     ValidationError:
       properties:
         loc:
@@ -319,28 +310,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ResidenceActRequest:
-      properties:
-        intent:
-          type: string
-          title: Intent
-          description: What you want your home to reason about / govern.
-        artifact:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Artifact
-          description: A concrete trade/diff/command/plan to govern, if any.
-        artifact_type:
-          type: string
-          title: Artifact Type
-          default: general
-        policy:
-          $ref: '#/components/schemas/HousePolicy'
-      type: object
-      required:
-      - intent
-      title: ResidenceActRequest
     DirectoryOptInRequest:
       properties:
         listed:
@@ -350,6 +319,37 @@ components:
           default: true
       type: object
       title: DirectoryOptInRequest
+    ProfileRequest:
+      properties:
+        autonomy:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Autonomy
+          description: unattended | supervised | assisted | exploring
+        agent_type:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Agent Type
+          description: e.g. claude, gpt, langchain, custom
+        goal:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Goal
+          description: trading | research | coding | data | outreach | other
+        building:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Building
+          description: 'one line: what you''re building / what you need'
+      type: object
+      title: ProfileRequest
+      description: Optional self-declared profile — all fields optional, sanitised server-side.
     HousePolicy:
       properties:
         max_spend_sats:

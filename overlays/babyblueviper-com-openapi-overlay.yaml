@@ -5,7 +5,7 @@ info:
   description: Our additions layered over the provider-hosted OpenAPI 3.1.0 (https://api.babyblueviper.com/openapi.json,
     saved verbatim in openapi/_original/). The original is never mutated. Each action records where the added fact
     came from.
-extends: openapi/babyblueviper-com-openapi.yml
+extends: ../openapi/_original/babyblueviper-com-openapi.json
 x-generated: '2026-09-19'
 x-method: generated
 actions:

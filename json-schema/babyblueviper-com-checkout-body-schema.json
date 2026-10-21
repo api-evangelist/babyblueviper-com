@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-checkout-body-schema.json",
+  "title": "CheckoutBody",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-billing-api-openapi.yml#/components/schemas/CheckoutBody",
+  "properties": {
+    "plan": {
+      "type": "string",
+      "title": "Plan"
+    },
+    "email": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Email"
+    },
+    "client_reference_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Client Reference Id"
+    },
+    "seats": {
+      "type": "integer",
+      "title": "Seats",
+      "default": 1
+    }
+  },
+  "type": "object",
+  "required": [
+    "plan"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-grant-first-call-request-schema.json",
+  "title": "GrantFirstCallRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-credit-api-openapi.yml#/components/schemas/GrantFirstCallRequest",
+  "properties": {
+    "token": {
+      "type": "string",
+      "maxLength": 2048,
+      "minLength": 20,
+      "title": "Token"
+    },
+    "target_api_key": {
+      "type": "string",
+      "minLength": 10,
+      "title": "Target Api Key"
+    }
+  },
+  "type": "object",
+  "required": [
+    "token",
+    "target_api_key"
+  ]
+}

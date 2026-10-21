@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-sentinel-directive-request-schema.json",
+  "title": "SentinelDirectiveRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-trading-api-openapi.yml#/components/schemas/SentinelDirectiveRequest",
+  "properties": {
+    "action": {
+      "type": "string",
+      "title": "Action",
+      "description": "pause_trading | resume_trading | run_dream | report_now | set_alert_threshold"
+    },
+    "params": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Params",
+      "description": "Action-specific parameters"
+    },
+    "issued_by": {
+      "type": "string",
+      "title": "Issued By",
+      "description": "Issuing authority (viper_warden or operator)",
+      "default": "viper_warden"
+    },
+    "reason": {
+      "type": "string",
+      "title": "Reason",
+      "description": "Human-readable reason for audit trail",
+      "default": ""
+    },
+    "idempotency_key": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 8,
+      "title": "Idempotency Key",
+      "description": "Unique key to prevent duplicate directive processing"
+    }
+  },
+  "type": "object",
+  "required": [
+    "action",
+    "idempotency_key"
+  ]
+}

@@ -1,6 +1,7 @@
 generated: '2026-09-19'
 method: probed
 source: https://api.babyblueviper.com/billing/plans (machine-readable, application/json) and https://api.babyblueviper.com/prices (per-call sats) — read 2026-09-19
+name: invinoveritas API Plans
 docs:
 - https://api.babyblueviper.com/llms.txt#pricing
 - https://api.babyblueviper.com/discovery/x402

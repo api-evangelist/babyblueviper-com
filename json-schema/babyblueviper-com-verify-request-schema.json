@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-verify-request-schema.json",
+  "title": "VerifyRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-credit-api-openapi.yml#/components/schemas/VerifyRequest",
+  "properties": {
+    "api_key": {
+      "type": "string",
+      "minLength": 10,
+      "title": "Api Key"
+    },
+    "tool": {
+      "type": "string",
+      "pattern": "^(reason|decide|decision|review|memory_store|memory_get|memory_list|memory_delete|marketplace_buy|orchestrate|message_post|message_dm|sovereign_earner|browse|execute|prove)$",
+      "title": "Tool"
+    },
+    "price_sats": {
+      "type": "integer",
+      "exclusiveMinimum": 0.0,
+      "title": "Price Sats"
+    },
+    "token_estimate": {
+      "type": "integer",
+      "minimum": 0.0,
+      "title": "Token Estimate",
+      "default": 0
+    }
+  },
+  "type": "object",
+  "required": [
+    "api_key",
+    "tool",
+    "price_sats"
+  ]
+}

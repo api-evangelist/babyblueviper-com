@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-reasoning-request-schema.json",
+  "title": "ReasoningRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-inference-api-openapi.yml#/components/schemas/ReasoningRequest",
+  "properties": {
+    "question": {
+      "type": "string",
+      "title": "Question",
+      "description": "The question to reason about"
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "short",
+        "concise",
+        "normal",
+        "detailed",
+        "comprehensive"
+      ],
+      "title": "Style",
+      "description": "Response style: short (1 sentence), concise (2-3 sentences), normal, detailed, or comprehensive",
+      "default": "normal"
+    },
+    "want_confidence": {
+      "type": "boolean",
+      "title": "Want Confidence",
+      "description": "Whether to include confidence score and uncertainty flags",
+      "default": false
+    },
+    "response_format": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Response Format",
+      "description": "Optional JSON schema for structured output"
+    }
+  },
+  "type": "object",
+  "required": [
+    "question"
+  ]
+}

@@ -94,7 +94,40 @@
     "babyblueviper-com-openapi.json: declared missing tag: warden",
     "babyblueviper-com-openapi.json: declared missing tag: waternova",
     "babyblueviper-com-openapi.json: declared missing tag: work-acceptance",
-    "apis.yml register: written (+8 apis, 34 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "babyblueviper-com-admission-chain-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-agents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-check-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-community-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-corpus-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-credit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-edgeproof-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-execution-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-inference-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-ledger-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-llms-txt-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-marketplace-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-markets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-mcp-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-memory-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-messageboard-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-meta-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-register-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-relay-health-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-residence-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-tools-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-trading-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-verify-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-warden-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-waternova-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "babyblueviper-com-work-acceptance-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

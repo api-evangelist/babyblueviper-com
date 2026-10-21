@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-browse-request-schema.json",
+  "title": "BrowseRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-execution-api-openapi.yml#/components/schemas/BrowseRequest",
+  "properties": {
+    "url": {
+      "type": "string",
+      "maxLength": 2000,
+      "title": "Url",
+      "description": "Public http(s) URL to fetch in the isolated action layer."
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "fetch",
+        "extract_text",
+        "screenshot",
+        "multi_step"
+      ],
+      "title": "Action",
+      "description": "fetch/extract_text use v0; screenshot uses Playwright BaaS v1; multi_step runs a sequence of click/type/navigate/wait/screenshot steps within the initial URL's domain.",
+      "default": "fetch"
+    },
+    "selector": {
+      "type": "string",
+      "maxLength": 200,
+      "title": "Selector",
+      "description": "Reserved for single-step Playwright actions.",
+      "default": ""
+    },
+    "steps": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "type": "array",
+      "maxItems": 5,
+      "title": "Steps",
+      "description": "Step sequence for multi_step action (max 5). Each step: {\"action\": \"click|type|navigate|wait|screenshot\", \"selector\": \"css\", \"value\": \"text\", \"url\": \"https://...\"}."
+    },
+    "max_bytes": {
+      "type": "integer",
+      "maximum": 262144.0,
+      "minimum": 1024.0,
+      "title": "Max Bytes",
+      "default": 65536
+    },
+    "viewport_width": {
+      "type": "integer",
+      "maximum": 1920.0,
+      "minimum": 320.0,
+      "title": "Viewport Width",
+      "default": 1280
+    },
+    "viewport_height": {
+      "type": "integer",
+      "maximum": 1600.0,
+      "minimum": 320.0,
+      "title": "Viewport Height",
+      "default": 900
+    },
+    "wait_ms": {
+      "type": "integer",
+      "maximum": 3000.0,
+      "minimum": 0.0,
+      "title": "Wait Ms",
+      "default": 500
+    },
+    "tier": {
+      "type": "integer",
+      "maximum": 3.0,
+      "minimum": 0.0,
+      "title": "Tier",
+      "description": "Execution tier: 0 starter, 1 default, 2 premium, 3 enterprise.",
+      "default": 1
+    },
+    "agent_id": {
+      "type": "string",
+      "maxLength": 120,
+      "title": "Agent Id",
+      "default": ""
+    }
+  },
+  "type": "object",
+  "required": [
+    "url"
+  ]
+}

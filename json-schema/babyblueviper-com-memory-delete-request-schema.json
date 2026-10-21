@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-memory-delete-request-schema.json",
+  "title": "MemoryDeleteRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-memory-api-openapi.yml#/components/schemas/MemoryDeleteRequest",
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Agent Id",
+      "description": "Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key."
+    },
+    "key": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Key"
+    }
+  },
+  "type": "object",
+  "required": [
+    "agent_id",
+    "key"
+  ]
+}

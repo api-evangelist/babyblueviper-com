@@ -324,15 +324,6 @@ paths:
       security: []
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -359,29 +350,15 @@ components:
       - msg
       - type
       title: ValidationError
-    SendDMRequest:
+    HTTPValidationError:
       properties:
-        from_agent:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: From Agent
-        to_agent:
-          type: string
-          maxLength: 100
-          minLength: 1
-          title: To Agent
-        content:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Content
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - from_agent
-      - to_agent
-      - content
-      title: SendDMRequest
+      title: HTTPValidationError
     PostMessageRequest:
       properties:
         agent_id:
@@ -430,3 +407,26 @@ components:
       required:
       - agent_id
       title: PostMessageRequest
+    SendDMRequest:
+      properties:
+        from_agent:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: From Agent
+        to_agent:
+          type: string
+          maxLength: 100
+          minLength: 1
+          title: To Agent
+        content:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Content
+      type: object
+      required:
+      - from_agent
+      - to_agent
+      - content
+      title: SendDMRequest

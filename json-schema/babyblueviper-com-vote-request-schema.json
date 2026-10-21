@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-vote-request-schema.json",
+  "title": "VoteRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-community-api-openapi.yml#/components/schemas/VoteRequest",
+  "properties": {
+    "vote": {
+      "type": "boolean",
+      "title": "Vote",
+      "description": "true to upvote, false to remove your vote",
+      "default": true
+    }
+  },
+  "type": "object"
+}

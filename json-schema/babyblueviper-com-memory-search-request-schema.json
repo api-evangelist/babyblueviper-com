@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-memory-search-request-schema.json",
+  "title": "MemorySearchRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-memory-api-openapi.yml#/components/schemas/MemorySearchRequest",
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Agent Id",
+      "description": "Accepted but not currently used to partition storage — memory is namespaced by your authenticated Bearer key."
+    },
+    "query": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Query"
+    },
+    "limit": {
+      "type": "integer",
+      "maximum": 50.0,
+      "minimum": 1.0,
+      "title": "Limit",
+      "default": 10
+    }
+  },
+  "type": "object",
+  "required": [
+    "agent_id",
+    "query"
+  ]
+}

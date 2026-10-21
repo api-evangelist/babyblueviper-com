@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-fulfill-purchase-request-schema.json",
+  "title": "FulfillPurchaseRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-marketplace-api-openapi.yml#/components/schemas/FulfillPurchaseRequest",
+  "properties": {
+    "fulfillment_ref": {
+      "type": "string",
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Fulfillment Ref",
+      "description": "A buyer-visible report reference or expiring delivery URL for this purchase."
+    }
+  },
+  "type": "object",
+  "required": [
+    "fulfillment_ref"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-markets-act-request-schema.json",
+  "title": "MarketsActRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-analytics-api-openapi.yml#/components/schemas/MarketsActRequest",
+  "properties": {
+    "coins": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Coins",
+      "description": "Coins for the signals set (default BTC/ETH/SOL/XRP)."
+    },
+    "artifact": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Artifact",
+      "description": "Optional proposed trade/plan to pass through the governance review gate."
+    },
+    "artifact_type": {
+      "type": "string",
+      "title": "Artifact Type",
+      "description": "code_diff|patch|shell_command|plan|config_change|analysis|agent_output|trade|onchain_action|sanctions_screening|general",
+      "default": "general"
+    },
+    "context": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Context",
+      "description": "Optional context for the review."
+    },
+    "max_spend_sats": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Max Spend Sats",
+      "description": "Hard deterministic cap; the bundle is rejected before any work if its price exceeds this."
+    }
+  },
+  "type": "object"
+}

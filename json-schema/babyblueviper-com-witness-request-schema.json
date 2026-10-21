@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-witness-request-schema.json",
+  "title": "WitnessRequest",
+  "description": "S216 (crewAI#4877 composed-evaluators collaboration) — anchor a THIRD PARTY's exact claim bytes\nas-is, without independent judgment. Distinct from /review(sign=true), which always runs OUR OWN\nverdict on the artifact and signs THAT. This is pure notarization: 'we received and timestamped\nthis, attributed to source X' — not 'we agree with it'. Lets two independent verifiers compose a\njoint artifact where each claim stays separately attributable, instead of one re-grading the other.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-execution-api-openapi.yml#/components/schemas/WitnessRequest",
+  "properties": {
+    "source": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Source",
+      "description": "Who this claim is attributed to (e.g. a domain or issuer name). Self-declared by the caller, NOT cryptographically verified by us — this proof establishes WHEN and WHAT was submitted, not WHO actually authored it."
+    },
+    "body": {
+      "type": "string",
+      "maxLength": 16000,
+      "minLength": 1,
+      "title": "Body",
+      "description": "The exact bytes to anchor, verbatim (typically a canonical JSON verdict body from another verifier). Anchored byte-for-byte — not re-serialized, not judged."
+    }
+  },
+  "type": "object",
+  "required": [
+    "source",
+    "body"
+  ]
+}

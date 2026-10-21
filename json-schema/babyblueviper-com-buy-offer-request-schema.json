@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-buy-offer-request-schema.json",
+  "title": "BuyOfferRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-marketplace-api-openapi.yml#/components/schemas/BuyOfferRequest",
+  "properties": {
+    "offer_id": {
+      "type": "string",
+      "minLength": 1,
+      "title": "Offer Id"
+    },
+    "verify_before_buy": {
+      "type": "boolean",
+      "title": "Verify Before Buy",
+      "description": "Run a neutral /review verdict on this offer BEFORE charging; a reject blocks the purchase (no sats spent).",
+      "default": false
+    },
+    "intent": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Intent",
+      "description": "What you intend to use this offer for — context for the verification gate (optional)."
+    },
+    "buyer_input": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Buyer Input",
+      "description": "Optional buyer-supplied data the seller needs to fulfil this specific purchase (e.g. a Lightning node pubkey for a node-analysis report). Passed through opaquely — never validated or interpreted by the platform — and surfaced to the seller via GET /offers/my/purchases. Do not put credentials, private keys, or seed phrases here."
+    }
+  },
+  "type": "object",
+  "required": [
+    "offer_id"
+  ]
+}

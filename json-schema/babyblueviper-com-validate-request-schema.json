@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-validate-request-schema.json",
+  "title": "ValidateRequest",
+  "description": "EdgeProof backtest reality-check. Submit realized P&L (never your strategy);\nget a verdict on whether the edge is real or curve-fit noise.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-execution-api-openapi.yml#/components/schemas/ValidateRequest",
+  "properties": {
+    "returns": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Returns",
+      "description": "Per-trade (or per-period) realized returns."
+    },
+    "trades": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Trades",
+      "description": "Alternative to 'returns': rows with a return field (ret/pnl/net_bps) and optional 'entry'/'exit' bar indices for honest purged k-fold timing. Include 'coin' and 'ts'/'timestamp' on each row to also unlock a 4th check (S226): a concentration jackknife (does the total sign flip once you exclude the single best trade or the single dominant coin) and a BTC-regime overlay (does the sign differ inside vs outside a BTC melt-up window). Both are additive — never change verdict/DSR/permutation_p_value/kfold_decay_rho, they surface under a separate 'concentration_and_regime' key only when coin/ts context is present."
+    },
+    "n_trials": {
+      "type": "integer",
+      "maximum": 10000000.0,
+      "minimum": 1.0,
+      "title": "N Trials",
+      "description": "How many strategy variants/params you tried before selecting this one. Be honest — more trials = bigger Deflated-Sharpe haircut.",
+      "default": 1
+    },
+    "trial_sharpes": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Trial Sharpes",
+      "description": "Optional: Sharpes of all variants tried → exact DSR variance."
+    },
+    "k_folds": {
+      "type": "integer",
+      "maximum": 20.0,
+      "minimum": 2.0,
+      "title": "K Folds",
+      "default": 5
+    },
+    "n_perms": {
+      "type": "integer",
+      "maximum": 3000.0,
+      "minimum": 200.0,
+      "title": "N Perms",
+      "default": 2000
+    },
+    "periods_per_year": {
+      "anyOf": [
+        {
+          "type": "number",
+          "exclusiveMinimum": 0.0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Periods Per Year",
+      "description": "Optional, for annualized-Sharpe display only."
+    },
+    "agent_id": {
+      "type": "string",
+      "maxLength": 120,
+      "title": "Agent Id",
+      "default": ""
+    }
+  },
+  "type": "object"
+}

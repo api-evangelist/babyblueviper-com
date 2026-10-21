@@ -1,0 +1,668 @@
+{
+  "@context": {
+    "@vocab": "https://babyblueviper.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "babyblueviper": "https://babyblueviper.com/schema#",
+    "ValidationError": "babyblueviper:ValidationError",
+    "loc": {
+      "@id": "babyblueviper:loc",
+      "@container": "@list"
+    },
+    "msg": {
+      "@id": "babyblueviper:msg",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "babyblueviper:type",
+      "@type": "xsd:string"
+    },
+    "input": {
+      "@id": "babyblueviper:input"
+    },
+    "ctx": {
+      "@id": "babyblueviper:ctx"
+    },
+    "HTTPValidationError": "babyblueviper:HTTPValidationError",
+    "detail": {
+      "@id": "babyblueviper:detail",
+      "@container": "@list"
+    },
+    "MarketsActRequest": "babyblueviper:MarketsActRequest",
+    "coins": {
+      "@id": "babyblueviper:coins"
+    },
+    "artifact": {
+      "@id": "babyblueviper:artifact"
+    },
+    "artifact_type": {
+      "@id": "babyblueviper:artifact_type",
+      "@type": "xsd:string"
+    },
+    "context": {
+      "@id": "babyblueviper:context"
+    },
+    "max_spend_sats": {
+      "@id": "babyblueviper:max_spend_sats"
+    },
+    "TopupBody": "babyblueviper:TopupBody",
+    "api_key": {
+      "@id": "babyblueviper:api_key",
+      "@type": "xsd:string"
+    },
+    "usd_amount": {
+      "@id": "babyblueviper:usd_amount",
+      "@type": "xsd:decimal"
+    },
+    "X402TopupBody": "babyblueviper:X402TopupBody",
+    "CheckoutBody": "babyblueviper:CheckoutBody",
+    "plan": {
+      "@id": "babyblueviper:plan",
+      "@type": "xsd:string"
+    },
+    "email": {
+      "@id": "babyblueviper:email"
+    },
+    "client_reference_id": {
+      "@id": "babyblueviper:client_reference_id"
+    },
+    "seats": {
+      "@id": "babyblueviper:seats",
+      "@type": "xsd:integer"
+    },
+    "FeedbackRequest": "babyblueviper:FeedbackRequest",
+    "category": {
+      "@id": "babyblueviper:category",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "babyblueviper:title",
+      "@type": "xsd:string"
+    },
+    "body": {
+      "@id": "babyblueviper:body",
+      "@type": "xsd:string"
+    },
+    "VoteRequest": "babyblueviper:VoteRequest",
+    "vote": {
+      "@id": "babyblueviper:vote",
+      "@type": "xsd:boolean"
+    },
+    "WithdrawProxyRequest": "babyblueviper:WithdrawProxyRequest",
+    "bolt11": {
+      "@id": "babyblueviper:bolt11"
+    },
+    "lightning_invoice": {
+      "@id": "babyblueviper:lightning_invoice"
+    },
+    "lightning_address": {
+      "@id": "babyblueviper:lightning_address"
+    },
+    "amount_sats": {
+      "@id": "babyblueviper:amount_sats",
+      "@type": "xsd:integer"
+    },
+    "WithdrawToAddressRequest": "babyblueviper:WithdrawToAddressRequest",
+    "comment": {
+      "@id": "babyblueviper:comment"
+    },
+    "ConfirmRequest": "babyblueviper:ConfirmRequest",
+    "payment_hash": {
+      "@id": "babyblueviper:payment_hash",
+      "@type": "xsd:string"
+    },
+    "preimage": {
+      "@id": "babyblueviper:preimage",
+      "@type": "xsd:string"
+    },
+    "label": {
+      "@id": "babyblueviper:label"
+    },
+    "VerifyRequest": "babyblueviper:VerifyRequest",
+    "tool": {
+      "@id": "babyblueviper:tool",
+      "@type": "xsd:string"
+    },
+    "price_sats": {
+      "@id": "babyblueviper:price_sats",
+      "@type": "xsd:integer"
+    },
+    "token_estimate": {
+      "@id": "babyblueviper:token_estimate",
+      "@type": "xsd:integer"
+    },
+    "GrantFirstCallRequest": "babyblueviper:GrantFirstCallRequest",
+    "token": {
+      "@id": "babyblueviper:token",
+      "@type": "xsd:string"
+    },
+    "target_api_key": {
+      "@id": "babyblueviper:target_api_key",
+      "@type": "xsd:string"
+    },
+    "SettleTopupProxyRequest": "babyblueviper:SettleTopupProxyRequest",
+    "DecisionReceiptRequest": "babyblueviper:DecisionReceiptRequest",
+    "question": {
+      "@id": "babyblueviper:question"
+    },
+    "options": {
+      "@id": "babyblueviper:options"
+    },
+    "choice": {
+      "@id": "babyblueviper:choice"
+    },
+    "score": {
+      "@id": "babyblueviper:score"
+    },
+    "irreversible_options": {
+      "@id": "babyblueviper:irreversible_options"
+    },
+    "context_sha256": {
+      "@id": "babyblueviper:context_sha256"
+    },
+    "decider": {
+      "@id": "babyblueviper:decider"
+    },
+    "review_proof": {
+      "@id": "babyblueviper:review_proof"
+    },
+    "salt": {
+      "@id": "babyblueviper:salt"
+    },
+    "decider_sig": {
+      "@id": "babyblueviper:decider_sig"
+    },
+    "decider_claimed_at": {
+      "@id": "babyblueviper:decider_claimed_at"
+    },
+    "ValidateRequest": "babyblueviper:ValidateRequest",
+    "returns": {
+      "@id": "babyblueviper:returns"
+    },
+    "trades": {
+      "@id": "babyblueviper:trades"
+    },
+    "n_trials": {
+      "@id": "babyblueviper:n_trials",
+      "@type": "xsd:integer"
+    },
+    "trial_sharpes": {
+      "@id": "babyblueviper:trial_sharpes"
+    },
+    "k_folds": {
+      "@id": "babyblueviper:k_folds",
+      "@type": "xsd:integer"
+    },
+    "n_perms": {
+      "@id": "babyblueviper:n_perms",
+      "@type": "xsd:integer"
+    },
+    "periods_per_year": {
+      "@id": "babyblueviper:periods_per_year"
+    },
+    "agent_id": {
+      "@id": "babyblueviper:agent_id",
+      "@type": "xsd:string"
+    },
+    "ProveRevealRequest": "babyblueviper:ProveRevealRequest",
+    "content": {
+      "@id": "babyblueviper:content"
+    },
+    "VerifyProofRequest": "babyblueviper:VerifyProofRequest",
+    "event": {
+      "@id": "babyblueviper:event"
+    },
+    "proof_event": {
+      "@id": "babyblueviper:proof_event"
+    },
+    "proof_id": {
+      "@id": "babyblueviper:proof_id"
+    },
+    "event_id": {
+      "@id": "babyblueviper:event_id"
+    },
+    "pq_companion_signature": {
+      "@id": "babyblueviper:pq_companion_signature"
+    },
+    "expect_artifact_hash": {
+      "@id": "babyblueviper:expect_artifact_hash"
+    },
+    "expect_intended_verifier": {
+      "@id": "babyblueviper:expect_intended_verifier"
+    },
+    "verifier_signature": {
+      "@id": "babyblueviper:verifier_signature"
+    },
+    "expect_max_age_seconds": {
+      "@id": "babyblueviper:expect_max_age_seconds"
+    },
+    "fault_injection": {
+      "@id": "babyblueviper:fault_injection"
+    },
+    "consume": {
+      "@id": "babyblueviper:consume",
+      "@type": "xsd:boolean"
+    },
+    "expect_pq_binding": {
+      "@id": "babyblueviper:expect_pq_binding",
+      "@type": "xsd:boolean"
+    },
+    "ExecuteRequest": "babyblueviper:ExecuteRequest",
+    "language": {
+      "@id": "babyblueviper:language",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "babyblueviper:code",
+      "@type": "xsd:string"
+    },
+    "stdin": {
+      "@id": "babyblueviper:stdin",
+      "@type": "xsd:string"
+    },
+    "timeout_seconds": {
+      "@id": "babyblueviper:timeout_seconds"
+    },
+    "tier": {
+      "@id": "babyblueviper:tier",
+      "@type": "xsd:integer"
+    },
+    "permissive": {
+      "@id": "babyblueviper:permissive",
+      "@type": "xsd:boolean"
+    },
+    "use_workspace": {
+      "@id": "babyblueviper:use_workspace",
+      "@type": "xsd:boolean"
+    },
+    "WitnessRequest": "babyblueviper:WitnessRequest",
+    "source": {
+      "@id": "babyblueviper:source",
+      "@type": "xsd:string"
+    },
+    "ProveRequest": "babyblueviper:ProveRequest",
+    "action_id": {
+      "@id": "babyblueviper:action_id",
+      "@type": "xsd:string"
+    },
+    "nostr_publish": {
+      "@id": "babyblueviper:nostr_publish",
+      "@type": "xsd:boolean"
+    },
+    "disclose": {
+      "@id": "babyblueviper:disclose",
+      "@type": "xsd:boolean"
+    },
+    "BrowseRequest": "babyblueviper:BrowseRequest",
+    "url": {
+      "@id": "babyblueviper:url",
+      "@type": "xsd:string"
+    },
+    "action": {
+      "@id": "babyblueviper:action",
+      "@type": "xsd:string"
+    },
+    "selector": {
+      "@id": "babyblueviper:selector",
+      "@type": "xsd:string"
+    },
+    "steps": {
+      "@id": "babyblueviper:steps",
+      "@container": "@list"
+    },
+    "max_bytes": {
+      "@id": "babyblueviper:max_bytes",
+      "@type": "xsd:integer"
+    },
+    "viewport_width": {
+      "@id": "babyblueviper:viewport_width",
+      "@type": "xsd:integer"
+    },
+    "viewport_height": {
+      "@id": "babyblueviper:viewport_height",
+      "@type": "xsd:integer"
+    },
+    "wait_ms": {
+      "@id": "babyblueviper:wait_ms",
+      "@type": "xsd:integer"
+    },
+    "ReviewRequest": "babyblueviper:ReviewRequest",
+    "concerns": {
+      "@id": "babyblueviper:concerns",
+      "@type": "xsd:string"
+    },
+    "severity_threshold": {
+      "@id": "babyblueviper:severity_threshold",
+      "@type": "xsd:string"
+    },
+    "include_trading_state": {
+      "@id": "babyblueviper:include_trading_state",
+      "@type": "xsd:boolean"
+    },
+    "sign": {
+      "@id": "babyblueviper:sign",
+      "@type": "xsd:boolean"
+    },
+    "seed": {
+      "@id": "babyblueviper:seed",
+      "@type": "xsd:boolean"
+    },
+    "state_hash": {
+      "@id": "babyblueviper:state_hash"
+    },
+    "dry_run": {
+      "@id": "babyblueviper:dry_run",
+      "@type": "xsd:boolean"
+    },
+    "related_proof_event": {
+      "@id": "babyblueviper:related_proof_event"
+    },
+    "mediator_attestation": {
+      "@id": "babyblueviper:mediator_attestation"
+    },
+    "verdict_relay": {
+      "@id": "babyblueviper:verdict_relay"
+    },
+    "related_claims": {
+      "@id": "babyblueviper:related_claims"
+    },
+    "intended_audience": {
+      "@id": "babyblueviper:intended_audience"
+    },
+    "intended_verifier": {
+      "@id": "babyblueviper:intended_verifier"
+    },
+    "submission_commitment": {
+      "@id": "babyblueviper:submission_commitment"
+    },
+    "slot": {
+      "@id": "babyblueviper:slot"
+    },
+    "request_capture_ref": {
+      "@id": "babyblueviper:request_capture_ref"
+    },
+    "operation_id": {
+      "@id": "babyblueviper:operation_id"
+    },
+    "confidentiality_tier": {
+      "@id": "babyblueviper:confidentiality_tier",
+      "@type": "xsd:string"
+    },
+    "disclosed_summary": {
+      "@id": "babyblueviper:disclosed_summary"
+    },
+    "artifact_source": {
+      "@id": "babyblueviper:artifact_source"
+    },
+    "action_binding": {
+      "@id": "babyblueviper:action_binding"
+    },
+    "policy": {
+      "@id": "babyblueviper:policy"
+    },
+    "facts": {
+      "@id": "babyblueviper:facts"
+    },
+    "evidence": {
+      "@id": "babyblueviper:evidence"
+    },
+    "external_evidence": {
+      "@id": "babyblueviper:external_evidence"
+    },
+    "consistency_explanations": {
+      "@id": "babyblueviper:consistency_explanations"
+    },
+    "DecisionRequest": "babyblueviper:DecisionRequest",
+    "goal": {
+      "@id": "babyblueviper:goal",
+      "@type": "xsd:string"
+    },
+    "style": {
+      "@id": "babyblueviper:style",
+      "@type": "xsd:string"
+    },
+    "want_confidence": {
+      "@id": "babyblueviper:want_confidence",
+      "@type": "xsd:boolean"
+    },
+    "response_format": {
+      "@id": "babyblueviper:response_format"
+    },
+    "ReasoningRequest": "babyblueviper:ReasoningRequest",
+    "VerdictOutcomeDemoRequest": "babyblueviper:VerdictOutcomeDemoRequest",
+    "citing_entries": {
+      "@id": "babyblueviper:citing_entries",
+      "@container": "@list"
+    },
+    "decision_ref": {
+      "@id": "babyblueviper:decision_ref",
+      "@type": "xsd:string"
+    },
+    "VerdictOutcomeDemoCitation": "babyblueviper:VerdictOutcomeDemoCitation",
+    "outcome": {
+      "@id": "babyblueviper:outcome",
+      "@type": "xsd:string"
+    },
+    "anchor_timestamp": {
+      "@id": "babyblueviper:anchor_timestamp"
+    },
+    "entry": {
+      "@id": "babyblueviper:entry",
+      "@type": "xsd:string"
+    },
+    "LedgerSubmitRequest": "babyblueviper:LedgerSubmitRequest",
+    "note": {
+      "@id": "babyblueviper:note",
+      "@type": "xsd:string"
+    },
+    "BuyOfferRequest": "babyblueviper:BuyOfferRequest",
+    "offer_id": {
+      "@id": "babyblueviper:offer_id",
+      "@type": "xsd:string"
+    },
+    "verify_before_buy": {
+      "@id": "babyblueviper:verify_before_buy",
+      "@type": "xsd:boolean"
+    },
+    "intent": {
+      "@id": "babyblueviper:intent"
+    },
+    "buyer_input": {
+      "@id": "babyblueviper:buyer_input"
+    },
+    "CreateOfferRequest": "babyblueviper:CreateOfferRequest",
+    "seller_id": {
+      "@id": "babyblueviper:seller_id",
+      "@type": "xsd:string"
+    },
+    "ln_address": {
+      "@id": "babyblueviper:ln_address",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "babyblueviper:description",
+      "@type": "xsd:string"
+    },
+    "content_file": {
+      "@id": "babyblueviper:content_file"
+    },
+    "preview_text": {
+      "@id": "babyblueviper:preview_text"
+    },
+    "thumbnail_url": {
+      "@id": "babyblueviper:thumbnail_url"
+    },
+    "eligibility_url": {
+      "@id": "babyblueviper:eligibility_url"
+    },
+    "eligibility_bearer": {
+      "@id": "babyblueviper:eligibility_bearer"
+    },
+    "FulfillPurchaseRequest": "babyblueviper:FulfillPurchaseRequest",
+    "fulfillment_ref": {
+      "@id": "babyblueviper:fulfillment_ref",
+      "@type": "xsd:string"
+    },
+    "MemorySearchRequest": "babyblueviper:MemorySearchRequest",
+    "query": {
+      "@id": "babyblueviper:query",
+      "@type": "xsd:string"
+    },
+    "limit": {
+      "@id": "babyblueviper:limit",
+      "@type": "xsd:integer"
+    },
+    "MemoryGetRequest": "babyblueviper:MemoryGetRequest",
+    "key": {
+      "@id": "babyblueviper:key",
+      "@type": "xsd:string"
+    },
+    "MemoryDeleteRequest": "babyblueviper:MemoryDeleteRequest",
+    "MemoryStoreRequest": "babyblueviper:MemoryStoreRequest",
+    "value": {
+      "@id": "babyblueviper:value",
+      "@type": "xsd:string"
+    },
+    "MemoryListRequest": "babyblueviper:MemoryListRequest",
+    "SendDMRequest": "babyblueviper:SendDMRequest",
+    "from_agent": {
+      "@id": "babyblueviper:from_agent",
+      "@type": "xsd:string"
+    },
+    "to_agent": {
+      "@id": "babyblueviper:to_agent",
+      "@type": "xsd:string"
+    },
+    "PostMessageRequest": "babyblueviper:PostMessageRequest",
+    "reply_to": {
+      "@id": "babyblueviper:reply_to"
+    },
+    "attach_proof_id": {
+      "@id": "babyblueviper:attach_proof_id"
+    },
+    "attach_ledger_entry": {
+      "@id": "babyblueviper:attach_ledger_entry"
+    },
+    "ProfileRequest": "babyblueviper:ProfileRequest",
+    "autonomy": {
+      "@id": "babyblueviper:autonomy"
+    },
+    "agent_type": {
+      "@id": "babyblueviper:agent_type"
+    },
+    "building": {
+      "@id": "babyblueviper:building"
+    },
+    "ResidenceActRequest": "babyblueviper:ResidenceActRequest",
+    "DirectoryOptInRequest": "babyblueviper:DirectoryOptInRequest",
+    "listed": {
+      "@id": "babyblueviper:listed",
+      "@type": "xsd:boolean"
+    },
+    "HousePolicy": "babyblueviper:HousePolicy",
+    "require_review": {
+      "@id": "babyblueviper:require_review",
+      "@type": "xsd:boolean"
+    },
+    "remember": {
+      "@id": "babyblueviper:remember",
+      "@type": "xsd:boolean"
+    },
+    "ConsolidationPlanRequest": "babyblueviper:ConsolidationPlanRequest",
+    "addresses": {
+      "@id": "babyblueviper:addresses",
+      "@container": "@list"
+    },
+    "dest_address": {
+      "@id": "babyblueviper:dest_address"
+    },
+    "fee_rate": {
+      "@id": "babyblueviper:fee_rate",
+      "@type": "xsd:integer"
+    },
+    "execution_template": {
+      "@id": "babyblueviper:execution_template",
+      "@type": "xsd:string"
+    },
+    "dust_threshold": {
+      "@id": "babyblueviper:dust_threshold",
+      "@type": "xsd:integer"
+    },
+    "confirm_privacy_cluster_merge": {
+      "@id": "babyblueviper:confirm_privacy_cluster_merge",
+      "@type": "xsd:boolean"
+    },
+    "SentinelDirectiveRequest": "babyblueviper:SentinelDirectiveRequest",
+    "params": {
+      "@id": "babyblueviper:params"
+    },
+    "issued_by": {
+      "@id": "babyblueviper:issued_by",
+      "@type": "xsd:string"
+    },
+    "reason": {
+      "@id": "babyblueviper:reason",
+      "@type": "xsd:string"
+    },
+    "idempotency_key": {
+      "@id": "babyblueviper:idempotency_key",
+      "@type": "xsd:string"
+    },
+    "WardenDirectiveRequest": "babyblueviper:WardenDirectiveRequest",
+    "target_agent": {
+      "@id": "babyblueviper:target_agent",
+      "@type": "xsd:string"
+    },
+    "WardenDecisionRequest": "babyblueviper:WardenDecisionRequest",
+    "CriteriaCommit": "babyblueviper:CriteriaCommit",
+    "criteria": {
+      "@id": "babyblueviper:criteria"
+    },
+    "sha256": {
+      "@id": "babyblueviper:sha256"
+    },
+    "terms_ref": {
+      "@id": "babyblueviper:terms_ref"
+    },
+    "ProducerEnroll": "babyblueviper:ProducerEnroll",
+    "signature": {
+      "@id": "babyblueviper:signature",
+      "@type": "xsd:string"
+    },
+    "ProducerSignature": "babyblueviper:ProducerSignature",
+    "CheckRequest": "babyblueviper:CheckRequest",
+    "content_base64": {
+      "@id": "babyblueviper:content_base64",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "babyblueviper:name",
+      "@type": "xsd:string"
+    },
+    "producer": {
+      "@id": "babyblueviper:producer"
+    },
+    "client_ref": {
+      "@id": "babyblueviper:client_ref",
+      "@type": "xsd:string"
+    },
+    "references": {
+      "@id": "babyblueviper:references"
+    },
+    "bindings": {
+      "@id": "babyblueviper:bindings"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "invinoveritas API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects invinoveritas's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-20) from openapi/babyblueviper-com-admission-chain-api-openapi.yml, openapi/babyblueviper-com-agents-api-openapi.yml, openapi/babyblueviper-com-analytics-api-openapi.yml.",
+  "dcterms:created": "2026-10-20",
+  "dcterms:source": [
+    "openapi/babyblueviper-com-admission-chain-api-openapi.yml",
+    "openapi/babyblueviper-com-agents-api-openapi.yml",
+    "openapi/babyblueviper-com-analytics-api-openapi.yml",
+    "openapi/babyblueviper-com-billing-api-openapi.yml",
+    "openapi/babyblueviper-com-check-api-openapi.yml"
+  ]
+}

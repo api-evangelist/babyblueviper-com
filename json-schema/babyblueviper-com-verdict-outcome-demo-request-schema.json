@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-verdict-outcome-demo-request-schema.json",
+  "title": "VerdictOutcomeDemoRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-ledger-api-openapi.yml#/components/schemas/VerdictOutcomeDemoRequest",
+  "properties": {
+    "citing_entries": {
+      "items": {
+        "$ref": "#/$defs/VerdictOutcomeDemoCitation"
+      },
+      "type": "array",
+      "maxItems": 50,
+      "title": "Citing Entries",
+      "description": "Your own synthetic citation set -- construct any mix of anchored/unanchored, proven_right/proven_wrong/inconclusive/evidence_unavailable entries you want to check the real resolution logic against."
+    },
+    "decision_ref": {
+      "type": "string",
+      "title": "Decision Ref",
+      "default": "demo:custom (SYNTHETIC — not a real /ledger entry)"
+    }
+  },
+  "type": "object",
+  "required": [
+    "citing_entries"
+  ],
+  "$defs": {
+    "VerdictOutcomeDemoCitation": {
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "title": "Outcome",
+          "description": "e.g. proven_right, proven_wrong, inconclusive, evidence_unavailable"
+        },
+        "anchor_timestamp": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Anchor Timestamp",
+          "description": "unix seconds, or null for an unanchored citation -- REQUIRED key (omitting it 422s); use null, not omission, to declare 'unanchored'"
+        },
+        "entry": {
+          "type": "string",
+          "title": "Entry",
+          "description": "free-text label for this synthetic citation, not a real /ledger entry",
+          "default": ""
+        }
+      },
+      "type": "object",
+      "required": [
+        "outcome",
+        "anchor_timestamp"
+      ],
+      "title": "VerdictOutcomeDemoCitation"
+    }
+  }
+}

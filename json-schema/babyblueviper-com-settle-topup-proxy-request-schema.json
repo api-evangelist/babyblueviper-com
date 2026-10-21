@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-settle-topup-proxy-request-schema.json",
+  "title": "SettleTopupProxyRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-credit-api-openapi.yml#/components/schemas/SettleTopupProxyRequest",
+  "properties": {
+    "api_key": {
+      "type": "string",
+      "minLength": 10,
+      "title": "Api Key"
+    },
+    "payment_hash": {
+      "type": "string",
+      "title": "Payment Hash"
+    },
+    "preimage": {
+      "type": "string",
+      "title": "Preimage"
+    }
+  },
+  "type": "object",
+  "required": [
+    "api_key",
+    "payment_hash",
+    "preimage"
+  ]
+}

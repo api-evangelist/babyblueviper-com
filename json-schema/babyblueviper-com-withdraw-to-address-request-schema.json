@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-withdraw-to-address-request-schema.json",
+  "title": "WithdrawToAddressRequest",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-credit-api-openapi.yml#/components/schemas/WithdrawToAddressRequest",
+  "properties": {
+    "lightning_address": {
+      "type": "string",
+      "minLength": 3,
+      "title": "Lightning Address",
+      "description": "LN address like user@domain"
+    },
+    "amount_sats": {
+      "type": "integer",
+      "minimum": 5000.0,
+      "title": "Amount Sats"
+    },
+    "comment": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 280
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Comment",
+      "description": "Optional LNURL-pay comment (truncated if exceeds commentAllowed)"
+    }
+  },
+  "type": "object",
+  "required": [
+    "lightning_address",
+    "amount_sats"
+  ]
+}

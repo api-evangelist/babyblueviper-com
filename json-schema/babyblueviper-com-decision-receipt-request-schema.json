@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/babyblueviper-com/main/json-schema/babyblueviper-com-decision-receipt-request-schema.json",
+  "title": "DecisionReceiptRequest",
+  "description": "2026-09-30: a signed, salted commitment to a bounded-choice decision (OpenAI Decisions API, Jev, our\n/decision, any classifier), gated on a /review proof for the options marked irreversible. Only hashes and\na salted choice commitment are signed; the salt is returned to the caller alone. Validation lives in\nservices/decision_receipt.validate so REST and MCP share it.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/babyblueviper-com-execution-api-openapi.yml#/components/schemas/DecisionReceiptRequest",
+  "properties": {
+    "question": {
+      "title": "Question",
+      "description": "The question the decider answered."
+    },
+    "options": {
+      "title": "Options",
+      "description": "The fixed answer options (2-64 distinct strings)."
+    },
+    "choice": {
+      "title": "Choice",
+      "description": "The option the decider returned; must be one of options."
+    },
+    "score": {
+      "title": "Score",
+      "description": "The decider's probability/score for choice, 0-1 (optional)."
+    },
+    "irreversible_options": {
+      "title": "Irreversible Options",
+      "description": "Options that need a /review proof before they are executable."
+    },
+    "context": {
+      "title": "Context",
+      "description": "The input the decision was made on. Hashed here and discarded, never stored."
+    },
+    "context_sha256": {
+      "title": "Context Sha256",
+      "description": "Alternatively, sha256 hex of that input, hashed on your side."
+    },
+    "decider": {
+      "title": "Decider",
+      "description": "{provider, model, request_id}: caller-reported; request_id is stored only as a hash."
+    },
+    "review_proof": {
+      "title": "Review Proof",
+      "description": "For a gated choice: the signed event from /review(sign=true) whose artifact is the same bytes as context."
+    },
+    "salt": {
+      "title": "Salt",
+      "description": "Decider-scoped receipts only: the decider's 32-byte salt (64 hex) used for the commitments it signs."
+    },
+    "decider_sig": {
+      "title": "Decider Sig",
+      "description": "Decider-scoped receipts only: BIP-340 signature by decider.pubkey over sha256(JCS(decision claim)); see SPEC v0.4."
+    },
+    "decider_claimed_at": {
+      "title": "Decider Claimed At",
+      "description": "Decider-scoped receipts only: the unix time in the signed claim (within 600 s of now)."
+    }
+  },
+  "type": "object",
+  "required": [
+    "question",
+    "options",
+    "choice"
+  ]
+}
