@@ -196,3 +196,9 @@ components:
           description: Hard deterministic cap; the bundle is rejected before any work if its price exceeds this.
       type: object
       title: MarketsActRequest
+x-provenance:
+  method: harvested
+  publisher: invinoveritas
+  source: https://api.babyblueviper.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

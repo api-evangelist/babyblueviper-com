@@ -15,6 +15,9 @@ artifacts:
   authentication/babyblueviper-com-authentication.yml:
     method: searched
     evidence: declared in the artifact
+  capabilities/babyblueviper-com-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/babyblueviper-com-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -36,7 +39,151 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  hosts/babyblueviper-com-hosts.yml:
+    method: derived
+    evidence: declared in the artifact
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/babyblueviper-com-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  json-ld/babyblueviper-com-context.jsonld:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-browse-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-buy-offer-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-check-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-checkout-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-confirm-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-consolidation-plan-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-create-offer-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-criteria-commit-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-decision-receipt-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-decision-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-directory-opt-in-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-execute-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-feedback-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-fulfill-purchase-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-grant-first-call-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-ledger-submit-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-markets-act-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-memory-delete-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-memory-get-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-memory-list-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-memory-search-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-memory-store-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-post-message-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-producer-enroll-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-producer-signature-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-profile-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-reasoning-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-residence-act-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-review-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-send-dmrequest-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-sentinel-directive-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-settle-topup-proxy-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-topup-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-validate-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-verdict-outcome-demo-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-verify-proof-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-verify-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-vote-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-warden-decision-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-warden-directive-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-withdraw-proxy-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-withdraw-to-address-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-witness-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/babyblueviper-com-x402-topup-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-19T193153.yml:
@@ -69,9 +216,27 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/babyblueviper-com-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
+  llms/babyblueviper-com-llms-provenance.yml:
+    method: searched
+    evidence: 'derive-llms-provenance.py: harvested'
   llms/babyblueviper-com-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
@@ -87,16 +252,109 @@ artifacts:
   mcp/babyblueviper-com-tool-crosswalk.yml:
     method: derived
     evidence: declared in the artifact
-  openapi/_original/babyblueviper-com-openapi-original.json:
+  openapi/_original/babyblueviper-com-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/babyblueviper-com-openapi.yml:
+    evidence: byte-identical to https://api.babyblueviper.com/openapi.json (sha256 36159ce48020, fetched
+      2026-10-19)
+  openapi/babyblueviper-com-admission-chain-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-agents-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-analytics-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-billing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-check-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-community-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-corpus-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-credit-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-discovery-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-edgeproof-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-embed-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-execution-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-inference-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-keys-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-ledger-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-llms-txt-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-marketplace-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-markets-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-mcp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-media-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-memory-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-messageboard-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-meta-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-register-media-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-relay-health-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-residence-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-tools-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-trading-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-verify-media-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-warden-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-waternova-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/babyblueviper-com-work-acceptance-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   overlays/babyblueviper-com-openapi-overlay.yaml:
-    method: generated
-    evidence: declared in the artifact
+    method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
   packages/babyblueviper-com-packages.yml:
     method: searched
     evidence: declared in the artifact
@@ -108,6 +366,9 @@ artifacts:
     evidence: no authorship recorded
   regulatory/babyblueviper-com-regulatory-posture.yml:
     method: searched
+    evidence: declared in the artifact
+  rules/babyblueviper-com-rules.yml:
+    method: generated
     evidence: declared in the artifact
   sandbox/babyblueviper-com-sandbox.yml:
     method: searched
@@ -121,9 +382,6 @@ artifacts:
   skills/_index.yml:
     method: searched
     evidence: declared in the artifact
-  skills/babyblueviper-com-invinoveritas-REFERENCE.md:
-    method: unknown
-    evidence: no authorship recorded
   skills/babyblueviper-com-invinoveritas.md:
     method: unknown
     evidence: no authorship recorded
@@ -136,6 +394,12 @@ artifacts:
   skills/babyblueviper-com-verification-handshake.md:
     method: unknown
     evidence: no authorship recorded
+  vendors/babyblueviper-com-vendors.yml:
+    method: unknown
+    evidence: no authorship recorded
+  vocabulary/babyblueviper-com-vocabulary.yml:
+    method: derived
+    evidence: declared in the artifact
   well-known/babyblueviper-com-agent-handshake.json:
     method: unknown
     evidence: no authorship recorded
